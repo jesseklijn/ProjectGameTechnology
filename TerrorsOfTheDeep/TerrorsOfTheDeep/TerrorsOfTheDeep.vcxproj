@@ -77,6 +77,14 @@
     <IncludePath>$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(IRRLICHT_HOME)\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(IRRLICHT_HOME)\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(IRRLICHT_HOME)\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
