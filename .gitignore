@@ -134,3 +134,4 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
+TerrorsOfTheDeep/TerrorsOfTheDeep/Irrlicht.dll
