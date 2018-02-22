@@ -77,7 +77,7 @@
     <IncludePath>$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(IRRLICHT_HOME)\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(IRRLICHT_HOME)\lib\Win32-visualstudio;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -136,7 +136,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayingField.cpp" />
+    <ClCompile Include="Tile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Grid.h" />
+    <ClInclude Include="PlayingField.h" />
+    <ClInclude Include="Tile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TerrorsOfTheDeep.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

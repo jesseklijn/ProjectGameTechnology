@@ -43,6 +43,7 @@ After we have set up the IDE, the compiler will know where to find the Irrlicht
 Engine header files so we can include it now in our code.
 */
 #include <irrlicht.h>
+#include "PlayingField.h"
 
 /*
 In the Irrlicht Engine, everything can be found in the namespace 'irr'. So if
@@ -81,6 +82,10 @@ losing platform independence then.
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
+
+
+//Fields
+PlayingField playingField;
 
 
 /*
@@ -122,7 +127,7 @@ int main()
 	dimensions, etc.
 	*/
 	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
+		createDevice(video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
 			false, false, false, 0);
 
 	if (!device)
@@ -145,13 +150,14 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+
 	/*
 	We add a hello world label to the window, using the GUI environment.
 	The text is placed at the position (10,10) as top left corner and
 	(260,22) as lower right corner.
 	*/
 	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
-		rect<s32>(10,10,260,22), true);
+		rect<s32>(10, 10, 260, 22), true);
 
 	/*
 	To show something interesting, we load a Quake 2 model and display it.
@@ -171,7 +177,7 @@ int main()
 		device->drop();
 		return 1;
 	}
-	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
+	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode(mesh);
 
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
@@ -185,7 +191,7 @@ int main()
 	{
 		node->setMaterialFlag(EMF_LIGHTING, false);
 		node->setMD2Animation(scene::EMAT_STAND);
-		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
+		node->setMaterialTexture(0, driver->getTexture("../media/sydney.bmp"));
 	}
 
 	/*
@@ -193,7 +199,7 @@ int main()
 	(0, 30, -40). The camera looks from there to (0,5,0), which is
 	approximately the place where our md2 model is.
 	*/
-	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+	smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
 
 	/*
 	Ok, now we have set up the scene, lets draw everything: We run the
@@ -201,7 +207,12 @@ int main()
 	more. This would be when the user closes the window or presses ALT+F4
 	(or whatever keycode closes a window).
 	*/
-	while(device->run())
+
+
+	playingField.AssignSize(10, 10);
+	playingField.Generate();
+
+	while (device->run())
 	{
 		/*
 		Anything can be drawn between a beginScene() and an endScene()
@@ -210,7 +221,7 @@ int main()
 		the GUI Environment draw their content. With the endScene()
 		call everything is presented on the screen.
 		*/
-		driver->beginScene(true, true, SColor(255,100,101,140));
+		driver->beginScene(true, true, SColor(255, 100, 101, 140));
 
 		smgr->drawAll();
 		guienv->drawAll();
