@@ -193,7 +193,28 @@ int main()
 	(0, 30, -40). The camera looks from there to (0,5,0), which is
 	approximately the place where our md2 model is.
 	*/
-	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+	//smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+
+	//! Key map added to allow multiple keys for actions such as
+	//wasd navigation
+	float zCameraSpeed = 1;
+	float rotationCameraSpeed = 100;
+	SKeyMap keyMap[8];
+
+	keyMap[1].Action = EKA_MOVE_FORWARD;
+	keyMap[1].KeyCode = KEY_KEY_W;
+
+	keyMap[3].Action = EKA_MOVE_BACKWARD;
+	keyMap[3].KeyCode = KEY_KEY_S;
+
+	keyMap[5].Action = EKA_STRAFE_LEFT;
+	keyMap[5].KeyCode = KEY_KEY_A;
+
+	keyMap[7].Action = EKA_STRAFE_RIGHT;
+	keyMap[7].KeyCode = KEY_KEY_D;
+
+	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
+	device->getCursorControl()->setVisible(false);
 
 	/*
 	Ok, now we have set up the scene, lets draw everything: We run the
