@@ -82,6 +82,27 @@ losing platform independence then.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+// Define enums for raycast selections.
+// These flags will determine how something is selected
+enum
+{
+	// I use this ISceneNode ID to indicate a scene node that is
+	// not pickable by getSceneNodeAndCollisionPointFromRay()
+	ID_IsNotPickable = 0,
+
+	// I use this flag in ISceneNode IDs to indicate that the
+	// scene node can be picked by ray selection.
+	IDFlag_IsPickable = 1 << 0,
+
+	// I use this flag in ISceneNode IDs to indicate that the
+	// scene node can be highlighted.  In this example, the
+	// homonids can be highlighted, but the level mesh can't.
+	IDFlag_IsHighlightable = 1 << 1
+};
+
+// The max distance for world raycasting
+float raycastDistanceMax = 1000.0f;
+
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -133,7 +154,7 @@ int main()
 	'L' in front of the string. The Irrlicht Engine uses wide character
 	strings when displaying text.
 	*/
-	device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
+	device->setWindowCaption(L"Terrors of the Deep");
 
 	/*
 	Get a pointer to the VideoDriver, the SceneManager and the graphical
@@ -141,17 +162,29 @@ int main()
 	device->getVideoDriver(), device->getSceneManager(), or
 	device->getGUIEnvironment().
 	*/
+
+
+	// Get core Irrlicht components
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
+	scene::ISceneNode* highlightedSceneNode = 0;
+	scene::ISceneCollisionManager* collMan = smgr->getSceneCollisionManager();
+	IGUIFont* font = guienv->getBuiltInFont();
 
-	/*
-	We add a hello world label to the window, using the GUI environment.
-	The text is placed at the position (10,10) as top left corner and
-	(260,22) as lower right corner.
-	*/
-	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
-		rect<s32>(10,10,260,22), true);
+	// Initialize a base selector, used for assigning selection to scene nodes
+	// It's dropped after every selector assignment, but it's easily re-usable
+	scene::ITriangleSelector* selector = 0;
+
+	// Initialize a re-usable ray
+	core::line3d<f32> ray;
+
+	// Tracks the current intersection point with the level or a mesh
+	core::vector3df intersection;
+
+	// Used to show with triangle has been hit
+	core::triangle3df hitTriangle;
+	
 
 	/*
 	To show something interesting, we load a Quake 2 model and display it.
@@ -165,13 +198,9 @@ int main()
 	other supported file format. By the way, that cool Quake 2 model
 	called sydney was modelled by Brian Collins.
 	*/
-	IAnimatedMesh* mesh = smgr->getMesh("../media/sydney.md2");
-	if (!mesh)
-	{
-		device->drop();
-		return 1;
-	}
-	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
+	scene::IAnimatedMesh* testNodeMesh = smgr->getMesh("../media/sydney.md2");
+	scene::IAnimatedMeshSceneNode* testNode = smgr->addAnimatedMeshSceneNode(testNodeMesh,
+		0, IDFlag_IsPickable | IDFlag_IsHighlightable);
 
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
@@ -181,19 +210,17 @@ int main()
 	texture to the mesh. Without it the mesh would be drawn using only a
 	color.
 	*/
-	if (node)
+	if (testNode)
 	{
-		node->setMaterialFlag(EMF_LIGHTING, false);
-		node->setMD2Animation(scene::EMAT_STAND);
-		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
-	}
+		testNode->setMaterialFlag(EMF_LIGHTING, false);
+		testNode->setMD2Animation(scene::EMAT_STAND);
+		testNode->setMaterialTexture(0, driver->getTexture("../media/sydney.bmp"));
 
-	/*
-	To look at the mesh, we place a camera into 3d space at the position
-	(0, 30, -40). The camera looks from there to (0,5,0), which is
-	approximately the place where our md2 model is.
-	*/
-	//smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+		// Create selection functionality so raycasts will detect it
+		selector = smgr->createTriangleSelector(testNode);
+		testNode->setTriangleSelector(selector);
+		selector->drop();
+	}
 
 	//! Key map added to allow multiple keys for actions such as
 	//wasd navigation
@@ -213,7 +240,7 @@ int main()
 	keyMap[7].Action = EKA_STRAFE_RIGHT;
 	keyMap[7].KeyCode = KEY_KEY_D;
 
-	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
+	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, sizeof(keyMap)); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
 	device->getCursorControl()->setVisible(false);
 
 	/*
@@ -222,7 +249,8 @@ int main()
 	more. This would be when the user closes the window or presses ALT+F4
 	(or whatever keycode closes a window).
 	*/
-	while(device->run())
+
+	while (device->run())
 	{
 		/*
 		Anything can be drawn between a beginScene() and an endScene()
@@ -232,10 +260,37 @@ int main()
 		call everything is presented on the screen.
 		*/
 		driver->beginScene(true, true, SColor(255,100,101,140));
-
 		smgr->drawAll();
-		guienv->drawAll();
 
+		// All intersections in this example are done with a ray cast out from the camera to
+		// a distance of 1000.  You can easily modify this to check (e.g.) a bullet
+		// trajectory or a sword's position, or create a ray from a mouse click position using
+		// ISceneCollisionManager::getRayFromScreenCoordinates()
+		highlightedSceneNode = 0;
+		ray.start = camera->getPosition();
+		ray.end = ray.start + (camera->getTarget() - ray.start).normalize() * raycastDistanceMax;
+
+		// This call is all you need to perform ray/triangle collision on every scene node
+		// that has a triangle selector, including the Quake level mesh.  It finds the nearest
+		// collision point/triangle, and returns the scene node containing that point.
+		// Irrlicht provides other types of selection, including ray/triangle selector,
+		// ray/box and ellipse/triangle selector, plus associated helpers.
+		// See the methods of ISceneCollisionManager
+		scene::ISceneNode * selectedSceneNode =
+			collMan->getSceneNodeAndCollisionPointFromRay(
+				ray,
+				intersection,		// This will be the position of the collision
+				hitTriangle,		// This will be the triangle hit in the collision
+				IDFlag_IsPickable,	// This ensures that only nodes that we have set up to be pickable are considered
+				0);					// Check the entire scene (this is actually the implicit default)
+
+		// Draw our selection result on the screen
+		if (selectedSceneNode)
+			font->draw(L"Selected!", rect<s32>(0, 0, 100, 100), SColor(0, 0, 0, 0), false, false, 0);
+		else
+			font->draw(L"Not selected!", rect<s32>(0, 0, 100, 100), SColor(0, 0, 0, 0), false, false, 0);
+
+		guienv->drawAll();
 		driver->endScene();
 	}
 
@@ -248,7 +303,6 @@ int main()
 	information.
 	*/
 	device->drop();
-
 	return 0;
 }
 
