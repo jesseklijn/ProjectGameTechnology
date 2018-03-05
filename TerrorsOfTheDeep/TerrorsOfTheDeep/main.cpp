@@ -127,7 +127,7 @@ int main()
 		else if (receiver.IsKeyDown(irr::KEY_DOWN))
 			nodePosition -= 5 * dir * frameDeltaTime;
 
-		// for left direction
+		// for left and right directions
 		f32 roty_rad = rot.Y;
 		roty_rad -= 90;
 		roty_rad *= PI / 180;
