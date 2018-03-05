@@ -145,6 +145,10 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+	// making a cube
+	ISceneNode* cube = smgr->addCubeSceneNode();
+	cube->setPosition(vector3df(0, 0, 5));
+
 	/*
 	We add a hello world label to the window, using the GUI environment.
 	The text is placed at the position (10,10) as top left corner and
