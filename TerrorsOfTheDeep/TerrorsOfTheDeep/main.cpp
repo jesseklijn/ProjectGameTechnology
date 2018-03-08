@@ -268,3 +268,12 @@ int main()
 /*
 That's it. Compile and run.
 **/
+
+// simple collision code. 
+bool col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
+	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
+		
+		return true;
+	}
+	else { return false; }
+}
