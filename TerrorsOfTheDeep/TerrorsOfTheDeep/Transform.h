@@ -1,9 +1,16 @@
 #pragma once
+#include <irrlicht.h>
+using namespace irr;
+using namespace core;
+
 class Transform
 {
 public:
 	Transform();
 	~Transform();
-	float posX, posY, PosZ;
+	vector3df position;
+	vector3df scale;
+	vector3df rotation;
+
 };
 

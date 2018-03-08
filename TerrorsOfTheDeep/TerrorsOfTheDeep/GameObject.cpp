@@ -13,6 +13,10 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	GameManager manager;
-	manager.Update();
+
 }
+
+void GameObject::Draw()
+{
+}
+
