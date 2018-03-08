@@ -82,7 +82,6 @@ losing platform independence then.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
-
 /*
 This is the main method. We can now use main() on every platform.
 */
@@ -127,7 +126,6 @@ int main()
 
 	if (!device)
 		return 1;
-
 	/*
 	Set the caption of the window to some nice text. Note that there is an
 	'L' in front of the string. The Irrlicht Engine uses wide character
@@ -145,9 +143,14 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	// making a cube
+	// Adding a cube for simple collision detection
 	ISceneNode* cube = smgr->addCubeSceneNode();
-	cube->setPosition(vector3df(0, 0, 5));
+	cube->setPosition(vector3df(0, 0, 50));
+
+	// adding a second cube. 
+	ISceneNode* cube2 = smgr->addCubeSceneNode();
+	cube2->setPosition(vector3df(0, 0, 400));
+
 
 	/*
 	We add a hello world label to the window, using the GUI environment.
@@ -236,6 +239,12 @@ int main()
 		call everything is presented on the screen.
 		*/
 		driver->beginScene(true, true, SColor(255,100,101,140));
+		
+		//if (keys[KEY_KEY_S]) {
+
+		//}
+		// making the first cube move. 
+		//cube->setPosition(cube->getPosition() + vector3df(0, 0, 0.05));
 
 		smgr->drawAll();
 		guienv->drawAll();
