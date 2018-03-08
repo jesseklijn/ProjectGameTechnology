@@ -13,6 +13,19 @@ using namespace gui;
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+class Player
+{
+public:
+	float speed;
+	float sidewaysSpeed;
+	// int oxygen
+	Player()
+	{
+		speed = (float)0.5;
+		sidewaysSpeed = (float)0.1;
+	}
+};
+
 int main()
 {
 	IrrlichtDevice *device = createDevice(EDT_OPENGL, dimension2d<u32>(640, 480), 16,
@@ -44,8 +57,11 @@ int main()
 		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
 	}
 
-	float zCameraSpeed = 0.1;
-	float rotationCameraSpeed = 100;
+	Player player = Player();
+
+	//float zCameraSpeed = 0.1;
+	float zCameraSpeed = player.speed;
+	float rotationCameraSpeed = 75;
 	SKeyMap keyMap[8];
 
 	keyMap[1].Action = EKA_MOVE_FORWARD;
@@ -61,13 +77,13 @@ int main()
 	keyMap[4].KeyCode = KEY_KEY_D;
 
 	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
-	
-	ISceneNode * player = smgr->addCubeSceneNode();
-	if (player)
+
+	ISceneNode * playerNode = smgr->addCubeSceneNode();
+	if (playerNode)
 	{
-		player->setMaterialTexture(0, driver->getTexture("../../media/t351sml.jpg"));
-		player->setMaterialFlag(EMF_LIGHTING, false);
-		smgr->getActiveCamera()->addChild(player);
+		playerNode->setMaterialTexture(0, driver->getTexture("../../media/t351sml.jpg"));
+		playerNode->setMaterialFlag(EMF_LIGHTING, false);
+		smgr->getActiveCamera()->addChild(playerNode);
 	}
 	
 	device->getCursorControl()->setVisible(false);
