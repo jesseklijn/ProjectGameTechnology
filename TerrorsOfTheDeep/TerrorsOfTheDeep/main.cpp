@@ -82,6 +82,7 @@ losing platform independence then.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+float ar, ag, ab, aa, dr, dg, db, da;
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -122,8 +123,8 @@ int main()
 	dimensions, etc.
 	*/
 	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
-			false, false, false, 0);
+		createDevice( video::EDT_OPENGL, dimension2d<u32>(640, 480), 16,
+			false, true, false, 0);
 
 	if (!device)
 		return 1;
@@ -145,6 +146,24 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+	
+	
+	ar = 0.1f;
+	ag = 0.1f;
+	ab = 0.1f;
+	aa = 1.0f;
+
+	dr = 0.8f;
+	dg = 0.8f;
+	db = 0.8f;
+	da = 0.2f;
+
+	//ILightSceneNode* light1 = smgr->addLightSceneNode(0, core::vector3df(0, 30, -40), video::SColorf(dr, dg, db, da));
+	smgr->setAmbientLight(video::SColorf(ar, ag, ab, aa));
+
+	//light1->enableCastShadow(true);
+	//light1->setLightType(video::ELT_POINT);
+
 	/*
 	We add a hello world label to the window, using the GUI environment.
 	The text is placed at the position (10,10) as top left corner and
@@ -161,17 +180,12 @@ int main()
 	and other errors.
 
 	Instead of writing the filename sydney.md2, it would also be possible
-	to load a Maya object file (.obj), a complete Quake3 map (.bsp) or any
+	to load a Maya object file (.obj), a complete Quake3 map (.bsp) or anyu
 	other supported file format. By the way, that cool Quake 2 model
 	called sydney was modelled by Brian Collins.
 	*/
-	IAnimatedMesh* mesh = smgr->getMesh("../media/sydney.md2");
-	if (!mesh)
-	{
-		device->drop();
-		return 1;
-	}
-	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
+	ISceneNode* node = smgr->addCubeSceneNode();
+	IAnimatedMesh* field = smgr->addHillPlaneMesh("field", dimension2df(10.0f, 10.0f), dimension2d<u32>(5,5), 0,0, dimension2df(0,0), dimension2df(0,0));
 
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
@@ -183,9 +197,11 @@ int main()
 	*/
 	if (node)
 	{
-		node->setMaterialFlag(EMF_LIGHTING, false);
-		node->setMD2Animation(scene::EMAT_STAND);
-		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
+		
+		node->setMaterialTexture(0, driver->getTexture("D:\\HvA\\Game Technology\\IrrlichtSDK\\irrlicht-1.8.4\\media\\wall.jpg"));
+		node->setMaterialFlag(video::EMF_LIGHTING, true);
+		node->setDebugDataVisible(scene::EDS_NORMALS);
+		
 	}
 
 	/*
@@ -194,7 +210,7 @@ int main()
 	approximately the place where our md2 model is.
 	*/
 	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
-
+	
 	/*
 	Ok, now we have set up the scene, lets draw everything: We run the
 	device in a while() loop, until the device does not want to run any
@@ -210,9 +226,10 @@ int main()
 		the GUI Environment draw their content. With the endScene()
 		call everything is presented on the screen.
 		*/
-		driver->beginScene(true, true, SColor(255,100,101,140));
-
+		driver->beginScene(true, true, SColor(255,100,100,140));
+		
 		smgr->drawAll();
+
 		guienv->drawAll();
 
 		driver->endScene();
