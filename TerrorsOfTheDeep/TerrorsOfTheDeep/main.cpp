@@ -82,6 +82,25 @@ losing platform independence then.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+IGUIFont* font;
+
+// simple collision code. 
+bool Col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
+	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
+		return true;
+	}
+	else { return false; }
+}
+
+bool InRange(ISceneNode* objectOne, ISceneNode* objectTwo) {
+	float dist = objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition());
+
+	if (dist <= 150) {
+		return true;
+	}
+	else { return false; }
+}
+
 /*
 This is the main method. We can now use main() on every platform.
 */
@@ -142,14 +161,19 @@ int main()
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
+	font = guienv->getBuiltInFont();
 
 	// Adding a cube for simple collision detection
-	ISceneNode* cube = smgr->addCubeSceneNode();
-	cube->setPosition(vector3df(0, 0, 50));
+	ISceneNode* Player = smgr->addCubeSceneNode();
+	Player->setPosition(vector3df(0, 0, 50));
 
 	// adding a second cube. 
-	ISceneNode* cube2 = smgr->addCubeSceneNode();
-	cube2->setPosition(vector3df(0, 0, 400));
+	ISceneNode* shark = smgr->addCubeSceneNode();
+	shark->setPosition(vector3df(0, 0, 400));
+
+	// array of SceneNode's, Don't need this for now. 
+	//core::array<scene::ISceneNode *> objects;
+	
 
 
 	/*
@@ -240,12 +264,28 @@ int main()
 		*/
 		driver->beginScene(true, true, SColor(255,100,101,140));
 		
-		//if (keys[KEY_KEY_S]) {
+		if (InRange(Player, shark)) {
+			//font->draw(L"In range", );
+			//font->draw(stringw(InRange(cube, cube2)).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
+			
 
-		//}
-		// making the first cube move. 
-		//cube->setPosition(cube->getPosition() + vector3df(0, 0, 0.05));
+			// WATCH OUT!! This causes the cube to be added to the array 60 times per second!
+			// Add this functionality later, if necessary. 
+			//objects.push_back(cube);
+			//font->draw(stringw(length).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
+		}
 
+		// collision code.
+		if (Col(Player, shark, 10)) {
+			Player->setPosition(Player->getPosition() + vector3df(rand() % 1 - 1,0,0));
+		}
+		else { Player->setPosition(Player->getPosition() + vector3df(0, 0, 0.05)); }
+		
+		if (Col(shark, Player, 10)) {
+			shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
+		}
+		else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }
+		
 		smgr->drawAll();
 		guienv->drawAll();
 
@@ -269,11 +309,3 @@ int main()
 That's it. Compile and run.
 **/
 
-// simple collision code. 
-bool col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
-	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
-		
-		return true;
-	}
-	else { return false; }
-}
