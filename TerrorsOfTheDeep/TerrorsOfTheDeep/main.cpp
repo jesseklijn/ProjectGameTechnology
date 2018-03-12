@@ -43,6 +43,7 @@ After we have set up the IDE, the compiler will know where to find the Irrlicht
 Engine header files so we can include it now in our code.
 */
 #include <irrlicht.h>
+#include "HUD.h"
 
 /*
 In the Irrlicht Engine, everything can be found in the namespace 'irr'. So if
@@ -81,8 +82,6 @@ losing platform independence then.
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
-
-
 /*
 This is the main method. We can now use main() on every platform.
 */
@@ -150,8 +149,8 @@ int main()
 	The text is placed at the position (10,10) as top left corner and
 	(260,22) as lower right corner.
 	*/
-	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
-		rect<s32>(10,10,260,22), true);
+	//guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
+	//	rect<s32>(10,10,260,22), true);
 
 	/*
 	To show something interesting, we load a Quake 2 model and display it.
@@ -188,6 +187,11 @@ int main()
 		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
 	}
 
+	// GUI
+	//IGUIEnvironment* guienv = device->getGUIEnvironment();
+	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
+	guienv->getSkin()->setFont(font);
+
 	/*
 	To look at the mesh, we place a camera into 3d space at the position
 	(0, 30, -40). The camera looks from there to (0,5,0), which is
@@ -204,17 +208,20 @@ int main()
 	keyMap[1].Action = EKA_MOVE_FORWARD;
 	keyMap[1].KeyCode = KEY_KEY_W;
 
-	keyMap[3].Action = EKA_MOVE_BACKWARD;
-	keyMap[3].KeyCode = KEY_KEY_S;
+	keyMap[2].Action = EKA_MOVE_BACKWARD;
+	keyMap[2].KeyCode = KEY_KEY_S;
 
-	keyMap[5].Action = EKA_STRAFE_LEFT;
-	keyMap[5].KeyCode = KEY_KEY_A;
+	keyMap[3].Action = EKA_STRAFE_LEFT;
+	keyMap[3].KeyCode = KEY_KEY_A;
 
-	keyMap[7].Action = EKA_STRAFE_RIGHT;
-	keyMap[7].KeyCode = KEY_KEY_D;
+	keyMap[4].Action = EKA_STRAFE_RIGHT;
+	keyMap[4].KeyCode = KEY_KEY_D;
 
-	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
-	device->getCursorControl()->setVisible(false);
+	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
+
+		device->getCursorControl()->setVisible(false);
+
+
 
 	/*
 	Ok, now we have set up the scene, lets draw everything: We run the
@@ -222,6 +229,17 @@ int main()
 	more. This would be when the user closes the window or presses ALT+F4
 	(or whatever keycode closes a window).
 	*/
+
+	// stamina variable for swimming faster etc
+	int stamina = 0;
+
+	//check if the items are picked up
+	bool itemPickedUp[3] = {true,true,true};
+
+	//create hud object
+	HUD* hud = new HUD;
+	bool disableHud = false;
+
 	while(device->run())
 	{
 		/*
@@ -234,9 +252,19 @@ int main()
 		driver->beginScene(true, true, SColor(255,100,101,140));
 
 		smgr->drawAll();
-		guienv->drawAll();
 
+		guienv->clear();
+		//Hud(stamina, itemPickedUp, driver,guienv);
+		if (!disableHud) {
+			hud->HudDraw(stamina, itemPickedUp, driver, guienv);
+		}
+		//stamina recovery
+		if (stamina >= 0 && stamina < 1000) {
+			stamina++;
+		}
+		guienv->drawAll();
 		driver->endScene();
+
 	}
 
 	/*
@@ -251,7 +279,6 @@ int main()
 
 	return 0;
 }
-
 /*
 That's it. Compile and run.
 **/
