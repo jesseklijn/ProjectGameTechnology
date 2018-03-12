@@ -1,82 +1,19 @@
-/** Example 001 HelloWorld
-
-This Tutorial shows how to set up the IDE for using the Irrlicht Engine and how
-to write a simple HelloWorld program with it. The program will show how to use
-the basics of the VideoDriver, the GUIEnvironment, and the SceneManager.
-Microsoft Visual Studio is used as an IDE, but you will also be able to
-understand everything if you are using a different one or even another
-operating system than windows.
-
-You have to include the header file <irrlicht.h> in order to use the engine. The
-header file can be found in the Irrlicht Engine SDK directory \c include. To let
-the compiler find this header file, the directory where it is located has to be
-specified. This is different for every IDE and compiler you use. Let's explain
-shortly how to do this in Microsoft Visual Studio:
-
-- If you use Version 6.0, select the Menu Extras -> Options.
-  Select the directories tab, and select the 'Include' Item in the combo box.
-  Add the \c include directory of the irrlicht engine folder to the list of
-  directories. Now the compiler will find the Irrlicht.h header file. We also
-  need the irrlicht.lib to be found, so stay in that dialog, select 'Libraries'
-  in the combo box and add the \c lib/VisualStudio directory.
-  \image html "vc6optionsdir.jpg"
-  \image latex "vc6optionsdir.jpg"
-  \image html "vc6include.jpg"
-  \image latex "vc6include.jpg"
-
-- If your IDE is Visual Studio .NET, select Tools -> Options.
-  Select the projects entry and then select VC++ directories. Select 'show
-  directories for include files' in the combo box, and add the \c include
-  directory of the irrlicht engine folder to the list of directories. Now the
-  compiler will find the Irrlicht.h header file. We also need the irrlicht.lib
-  to be found, so stay in that dialog, select 'show directories for Library
-  files' and add the \c lib/VisualStudio directory.
-  \image html "vcnetinclude.jpg"
-  \image latex "vcnetinclude.jpg"
-
-That's it. With your IDE set up like this, you will now be able to develop
-applications with the Irrlicht Engine.
-
-Lets start!
-
-After we have set up the IDE, the compiler will know where to find the Irrlicht
-Engine header files so we can include it now in our code.
-*/
+//All Includes
 #include <irrlicht.h>
 #include "GameManager.h"
-/*
-In the Irrlicht Engine, everything can be found in the namespace 'irr'. So if
-you want to use a class of the engine, you have to write irr:: before the name
-of the class. For example to use the IrrlichtDevice write: irr::IrrlichtDevice.
-To get rid of the irr:: in front of the name of every class, we tell the
-compiler that we use that namespace from now on, and we will not have to write
-irr:: anymore.
-*/
+
+
+//Main namespace
 using namespace irr;
 
-/*
-There are 5 sub namespaces in the Irrlicht Engine. Take a look at them, you can
-read a detailed description of them in the documentation by clicking on the top
-menu item 'Namespace List' or by using this link:
-http://irrlicht.sourceforge.net/docu/namespaces.html
-Like the irr namespace, we do not want these 5 sub namespaces now, to keep this
-example simple. Hence, we tell the compiler again that we do not want always to
-write their names.
-*/
+//Namespaces of Irrlicht
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
 
-/*
-To be able to use the Irrlicht.DLL file, we need to link with the Irrlicht.lib.
-We could set this option in the project settings, but to make it easy, we use a
-pragma comment lib for VisualStudio. On Windows platforms, we have to get rid
-of the console window, which pops up when starting a program with main(). This
-is done by the second pragma. We could also use the WinMain method, though
-losing platform independence then.
-*/
+//Dll files
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
@@ -89,6 +26,9 @@ This is the main method. We can now use main() on every platform.
 */
 int main()
 {
+	//Add the Game Manager here
+	GameManager gameManager;
+
 	//Create Irrlicht device
 	IrrlichtDevice *device =
 		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
@@ -98,16 +38,11 @@ int main()
 	if (!device)
 		return 1;
 
-	//Add the Game Manager here
-	GameManager gameManager;
 
 
 
-	/*
-	Set the caption of the window to some nice text. Note that there is an
-	'L' in front of the string. The Irrlicht Engine uses wide character
-	strings when displaying text.
-	*/
+
+	//Set text window
 	device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
 
 	/*
@@ -170,12 +105,12 @@ int main()
 	*/
 	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
-	/*
-	Ok, now we have set up the scene, lets draw everything: We run the
-	device in a while() loop, until the device does not want to run any
-	more. This would be when the user closes the window or presses ALT+F4
-	(or whatever keycode closes a window).
-	*/
+	//Start the awake of Game Manager
+	gameManager.Awake();
+	//Start the start method of Game manager
+	gameManager.Start();
+
+	//Update the window
 	while(device->run())
 	{
 		/*
