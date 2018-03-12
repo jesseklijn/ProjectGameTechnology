@@ -23,7 +23,7 @@ int main()
 		return 1;
 
 	sound_init();
-	background_music("../media/getout.ogg");
+	background_music("../media/JawsTheme.ogg");
 
 	
 	while(device->run())
