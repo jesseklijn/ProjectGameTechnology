@@ -1,4 +1,5 @@
 #include <irrlicht.h>
+#include "Player.h"
 
 using namespace irr;
 
@@ -13,18 +14,9 @@ using namespace gui;
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
-class Player
-{
-public:
-	float speed;
-	float sidewaysSpeed;
-	// int oxygen
-	Player()
-	{
-		speed = (float)0.5;
-		sidewaysSpeed = (float)0.1;
-	}
-};
+const float MOVEMENT_SPEED = (float)0.5;
+//const float sidewaysSpeed = (float)0.1;
+const float ROTATION_SPEED = (float)25;
 
 int main()
 {
@@ -57,45 +49,35 @@ int main()
 		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
 	}
 
-	Player player = Player();
+	
+	SKeyMap keyMap[4];
 
-	//float zCameraSpeed = 0.1;
-	float zCameraSpeed = player.speed;
-	float rotationCameraSpeed = 75;
-	SKeyMap keyMap[8];
+	keyMap[0].Action = EKA_MOVE_FORWARD;
+	keyMap[0].KeyCode = KEY_KEY_W;
 
-	keyMap[1].Action = EKA_MOVE_FORWARD;
-	keyMap[1].KeyCode = KEY_KEY_W;
+	keyMap[1].Action = EKA_MOVE_BACKWARD;
+	keyMap[1].KeyCode = KEY_KEY_S;
 
-	keyMap[2].Action = EKA_MOVE_BACKWARD;
-	keyMap[2].KeyCode = KEY_KEY_S;
+	keyMap[2].Action = EKA_STRAFE_LEFT;
+	keyMap[2].KeyCode = KEY_KEY_A;
 
-	keyMap[3].Action = EKA_STRAFE_LEFT;
-	keyMap[3].KeyCode = KEY_KEY_A;
+	keyMap[3].Action = EKA_STRAFE_RIGHT;
+	keyMap[3].KeyCode = KEY_KEY_D;
 
-	keyMap[4].Action = EKA_STRAFE_RIGHT;
-	keyMap[4].KeyCode = KEY_KEY_D;
+	smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4); 
+	// parent, rotation speed, move speed, id, keymaparray, keymapsize (+ noVerticalMovement, jumpSpeed, invertMouse, makeActive)
 
-	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
-
-	ISceneNode * playerNode = smgr->addCubeSceneNode();
-	if (playerNode)
-	{
-		playerNode->setMaterialTexture(0, driver->getTexture("../../media/t351sml.jpg"));
-		playerNode->setMaterialFlag(EMF_LIGHTING, false);
-		smgr->getActiveCamera()->addChild(playerNode);
-	}
+	// makes the player object, which is also added to smgr to be drawn
+	Player player = Player(smgr->getActiveCamera(), smgr, -1111);
 	
 	device->getCursorControl()->setVisible(false);
+
 
 	int lastFPS = -1;
 
 	// In order to do framerate independent movement, we have to know
 	// how long it was since the last frame
 	u32 then = device->getTimer()->getTime();
-
-	// This is the movemen speed in units per second.
-	const f32 MOVEMENT_SPEED = 5.f;
 
 	while(device->run())
 	{
@@ -106,6 +88,7 @@ int main()
 
 		driver->endScene();
 
+		// to display the fps in the window caption
 		int fps = driver->getFPS();
 
 		if (lastFPS != fps)
