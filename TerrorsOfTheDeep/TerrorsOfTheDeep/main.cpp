@@ -121,7 +121,7 @@ int main()
 	dimensions, etc.
 	*/
 	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
+		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 64,
 			false, false, false, 0);
 
 	if (!device)
@@ -164,14 +164,15 @@ int main()
 	other supported file format. By the way, that cool Quake 2 model
 	called sydney was modelled by Brian Collins.
 	*/
-	IAnimatedMesh* mesh = smgr->getMesh("../media/sydney.md2");
-	if (!mesh)
+	IAnimatedMesh* sharkMesh = smgr->getMesh("../media/shark.obj");
+	IAnimatedMesh* rockMesh = smgr->getMesh("../media/rock.obj");
+	if (!sharkMesh || !rockMesh)
 	{
 		device->drop();
 		return 1;
 	}
-	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
-
+	IAnimatedMeshSceneNode* shark = smgr->addAnimatedMeshSceneNode( sharkMesh );
+	IAnimatedMeshSceneNode* rock = smgr->addAnimatedMeshSceneNode(rockMesh);
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
 	disable lighting because we do not have a dynamic light in here, and
@@ -180,12 +181,31 @@ int main()
 	texture to the mesh. Without it the mesh would be drawn using only a
 	color.
 	*/
-	if (node)
+	if (shark)
 	{
-		node->setMaterialFlag(EMF_LIGHTING, false);
-		node->setMD2Animation(scene::EMAT_STAND);
-		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
+		shark->setMaterialFlag(EMF_LIGHTING, false);
+		shark->setMD2Animation(scene::EMAT_STAND);
+		shark->setMaterialTexture(1,driver->getTexture("../media/Shark_ Bump.jpg"));
+		shark->setScale(vector3df(20,20,20));
 	}
+
+	if (rock)
+	{
+		rock->setMaterialFlag(EMF_LIGHTING, false);
+		rock->setMD2Animation(scene::EMAT_STAND);
+		rock->setMaterialTexture(0, driver->getTexture("../media/RockTexture.jpg"));
+		rock->setScale(vector3df(20, 20, 20));
+		rock->setPosition(vector3df(0,20,0));
+	}
+
+	scene::ISceneNode* skybox = smgr->addSkyBoxSceneNode(
+		driver->getTexture("../media/irrlicht2_up.jpg"),
+		driver->getTexture("../media/irrlicht2_dn.jpg"),
+		driver->getTexture("../media/irrlicht2_lf.jpg"),
+		driver->getTexture("../media/irrlicht2_rt.jpg"),
+		driver->getTexture("../media/irrlicht2_ft.jpg"),
+		driver->getTexture("../media/irrlicht2_bk.jpg"));
+	scene::ISceneNode* skydome = smgr->addSkyDomeSceneNode(driver->getTexture("../media/skydome.jpg"), 16, 8, 0.95f, 2.0f);
 
 	// GUI
 	//IGUIEnvironment* guienv = device->getGUIEnvironment();
@@ -217,8 +237,7 @@ int main()
 	keyMap[4].Action = EKA_STRAFE_RIGHT;
 	keyMap[4].KeyCode = KEY_KEY_D;
 
-	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
-
+	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -1, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
 		device->getCursorControl()->setVisible(false);
 
 
