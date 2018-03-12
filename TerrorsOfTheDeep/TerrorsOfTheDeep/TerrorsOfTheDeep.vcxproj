@@ -139,12 +139,14 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="PlayingField.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="PlayingField.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>

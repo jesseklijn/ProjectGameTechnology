@@ -2,7 +2,6 @@
 #include <irrlicht.h>
 #include "GameManager.h"
 
-
 //Main namespace
 using namespace irr;
 
@@ -12,14 +11,7 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-
-//Dll files
-#ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-#endif
-
-IGUIEnvironment* guienv;
+using namespace std;
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -29,31 +21,8 @@ int main()
 	//Add the Game Manager here
 	GameManager gameManager;
 
-	//Create Irrlicht device
-	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
-			false, false, false, 0);
-
-	//If device didn't sucessfully load return
-	if (!device)
-		return 1;
-
-
-
-
-
-	//Set text window
-	device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
-
-	/*
-	Get a pointer to the VideoDriver, the SceneManager and the graphical
-	user interface environment, so that we do not always have to write
-	device->getVideoDriver(), device->getSceneManager(), or
-	device->getGUIEnvironment().
-	*/
-	IVideoDriver* driver = device->getVideoDriver();
-	ISceneManager* smgr = device->getSceneManager();
-	guienv = device->getGUIEnvironment();
+	while (!device)
+		continue;
 
 	/*
 	We add a hello world label to the window, using the GUI environment.
