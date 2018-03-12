@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include "GameObject.h"
+
+
 using namespace std;
 
 
@@ -12,12 +13,6 @@ public:
 	~GameManager();
 	int GameSpeed = 1;
 	bool GamePaused = false;
-	
-	vector<GameObject> gameObjects;
-	void Start();
-	void AddGameObject(GameObject gameObject);
-	void RemoveGameObject(GameObject gameObject);
-	int GetGameObjectIndex(GameObject gameObject);
 
 	enum GameState {
 		Main_Menu,
@@ -29,6 +24,8 @@ public:
 
 	GameState currentGamestate = DemoScene;
 
+	void Awake();
+	void Start();
 	void Update();
 	void Draw();
 
@@ -36,6 +33,5 @@ public:
 	void UnloadGameState(GameState StateToCleanUp);
 
 private: 
-	std::vector<GameObject>::iterator it;
 };
 

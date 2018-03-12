@@ -82,6 +82,7 @@ losing platform independence then.
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+IGUIEnvironment* guienv;
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -117,7 +118,7 @@ int main()
 	*/
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
-	IGUIEnvironment* guienv = device->getGUIEnvironment();
+	guienv = device->getGUIEnvironment();
 
 	/*
 	We add a hello world label to the window, using the GUI environment.
