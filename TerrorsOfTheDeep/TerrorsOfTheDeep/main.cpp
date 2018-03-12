@@ -88,7 +88,7 @@ IGUIFont* font;
 bool Col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
 	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
 		return true;
-			}
+	}
 	else { return false; }
 }
 
@@ -101,6 +101,9 @@ bool InRange(ISceneNode* objectOne, ISceneNode* objectTwo) {
 	else { return false; }
 }
 
+void ChangePos(ISceneNode* node) {
+	node->setPosition(vector3df(1000, 1000, 1000));
+}
 /*
 This is the main method. We can now use main() on every platform.
 */
@@ -174,7 +177,13 @@ int main()
 	// adding a third cube for the win condition.
 	ISceneNode* win = smgr->addCubeSceneNode();
 	win->setPosition(vector3df(-5, 0, 600));
-	//win->setScale(vector3df(5, 5, 5));
+	
+	// Adding a sphere as a key object
+	ISceneNode* key = smgr->addCubeSceneNode();
+	key->setPosition(vector3df(-5, 0, 500));
+	bool hasKey = false;
+	bool allowCollision = false;
+	int colTime = 10;
 
 	// array of SceneNode's, Don't need this for now. 
 	//core::array<scene::ISceneNode *> objects;
@@ -219,31 +228,51 @@ int main()
 	smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -100, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
 	device->getCursorControl()->setVisible(false);
 
-	bool moving = true;
-
 	while(device->run())
 	{
 
 		driver->beginScene(true, true, SColor(255,100,101,140));
 		shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05));
-		
-		if (Col(Player, win, 10)) {
-			Player->setPosition(Player->getPosition() + vector3df(0, 0, 0));
-			font->draw(L"Congrats You win xDDDDD", rect<s32>(30, 100, 30, 100), SColor(255, 255, 255, 255));
-		}
-		else
-		{
-			Player->setPosition(Player->getPosition() + vector3df(0, 0, 0.05));
+
+		if (colTime >= 0) {
+			colTime--;
+
+			if (colTime < 0) {
+				allowCollision = true;
+			}
 		}
 
-		// collision code.
-		if (Col(Player, shark, 10)) {
-			// push player out of the way. 
-			Player->setPosition(Player->getPosition() + vector3df(rand() % 1 - 1,0,0));
-		}
+		if (allowCollision) {
+			if (Col(Player, win, 10)) {
+				Player->setPosition(Player->getPosition() + vector3df(0, 0, 0));
 
-		if (Col(shark, Player, 10)) {
-			shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
+				if (hasKey) {
+					font->draw(L"Congrats You win xDDDDD", rect<s32>(30, 100, 30, 100), SColor(255, 255, 255, 255));
+				}
+				else {
+					font->draw(L"Get a key you noob!", rect<s32>(30, 100, 30, 100), SColor(255, 255, 255, 255));
+				}
+			}
+			else
+			{
+				Player->setPosition(Player->getPosition() + vector3df(0, 0, 0.05));
+			}
+			if (Player&&key) {
+				if (Col(key, Player, 10)) {
+					hasKey = true;
+					key->setPosition(key->getPosition() + vector3df(1000, 1000, 1000));
+				}
+			}
+
+			// collision code.
+			if (Col(Player, shark, 10)) {
+				// push player out of the way. 
+				Player->setPosition(Player->getPosition() + vector3df(rand() % 1 - 1, 0, 0));
+			}
+
+			if (Col(shark, Player, 10)) {
+				shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
+			}
 		}
 		
 		smgr->drawAll();
