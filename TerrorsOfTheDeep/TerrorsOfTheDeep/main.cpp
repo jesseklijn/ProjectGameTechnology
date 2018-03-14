@@ -43,6 +43,7 @@ After we have set up the IDE, the compiler will know where to find the Irrlicht
 Engine header files so we can include it now in our code.
 */
 #include <irrlicht.h>
+#include "addLighting.h"
 
 /*
 In the Irrlicht Engine, everything can be found in the namespace 'irr'. So if
@@ -146,8 +147,6 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	
-	
 	ar = 0.1f;
 	ag = 0.1f;
 	ab = 0.1f;
@@ -158,8 +157,9 @@ int main()
 	db = 0.8f;
 	da = 0.2f;
 
-	//ILightSceneNode* light1 = smgr->addLightSceneNode(0, core::vector3df(0, 30, -40), video::SColorf(dr, dg, db, da));
-	smgr->setAmbientLight(video::SColorf(ar, ag, ab, aa));
+	addLighting(smgr).setSceneLight(ar, ag, ab, aa);
+	ILightSceneNode* light1 = addLighting(smgr).createPointLight(dr, dg, db, da, core::vector3df(0, 30, -40), true,0);
+
 
 	//light1->enableCastShadow(true);
 	//light1->setLightType(video::ELT_POINT);
@@ -185,7 +185,6 @@ int main()
 	called sydney was modelled by Brian Collins.
 	*/
 	ISceneNode* node = smgr->addCubeSceneNode();
-	IAnimatedMesh* field = smgr->addHillPlaneMesh("field", dimension2df(10.0f, 10.0f), dimension2d<u32>(5,5), 0,0, dimension2df(0,0), dimension2df(0,0));
 
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
