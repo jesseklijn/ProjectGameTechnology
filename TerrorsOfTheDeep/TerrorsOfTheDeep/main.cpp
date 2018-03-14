@@ -158,11 +158,7 @@ int main()
 	da = 0.2f;
 
 	addLighting(smgr).setSceneLight(ar, ag, ab, aa);
-	ILightSceneNode* light1 = addLighting(smgr).createPointLight(dr, dg, db, da, core::vector3df(0, 30, -40), true,0);
-
-
-	//light1->enableCastShadow(true);
-	//light1->setLightType(video::ELT_POINT);
+	ILightSceneNode* light1 = addLighting(smgr).createPointLight(dr, dg, db, da, core::vector3df(0, 30, -40), true);
 
 	/*
 	We add a hello world label to the window, using the GUI environment.

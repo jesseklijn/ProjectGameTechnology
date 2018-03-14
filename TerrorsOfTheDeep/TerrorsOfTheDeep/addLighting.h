@@ -11,9 +11,9 @@ public:
 	addLighting(irr::scene::ISceneManager* tempSmgr);
 
 	void setSceneLight(float r, float g, float b, float a);
-	irr::scene::ILightSceneNode* createPointLight(float r, float g, float b, float a, irr::core::vector3df pos, bool castShadow, irr::scene::ISceneNode* parentID);
-	irr::scene::ILightSceneNode* createDirectionalLight(float r, float g, float b, float a, irr::core::vector3df pos, float radius, bool castShadow, irr::scene::ISceneNode* parentID);
-	irr::scene::ILightSceneNode* createSpotLight(float r, float g, float b, float a, irr::core::vector3df pos, float radius, bool castShadow, irr::scene::ISceneNode* parentID);
+	irr::scene::ILightSceneNode* createPointLight(float r, float g, float b, float a, irr::core::vector3df pos, bool castShadow =false, irr::scene::ISceneNode* parentID = 0);
+	irr::scene::ILightSceneNode* createDirectionalLight(float r, float g, float b, float a, irr::core::vector3df pos, irr::core::vector3df dir, float radius, bool castShadow = false, irr::scene::ISceneNode* parentID = 0);
+	irr::scene::ILightSceneNode* createSpotLight(float r, float g, float b, float a, irr::core::vector3df pos, irr::core::vector3df dir, float radius, bool castShadow = false, irr::scene::ISceneNode* parentID = 0);
 
 };
 
