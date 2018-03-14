@@ -1,34 +1,25 @@
 #include <irrlicht.h>
 
-using namespace irr;
-
-using namespace core;
-using namespace scene;
-using namespace video;
-using namespace io;
-using namespace gui;
-
 #ifdef _MSC_VER
 #pragma comment(lib, "Irrlicht.lib")
 #endif
 
-
-class Player : public ISceneNode
+class Player : public irr::scene::ISceneNode
 {
 public:
-	ISceneManager* smgr;
+	irr::scene::ISceneManager* smgr;
 
-	aabbox3d<f32> Box;
-	S3DVertex Vertices[4];
-	SMaterial Material;
+	irr::core::aabbox3d<irr::f32> Box;
+	irr::video::S3DVertex Vertices[8];
+	irr::video::SMaterial Material;
 
 	// int oxygen, stamina...
-	Player(ISceneNode* parent, ISceneManager* mgr, s32 id);
+	Player(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id);
 	~Player();
 
 	virtual void render();
 	virtual void OnRegisterSceneNode();
-	virtual const core::aabbox3d<f32>& getBoundingBox() const;
-	virtual u32 getMaterialCount() const;
-	virtual video::SMaterial& getMaterial(u32 i);
+	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
+	virtual irr::u32 getMaterialCount() const;
+	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
 };

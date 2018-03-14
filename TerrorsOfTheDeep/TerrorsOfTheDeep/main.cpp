@@ -78,6 +78,7 @@ int main()
 	// In order to do framerate independent movement, we have to know
 	// how long it was since the last frame
 	u32 then = device->getTimer()->getTime();
+	float delta = 0.01;
 
 	while(device->run())
 	{
@@ -99,6 +100,14 @@ int main()
 			device->setWindowCaption(tmp.c_str());
 			lastFPS = fps;
 		}
+
+		vector3df position = player.getPosition();
+		u32 now = device->getTimer()->getTime();
+		if (now - then > 1000) {
+			delta *= -1;
+			then = now;
+		}
+		player.setPosition(position + vector3df(delta, 0, 0));
 	}
 
 	device->drop();
