@@ -8,8 +8,9 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
-Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id) : ISceneNode(parent, mgr, id)
+Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* device) : ISceneNode(parent, mgr, id)
 {
+	irrDevice = device;
 	smgr = mgr;
 
 	Material.Wireframe = false;
@@ -21,13 +22,17 @@ Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id) : ISceneNode(pare
 	Vertices[3] = S3DVertex(-15, -20, 10, 0, 0, 1, SColor(255, 0, 255, 0), 0, 0);
 
 	Vertices[4] = S3DVertex(10, -20, 50, 1, 1, 0, SColor(255, 0, 255, 255), 0, 1);
-	Vertices[5] = S3DVertex(15, -20, 10, 1, 0, 0, SColor(255, 255, 0, 255), 1, 1);
+	Vertices[5] = S3DVertex(5, -20, 10, 1, 0, 0, SColor(255, 255, 0, 255), 1, 1);
 	Vertices[6] = S3DVertex(10, -25, 40, 1, 1, 1, SColor(255, 255, 255, 0), 1, 0);
-	Vertices[7] = S3DVertex(5, -20, 10, 0, 0, 1, SColor(255, 0, 255, 0), 0, 0);
+	Vertices[7] = S3DVertex(15, -20, 10, 0, 0, 1, SColor(255, 0, 255, 0), 0, 0);
 
 	Box.reset(Vertices[0].Pos);
 	for (s32 i = 1; i<8; ++i)
 		Box.addInternalPoint(Vertices[i].Pos);
+
+	then = irrDevice->getTimer()->getTime();
+	deltaX = 0.05;
+	deltaZ = 0.05;
 }
 
 
@@ -68,3 +73,29 @@ SMaterial& Player::getMaterial(u32 i)
 {
 	return Material;
 }
+
+void Player::updatePos()
+{
+	// if W down, move both hands
+	// if moving mouse in direction, move other hands
+
+	u32 difference = Vertices[5].Pos.X - Vertices[1].Pos.X;
+	if (difference > 60 || difference < 2) {
+		deltaX *= -1;
+		deltaZ *= -1;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		Vertices[i].Pos.X -= deltaX;
+		Vertices[i].Pos.Z -= deltaZ;
+	}
+	for (int i = 4; i < 8; i++) {
+		Vertices[i].Pos.X += deltaX;
+		Vertices[i].Pos.Z -= deltaZ;
+	}
+}
+
+// In main:
+// Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
+// In while:
+// player.updatePos();

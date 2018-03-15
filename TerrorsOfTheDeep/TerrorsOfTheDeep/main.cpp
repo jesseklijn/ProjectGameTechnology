@@ -27,7 +27,7 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	guienv->addStaticText(L"Hi kids! This is what your parents don't want you to see!",
+	guienv->addStaticText(L"Terrors of the Deep",
 		rect<s32>(10,10,260,22), true);
 
 	IAnimatedMesh* mesh = smgr->getMesh("../media/sydney.md2");
@@ -50,17 +50,9 @@ int main()
 	Camera camera = Camera(smgr);
 
 	// makes the player object, which is also added to smgr to be drawn
-	Player player = Player(smgr->getActiveCamera(), smgr, -1111);
+	Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
 	
 	device->getCursorControl()->setVisible(false);
-
-
-	int lastFPS = -1;
-
-	// In order to do framerate independent movement, we have to know
-	// how long it was since the last frame
-	u32 then = device->getTimer()->getTime();
-	float delta = 0.01;
 
 	while(device->run())
 	{
@@ -71,25 +63,7 @@ int main()
 
 		driver->endScene();
 
-		// to display the fps in the window caption
-		int fps = driver->getFPS();
-
-		if (lastFPS != fps)
-		{
-			stringw tmp(L"TERRORS OF THE DEEP. fps: ");
-			tmp += fps;
-
-			device->setWindowCaption(tmp.c_str());
-			lastFPS = fps;
-		}
-
-		vector3df position = player.getPosition();
-		u32 now = device->getTimer()->getTime();
-		if (now - then > 1000) {
-			delta *= -1;
-			then = now;
-		}
-		player.setPosition(position + vector3df(delta, 0, 0));
+		player.updatePos();
 	}
 
 	device->drop();

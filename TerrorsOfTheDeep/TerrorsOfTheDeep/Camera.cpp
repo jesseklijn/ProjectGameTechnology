@@ -11,7 +11,7 @@ using namespace gui;
 Camera::Camera(ISceneManager* smgr)
 {
 	const float MOVEMENT_SPEED = (float)0.5;
-	//const float sidewaysSpeed = (float)0.1;
+	// const float sidewaysSpeed = (float)0.1;
 	const float ROTATION_SPEED = (float)25;
 
 	SKeyMap keyMap[4];
@@ -35,3 +35,6 @@ Camera::Camera(ISceneManager* smgr)
 Camera::~Camera()
 {
 }
+
+// In main:
+// Camera camera = Camera(smgr);
