@@ -11,7 +11,7 @@
 *.so
 *.dylib
 #we may need to uncomment it later
-#*.dll
+*.dll
 
 # Fortran module files
 *.mod

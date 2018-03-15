@@ -17,6 +17,26 @@ using namespace gui;
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
+
+// simple collision code. 
+// Needs to be put into a class!!
+bool Col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
+	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
+		return true;
+	}
+	else { return false; }
+}
+
+bool InRange(ISceneNode* objectOne, ISceneNode* objectTwo) {
+	float dist = objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition());
+
+	if (dist <= 150) {
+		return true;
+	}
+	else { return false; }
+}
+
+
 int main()
 {
 
@@ -27,15 +47,15 @@ int main()
 	if (!device)
 		return 1;
 
-	device->setWindowCaption(L"Hello World! - Irrlicht Engine Demo");
+	device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	//guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
-	//	rect<s32>(10, 10, 260, 22), true);
-
+	// array of SceneNode's, Don't need this for now. 
+	//core::array<scene::ISceneNode *> objects;
+	
 	IAnimatedMesh* sharkMesh = smgr->getMesh("../media/shark.obj");
 	IAnimatedMesh* rockMesh = smgr->getMesh("../media/rock.obj");
 	if (!sharkMesh || !rockMesh)
@@ -90,15 +110,38 @@ int main()
 	// adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(smgr);
 
-	// makes the player object, which is also added to smgr to be drawn
 	Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
+	// makes the player object, which is also added to smgr to be drawn
+	
 	
 	device->getCursorControl()->setVisible(false);
 
 	while(device->run())
 	{
 		driver->beginScene(true, true, SColor(255,100,101,140));
+		
+		//if (InRange(*player, shark)) {
+			//font->draw(L"In range", );
+			//font->draw(stringw(InRange(cube, cube2)).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
+			
 
+			// WATCH OUT!! This causes the cube to be added to the array 60 times per second!
+			// Add this functionality later, if necessary. 
+			//objects.push_back(cube);
+			//font->draw(stringw(length).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
+		}
+
+		// collision code.
+		/*if (Col(player, shark, 10)) {
+			player->setPosition(player->getPosition() + vector3df(rand() % 1 - 1,0,0));
+		}
+		else { player->setPosition(player->getPosition() + vector3df(0, 0, 0.05)); }
+		
+		if (Col(shark, player, 10)) {
+			shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
+		}
+		else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }*/
+		
 		smgr->drawAll();
 
 		guienv->clear();
@@ -114,7 +157,7 @@ int main()
 		driver->endScene();
 		player.updatePos();
 
-	}
+	
 
 	device->drop();
 
