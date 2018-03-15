@@ -20,7 +20,7 @@ int main()
 {
 
 	IrrlichtDevice *device =
-		createDevice(video::EDT_OPENGL, dimension2d<u32>(640, 480), 16,
+		createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
 			false, true, false, 0);
 
 	if (!device)
@@ -32,8 +32,8 @@ int main()
 	ISceneManager* smgr = device->getSceneManager();
 	IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
-		rect<s32>(10, 10, 260, 22), true);
+	//guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
+	//	rect<s32>(10, 10, 260, 22), true);
 
 	IAnimatedMesh* sharkMesh = smgr->getMesh("../media/shark.obj");
 	IAnimatedMesh* rockMesh = smgr->getMesh("../media/rock.obj");
@@ -71,7 +71,7 @@ int main()
 		driver->getTexture("../media/irrlicht2_ft.jpg"),
 		driver->getTexture("../media/irrlicht2_bk.jpg"));
 
-	scene::ISceneNode* skydome = smgr->addSkyDomeSceneNode(driver->getTexture("../media/skydome.jpg"), 16, 8, 0.95f, 2.0f);
+	scene::ISceneNode* skydome = smgr->addSkyDomeSceneNode(driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
 	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
 	guienv->getSkin()->setFont(font);
@@ -114,9 +114,9 @@ int main()
 	while(device->run())
 	{
 		
-		driver->beginScene(true, true, SColor(255,100,101,140));
+		driver->beginScene(true, true, SColor(255, 100, 101, 140));
 
-		driver->beginScene(true, true, SColor(255, 100, 100, 140));
+		smgr->drawAll();
 
 		guienv->clear();
 		//Hud(stamina, itemPickedUp, driver,guienv);
