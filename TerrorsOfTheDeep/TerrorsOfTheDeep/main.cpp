@@ -120,8 +120,9 @@ int main()
 	Always check the return value to cope with unsupported drivers,
 	dimensions, etc.
 	*/
+	int resolutionX = 1020, resolutionY = 1920;
 	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 64,
+		createDevice( video::EDT_DIRECT3D9, dimension2d<u32>(resolutionY, resolutionX), 64,
 			false, false, false, 0);
 
 	if (!device)
