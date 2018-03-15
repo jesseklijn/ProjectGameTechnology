@@ -1,7 +1,8 @@
 #include <irrlicht.h>
 #include "addLighting.h"
 #include "HUD.h"
-
+#include "Player.h"
+#include "Camera.h"
 
 using namespace irr;
 
@@ -76,31 +77,6 @@ int main()
 	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
 	guienv->getSkin()->setFont(font);
 
-	
-	//! Key map added to allow multiple keys for actions such as
-	//wasd navigation
-	float zCameraSpeed = 1;
-	float rotationCameraSpeed = 100;
-	SKeyMap keyMap[8];
-
-	keyMap[1].Action = EKA_MOVE_FORWARD;
-	keyMap[1].KeyCode = KEY_KEY_W;
-
-	keyMap[2].Action = EKA_MOVE_BACKWARD;
-	keyMap[2].KeyCode = KEY_KEY_S;
-
-	keyMap[3].Action = EKA_STRAFE_LEFT;
-	keyMap[3].KeyCode = KEY_KEY_A;
-
-	keyMap[4].Action = EKA_STRAFE_RIGHT;
-	keyMap[4].KeyCode = KEY_KEY_D;
-
-	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, rotationCameraSpeed, zCameraSpeed, -1, keyMap, 8); //(?, rotation speed, forward speed, ? , keymap, array keys keymap
-		device->getCursorControl()->setVisible(false);
-
-
-
-
 	// stamina variable for swimming faster etc
 	int stamina = 0;
 
@@ -111,10 +87,17 @@ int main()
 	HUD* hud = new HUD;
 	bool disableHud = false;
 
+	// adds the camera and binds the keys to the camera's movement
+	Camera camera = Camera(smgr);
+
+	// makes the player object, which is also added to smgr to be drawn
+	Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
+	
+	device->getCursorControl()->setVisible(false);
+
 	while(device->run())
 	{
-		
-		driver->beginScene(true, true, SColor(255, 100, 101, 140));
+		driver->beginScene(true, true, SColor(255,100,101,140));
 
 		smgr->drawAll();
 
@@ -129,6 +112,7 @@ int main()
 		}
 		guienv->drawAll();
 		driver->endScene();
+		player.updatePos();
 
 	}
 

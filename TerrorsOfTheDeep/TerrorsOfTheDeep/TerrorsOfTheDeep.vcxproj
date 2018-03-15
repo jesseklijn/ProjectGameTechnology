@@ -140,11 +140,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
 	<ClCompile Include="addLighting.cpp" />
     <ClInclude Include="addLighting.h" />
     <ClCompile Include="HUD.cpp" />
-    <ClInclude Include="HUD.h" />
+    <ClCompile Include="Player.cpp" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
