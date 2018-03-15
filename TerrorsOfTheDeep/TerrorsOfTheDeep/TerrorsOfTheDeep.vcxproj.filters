@@ -19,11 +19,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="addLighting.cpp">
+    <ClCompile Include="HUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="addLighting.h">
+    <ClInclude Include="HUD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
