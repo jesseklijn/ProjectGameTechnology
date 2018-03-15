@@ -1,6 +1,10 @@
 //All Includes
 #include <irrlicht.h>
+
+#pragma once
 #include "GameManager.h"
+#pragma once
+#include "Monster.h"
 
 //Main namespace
 using namespace irr;
@@ -20,16 +24,14 @@ int main()
 {
 	//Add the Game Manager here
 	GameManager gameManager;
-
-	while (!device)
-		continue;
+	Monster monster;
 
 	/*
 	We add a hello world label to the window, using the GUI environment.
 	The text is placed at the position (10,10) as top left corner and
 	(260,22) as lower right corner.
 	*/
-	guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
+	GameManager::guienv->addStaticText(L"Hello World! This is the Irrlicht Software renderer!",
 		rect<s32>(10,10,260,22), true);
 
 	/*
@@ -44,13 +46,13 @@ int main()
 	other supported file format. By the way, that cool Quake 2 model
 	called sydney was modelled by Brian Collins.
 	*/
-	IAnimatedMesh* mesh = smgr->getMesh("../media/sydney.md2");
+	IAnimatedMesh* mesh = GameManager::smgr->getMesh("../media/sydney.md2");
 	if (!mesh)
 	{
-		device->drop();
+		GameManager::device->drop();
 		return 1;
 	}
-	IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode( mesh );
+	IAnimatedMeshSceneNode* node = GameManager::smgr->addAnimatedMeshSceneNode( mesh );
 
 	/*
 	To let the mesh look a little bit nicer, we change its material. We
@@ -64,15 +66,8 @@ int main()
 	{
 		node->setMaterialFlag(EMF_LIGHTING, false);
 		node->setMD2Animation(scene::EMAT_STAND);
-		node->setMaterialTexture( 0, driver->getTexture("../media/sydney.bmp") );
+		node->setMaterialTexture( 0, GameManager::driver->getTexture("../media/sydney.bmp") );
 	}
-
-	/*
-	To look at the mesh, we place a camera into 3d space at the position
-	(0, 30, -40). The camera looks from there to (0,5,0), which is
-	approximately the place where our md2 model is.
-	*/
-	smgr->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
 	//Start the awake of Game Manager
 	gameManager.Awake();
@@ -80,7 +75,7 @@ int main()
 	gameManager.Start();
 
 	//Update the window
-	while(device->run())
+	while(GameManager::device->run())
 	{
 		/*
 		Anything can be drawn between a beginScene() and an endScene()
@@ -89,15 +84,15 @@ int main()
 		the GUI Environment draw their content. With the endScene()
 		call everything is presented on the screen.
 		*/
-		driver->beginScene(true, true, SColor(255,100,101,140));
+		GameManager::driver->beginScene(true, true, SColor(255,100,101,140));
 
 		gameManager.Update();
 		gameManager.Draw();
 
-		smgr->drawAll();
-		guienv->drawAll();
+		GameManager::smgr->drawAll();
+		GameManager::guienv->drawAll();
 
-		driver->endScene();
+		GameManager::driver->endScene();
 	}
 
 	/*
@@ -108,7 +103,7 @@ int main()
 	See the documentation at irr::IReferenceCounted::drop() for more
 	information.
 	*/
-	device->drop();
+	GameManager::device->drop();
 
 	return 0;
 }
