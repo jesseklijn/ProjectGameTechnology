@@ -18,12 +18,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+        <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="addLighting.cpp">
 	<Filter>Source Files</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="HUD.cpp">
 	<Filter>Source Files</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -32,12 +35,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sound.h">
+        <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="addLighting.h">
 	<Filter>Header Files</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="HUD.h">
 	<Filter>Header Files</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>

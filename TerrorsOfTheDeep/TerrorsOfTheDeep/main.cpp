@@ -18,25 +18,6 @@ using namespace gui;
 #endif
 
 
-// simple collision code. 
-// Needs to be put into a class!!
-bool Col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
-	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
-		return true;
-	}
-	else { return false; }
-}
-
-bool InRange(ISceneNode* objectOne, ISceneNode* objectTwo) {
-	float dist = objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition());
-
-	if (dist <= 150) {
-		return true;
-	}
-	else { return false; }
-}
-
-
 int main()
 {
 
@@ -48,6 +29,9 @@ int main()
 		return 1;
 
 	device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
+	
+	sound_init();
+	background_music("../media/JawsTheme.ogg");
 
 	IVideoDriver* driver = device->getVideoDriver();
 	ISceneManager* smgr = device->getSceneManager();
@@ -160,6 +144,7 @@ int main()
 
 	}
 	device->drop();
+	sound_shutdown();
 
 	return 0;
 }
