@@ -1,12 +1,16 @@
 #pragma once
 #include "GameManager.h"
+#pragma once
 #include <utility>
+#pragma once
+#include "Camera.h"
 
-// DLL files
+// If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
+
 
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
@@ -20,17 +24,9 @@ irr::scene::ISceneManager* GameManager::smgr = GameManager::device->getSceneMana
 irr::gui::IGUIEnvironment* GameManager::guienv = GameManager::device->getGUIEnvironment();
 irr::scene::ISceneCollisionManager* GameManager::collMan = GameManager::smgr->getSceneCollisionManager();
 irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
-
-/*
-To look at the mesh, we place a camera into 3d space at the position
-(0, 30, -40). The camera looks from there to (0,5,0), which is
-approximately the place where our md2 model is.
-*/
-irr::scene::ICameraSceneNode* GameManager::camera = GameManager::smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
 #pragma endregion
 
 #pragma region Raycasting
-
 // Initialize a base selector, used for assigning selection to scene nodes 
 // It's dropped after every selector assignment, but it's easily re-usable 
 ITriangleSelector* selector;
@@ -41,55 +37,86 @@ line3d<f32>* ray;
 // Tracks the current intersection point with the level or a mesh 
 vector3df* intersection;
 
-// Used to show with triangle has been hit 
+// Used to show which triangle has been hit 
 triangle3df* hitTriangle;
-
-ISceneNode* highlightedSceneNode = 0;
 #pragma endregion
 
+#pragma region Variables
+list<GameObject>* GameManager::gameObjects = new list<GameObject>;
+#pragma endregion
+
+// Constructor
 GameManager::GameManager()
 {
+	// Set a default font
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+
+	Awake();
 }
 
+// Destructor
 GameManager::~GameManager()
 {
 
 }
 
-void GameManager::Start()
-{
-}
-
+// Runs immediately after the constructor once
 void GameManager::Awake()
 {
-	
+	Start();
 }
 
+// Runs similarly to Awake(), but later
+void GameManager::Start()
+{
+
+}
+
+// Runs the Update() for all GameObjects in GameManager::nodes.
 void GameManager::Update()
 {
-	
+	list<GameObject>::Iterator it;
+	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
+	{
+		it->Update();
+	}
 }
 
+// Runs the Draw() for all GameObjects in GameManager::nodes.
 void GameManager::Draw()
 {
-	
+	list<GameObject>::Iterator it;
+	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
+	{
+		it->Draw();
+	}
 }
 
-
+// Switch to the given GameState.
+// TODO: Functionality!
 void GameManager::GameStateTransition(GameState StateToLoad)
 {
 
 }
 
+// Cleans up the given state.
+// TODO: Functionality!
 void GameManager::UnloadGameState(GameState StateToCleanUp)
 {
 
 }
 
-// Cast a Raycast line between the given start and end positions and return the ISceneNode that was hit.
-scene::ISceneNode* GameManager::PerformRaycast(core::vector3df startPosition, core::vector3df endPosition)
+/* Cast a Raycast line between the given start and end positions and return the ISceneNode that was hit.
+NOTE: In order for raycast detection, nodes must be flagged as such first by linking a selector to it.
+
+Example:
+	selector = GameManager::smgr->createTriangleSelector(<NODE>);
+	<NODE>->setTriangleSelector(selector);
+	selector->drop();
+*/
+ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
 {
-	core::line3d<f32> ray;
+	line3d<f32> ray;
 	ray.start = startPosition;
 	ray.end = endPosition;
 
@@ -99,7 +126,7 @@ scene::ISceneNode* GameManager::PerformRaycast(core::vector3df startPosition, co
 	// Irrlicht provides other types of selection, including ray/triangle selector,
 	// ray/box and ellipse/triangle selector, plus associated helpers.
 	// See the methods of ISceneCollisionManager
-	scene::ISceneNode* selectedSceneNode =
+	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,
 			*intersection,    // This will be the position of the collision

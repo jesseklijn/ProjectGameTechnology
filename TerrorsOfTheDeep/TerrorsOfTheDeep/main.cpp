@@ -1,13 +1,25 @@
-//All Includes
+#pragma region Includes
+#pragma once
 #include <irrlicht.h>
+#pragma once
 #include "addLighting.h"
+#pragma once
 #include "HUD.h"
+#pragma once
 #include "Player.h"
+#pragma once
 #include "Camera.h"
+#pragma once
 #include "Sound.h"
+#pragma once
 #include "GameManager.h"
+#pragma once
+#include "GameObject.h"
+#pragma once
 #include "Monster.h"
+#pragma endregion
 
+#pragma region Namespaces
 //Main namespace
 using namespace irr;
 
@@ -17,134 +29,101 @@ using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-using namespace std;
+#pragma endregion
+
+#pragma region Variables
+// TODO: Place these in GameObjects where they belong
+
+// Stamina variable for swimming faster etc
+int stamina = 0;
+
+// Check if the items are picked up
+bool itemPickedUp[3] = { true, true, true };
+
+// Create HUD object
+HUD* hud = new HUD;
+
+// Whether to hide or show the HUD
+bool disableHud = false;
+#pragma endregion
+
 
 /*
 This is the main method. We can now use main() on every platform.
 */
 int main()
 {
-	//Add the Game Manager here
+	// Create a GameManager, set window caption and hide our mouse
 	GameManager gameManager;
-	Monster monster;
-
-
-
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
+	GameManager::device->getCursorControl()->setVisible(false);
 	
-	sound_init();
-	background_music("../media/JawsTheme.ogg");
-
-	// array of SceneNode's, Don't need this for now. 
-	//core::array<scene::ISceneNode *> objects;
-
-	IAnimatedMesh* sharkMesh = GameManager::smgr->getMesh("../media/shark.obj");
-	IAnimatedMesh* rockMesh = GameManager::smgr->getMesh("../media/rock.obj");
-	if (!sharkMesh || !rockMesh)
-	{
-		GameManager::device->drop();
-		return 1;
-	}
-
-	IAnimatedMeshSceneNode* shark = GameManager::smgr->addAnimatedMeshSceneNode(sharkMesh);
-	IAnimatedMeshSceneNode* rock = GameManager::smgr->addAnimatedMeshSceneNode(rockMesh);
-
-	if (shark)
-	{
-		shark->setMaterialFlag(EMF_LIGHTING, false);
-		shark->setMD2Animation(scene::EMAT_STAND);
-		shark->setMaterialTexture( 0, GameManager::driver->getTexture("../media/Shark_Texture.jpg") );
-	}
-
-	if (rock)
-	{
-		rock->setMaterialFlag(EMF_LIGHTING, false);
-		rock->setMD2Animation(scene::EMAT_STAND);
-		rock->setMaterialTexture(0, GameManager::driver->getTexture("../media/RockTexture.jpg"));
-		rock->setScale(vector3df(20, 20, 20));
-		rock->setPosition(vector3df(0, 20, 0));
-	}
-
-	scene::ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
+	// Set our skybox
+	ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
 		GameManager::driver->getTexture("../media/irrlicht2_up.jpg"),
 		GameManager::driver->getTexture("../media/irrlicht2_dn.jpg"),
 		GameManager::driver->getTexture("../media/irrlicht2_lf.jpg"),
 		GameManager::driver->getTexture("../media/irrlicht2_rt.jpg"),
 		GameManager::driver->getTexture("../media/irrlicht2_ft.jpg"),
 		GameManager::driver->getTexture("../media/irrlicht2_bk.jpg"));
+	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
-	scene::ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
-
-	gui::IGUIFont* font = GameManager::device->getGUIEnvironment()->getBuiltInFont();
-	GameManager::guienv->getSkin()->setFont(font);
-
-	// stamina variable for swimming faster etc
-	int stamina = 0;
-
-	//check if the items are picked up
-	bool itemPickedUp[3] = { true,true,true };
-
-	//create hud object
-	HUD* hud = new HUD;
-	bool disableHud = false;
-
-	// adds the camera and binds the keys to the camera's movement
+	// Initialize our background music
+	sound_init();
+	background_music("../media/JawsTheme.ogg");
+		
+	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
-
 	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, GameManager::device);
-	// makes the player object, which is also added to smgr to be drawn
+
+	// Create two dummy objects for testing
+	// Shark
+	GameObject* shark = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/shark.obj")),
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
+
+	// Rock
+	GameObject* rock = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/rock.obj")),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"),
+		new const vector3df(0, 20, 0),
+		new const vector3df(20, 20, 20));
 
 
-	GameManager::device->getCursorControl()->setVisible(false);
-
-	gameManager.Awake();
-	gameManager.Start();
-
+	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
 	{
+		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
+
+		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
-		gameManager.Draw();
-		//if (InRange(*player, shark)) {
-			//font->draw(L"In range", );
-			//font->draw(stringw(InRange(cube, cube2)).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
+		player.updatePos();
 
-
-			// WATCH OUT!! This causes the cube to be added to the array 60 times per second!
-			// Add this functionality later, if necessary. 
-			//objects.push_back(cube);
-			//font->draw(stringw(length).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
-	//}
-
-	// collision code.
-	/*if (Col(player, shark, 10)) {
-		player->setPosition(player->getPosition() + vector3df(rand() % 1 - 1,0,0));
-	}
-	else { player->setPosition(player->getPosition() + vector3df(0, 0, 0.05)); }
-
-	if (Col(shark, player, 10)) {
-		shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
-	}
-	else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }*/
-
-		GameManager::smgr->drawAll();
-
+		// Clear the HUD, update HUD values and prepare the updated HUD
 		GameManager::guienv->clear();
-		//Hud(stamina, itemPickedUp, driver,guienv);
-		if (!disableHud) {
-			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
-		}
-		//stamina recovery
 		if (stamina >= 0 && stamina < 1000) {
 			stamina++;
 		}
+		if (!disableHud) {
+			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
+		}
+
+		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes
+		gameManager.Draw();
+
+		// We finished changing the scene
+		// Now draw the scene in our actual window
+		GameManager::smgr->drawAll();
+
+		// Finally, draw our HUD on the screen		
 		GameManager::guienv->drawAll();
+
+		// Our frame is finished
 		GameManager::driver->endScene();
-		player.updatePos();
-
-
 	}
+	// Game end, drop our Irrlicht device
 	GameManager::device->drop();
+
+	// Stop sound
 	sound_shutdown();
 
 	return 0;

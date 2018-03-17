@@ -1,21 +1,30 @@
+#pragma region Includes
 #pragma once
 #include <vector>
+#pragma once
+#include "GameObject.h"
+#pragma once
 #include <iostream>
+#pragma once
 #include "irrlicht.h"
+#pragma endregion
 
+#pragma region Namespaces
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-using namespace std;
+#pragma endregion
 
+
+// Class responsible for managing the overall game.
+// Makes use of state tracking and switching.
+// Runs Update() and Draw() calls for every GameObject.
 class GameManager
 {
 public:
-	GameManager();
-	~GameManager();
 
 #pragma region Core Irrlicht Components
 	//Create Irrlicht device
@@ -27,7 +36,6 @@ public:
 	static irr::gui::IGUIEnvironment* guienv;
 	static irr::scene::ISceneCollisionManager* collMan;
 	static irr::gui::IGUIFont* font;
-	static irr::scene::ICameraSceneNode* camera;
 #pragma endregion
 
 #pragma region Raycasting
@@ -50,9 +58,7 @@ public:
 	};
 #pragma endregion
 
-	int GameSpeed = 1;
-	bool GamePaused = false;
-
+#pragma region Game state
 	enum GameState {
 		Main_Menu,
 		Level_Selector,
@@ -60,9 +66,23 @@ public:
 		Settings,
 		DemoScene,
 	};
-
 	GameState currentGamestate = DemoScene;
+#pragma endregion
 
+	// Constructor and destructor
+	GameManager();
+	~GameManager();
+
+	// Variables
+
+	// A list of all GameObjects in the scene
+	// Once created, a GameObject automatically adds itself to this list in its constructor
+	static list<GameObject>* gameObjects;
+
+	int GameSpeed = 1;
+	bool GamePaused = false;
+
+	// Functions
 	void Awake();
 	void Start();
 	void Update();

@@ -5,6 +5,7 @@
 #pragma comment(lib, "Irrlicht.lib")
 #endif
 
+// Defines a player character to interact with the game world.
 class Player : public irr::scene::ISceneNode
 {
 public:

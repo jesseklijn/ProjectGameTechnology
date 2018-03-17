@@ -1,29 +1,24 @@
+#pragma once
 #include "Monster.h"
-
 #pragma once
 #include "GameManager.h"
 
+// Constructor
 Monster::Monster()
 {
-	bool foundTarget = IsInSight();
-	const wchar_t* result;
 
-	if (foundTarget)
-		result = L"Raycast: Yes";
-	else
-		result = L"Raycast: No";
-
-	GameManager::device->setWindowCaption(result);
 }
 
+// Destructor
 Monster::~Monster()
 {
+
 }
 
-bool Monster::IsInSight()
+// Checks whether a target can be seen.
+bool Monster::IsInSight(irr::core::vector3df* startPosition, irr::core::vector3df* endPosition)
 {
-	ISceneNode* target = GameManager::PerformRaycast(GameManager::camera->getPosition(), 
-														GameManager::camera->getPosition() + (GameManager::camera->getTarget() - GameManager::camera->getPosition()).normalize() * 1000.0);
+	ISceneNode* target = GameManager::PerformRaycast(*startPosition, *endPosition);
 	
 	if (target)
 		return true;

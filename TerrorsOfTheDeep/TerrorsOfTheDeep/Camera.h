@@ -4,6 +4,7 @@
 #pragma comment(lib, "Irrlicht.lib")
 #endif
 
+// Class that initializes a main camera.
 class Camera
 {
 public:

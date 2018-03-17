@@ -1,11 +1,13 @@
 #include "Player.h"
 
+#pragma region Namespaces
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
+#pragma endregion
 
 Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* device) : ISceneNode(parent, mgr, id)
 {
