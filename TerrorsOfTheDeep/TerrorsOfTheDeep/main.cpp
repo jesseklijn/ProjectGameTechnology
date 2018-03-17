@@ -1,86 +1,82 @@
+//All Includes
 #include <irrlicht.h>
 #include "addLighting.h"
 #include "HUD.h"
 #include "Player.h"
 #include "Camera.h"
 #include "Sound.h"
+#include "GameManager.h"
+#include "Monster.h"
 
+//Main namespace
 using namespace irr;
 
+//Namespaces of Irrlicht
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
+using namespace std;
 
-#ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-#endif
-
-
+/*
+This is the main method. We can now use main() on every platform.
+*/
 int main()
 {
+	//Add the Game Manager here
+	GameManager gameManager;
+	Monster monster;
 
-	IrrlichtDevice *device =
-		createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
-			false, true, false, 0);
 
-	if (!device)
-		return 1;
 
-	device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
+	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	
 	sound_init();
 	background_music("../media/JawsTheme.ogg");
 
-	IVideoDriver* driver = device->getVideoDriver();
-	ISceneManager* smgr = device->getSceneManager();
-	IGUIEnvironment* guienv = device->getGUIEnvironment();
-
 	// array of SceneNode's, Don't need this for now. 
 	//core::array<scene::ISceneNode *> objects;
 
-	IAnimatedMesh* sharkMesh = smgr->getMesh("../media/shark.obj");
-	IAnimatedMesh* rockMesh = smgr->getMesh("../media/rock.obj");
+	IAnimatedMesh* sharkMesh = GameManager::smgr->getMesh("../media/shark.obj");
+	IAnimatedMesh* rockMesh = GameManager::smgr->getMesh("../media/rock.obj");
 	if (!sharkMesh || !rockMesh)
 	{
-		device->drop();
+		GameManager::device->drop();
 		return 1;
 	}
 
-	IAnimatedMeshSceneNode* shark = smgr->addAnimatedMeshSceneNode(sharkMesh);
-	IAnimatedMeshSceneNode* rock = smgr->addAnimatedMeshSceneNode(rockMesh);
+	IAnimatedMeshSceneNode* shark = GameManager::smgr->addAnimatedMeshSceneNode(sharkMesh);
+	IAnimatedMeshSceneNode* rock = GameManager::smgr->addAnimatedMeshSceneNode(rockMesh);
 
 	if (shark)
 	{
 		shark->setMaterialFlag(EMF_LIGHTING, false);
 		shark->setMD2Animation(scene::EMAT_STAND);
-		shark->setMaterialTexture(1, driver->getTexture("../media/Shark_ Bump.jpg"));
-		shark->setScale(vector3df(20, 20, 20));
+		shark->setMaterialTexture( 0, GameManager::driver->getTexture("../media/Shark_Texture.jpg") );
 	}
 
 	if (rock)
 	{
 		rock->setMaterialFlag(EMF_LIGHTING, false);
 		rock->setMD2Animation(scene::EMAT_STAND);
-		rock->setMaterialTexture(0, driver->getTexture("../media/RockTexture.jpg"));
+		rock->setMaterialTexture(0, GameManager::driver->getTexture("../media/RockTexture.jpg"));
 		rock->setScale(vector3df(20, 20, 20));
 		rock->setPosition(vector3df(0, 20, 0));
 	}
 
-	scene::ISceneNode* skybox = smgr->addSkyBoxSceneNode(
-		driver->getTexture("../media/irrlicht2_up.jpg"),
-		driver->getTexture("../media/irrlicht2_dn.jpg"),
-		driver->getTexture("../media/irrlicht2_lf.jpg"),
-		driver->getTexture("../media/irrlicht2_rt.jpg"),
-		driver->getTexture("../media/irrlicht2_ft.jpg"),
-		driver->getTexture("../media/irrlicht2_bk.jpg"));
+	scene::ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
+		GameManager::driver->getTexture("../media/irrlicht2_up.jpg"),
+		GameManager::driver->getTexture("../media/irrlicht2_dn.jpg"),
+		GameManager::driver->getTexture("../media/irrlicht2_lf.jpg"),
+		GameManager::driver->getTexture("../media/irrlicht2_rt.jpg"),
+		GameManager::driver->getTexture("../media/irrlicht2_ft.jpg"),
+		GameManager::driver->getTexture("../media/irrlicht2_bk.jpg"));
 
-	scene::ISceneNode* skydome = smgr->addSkyDomeSceneNode(driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
+	scene::ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
-	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
-	guienv->getSkin()->setFont(font);
+	gui::IGUIFont* font = GameManager::device->getGUIEnvironment()->getBuiltInFont();
+	GameManager::guienv->getSkin()->setFont(font);
 
 	// stamina variable for swimming faster etc
 	int stamina = 0;
@@ -93,18 +89,22 @@ int main()
 	bool disableHud = false;
 
 	// adds the camera and binds the keys to the camera's movement
-	Camera camera = Camera(smgr);
+	Camera camera = Camera(GameManager::smgr);
 
-	Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
+	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, GameManager::device);
 	// makes the player object, which is also added to smgr to be drawn
 
 
-	device->getCursorControl()->setVisible(false);
+	GameManager::device->getCursorControl()->setVisible(false);
 
-	while (device->run())
+	gameManager.Awake();
+	gameManager.Start();
+
+	while (GameManager::device->run())
 	{
-		driver->beginScene(true, true, SColor(255, 100, 101, 140));
-
+		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
+		gameManager.Update();
+		gameManager.Draw();
 		//if (InRange(*player, shark)) {
 			//font->draw(L"In range", );
 			//font->draw(stringw(InRange(cube, cube2)).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
@@ -127,24 +127,24 @@ int main()
 	}
 	else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }*/
 
-		smgr->drawAll();
+		GameManager::smgr->drawAll();
 
-		guienv->clear();
+		GameManager::guienv->clear();
 		//Hud(stamina, itemPickedUp, driver,guienv);
 		if (!disableHud) {
-			hud->HudDraw(stamina, itemPickedUp, driver, guienv);
+			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
 		}
 		//stamina recovery
 		if (stamina >= 0 && stamina < 1000) {
 			stamina++;
 		}
-		guienv->drawAll();
-		driver->endScene();
+		GameManager::guienv->drawAll();
+		GameManager::driver->endScene();
 		player.updatePos();
 
 
 	}
-	device->drop();
+	GameManager::device->drop();
 	sound_shutdown();
 
 	return 0;

@@ -13,7 +13,7 @@ using namespace gui;
 
 	int DetectCollision() {
 
-		IrrlichtDevice *device =
+		/*IrrlichtDevice *device =
 			createDevice(video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
 				false, false, false, 0);
 
@@ -35,5 +35,5 @@ using namespace gui;
 
 
 
-		return 0;
+		return 0;*/
 	}
