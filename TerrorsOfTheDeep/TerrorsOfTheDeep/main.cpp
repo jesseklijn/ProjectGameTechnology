@@ -55,7 +55,7 @@ int main()
 
 	// array of SceneNode's, Don't need this for now. 
 	//core::array<scene::ISceneNode *> objects;
-	
+
 	IAnimatedMesh* sharkMesh = smgr->getMesh("../media/shark.obj");
 	IAnimatedMesh* rockMesh = smgr->getMesh("../media/rock.obj");
 	if (!sharkMesh || !rockMesh)
@@ -64,15 +64,15 @@ int main()
 		return 1;
 	}
 
-	IAnimatedMeshSceneNode* shark = smgr->addAnimatedMeshSceneNode( sharkMesh );
+	IAnimatedMeshSceneNode* shark = smgr->addAnimatedMeshSceneNode(sharkMesh);
 	IAnimatedMeshSceneNode* rock = smgr->addAnimatedMeshSceneNode(rockMesh);
 
 	if (shark)
 	{
 		shark->setMaterialFlag(EMF_LIGHTING, false);
 		shark->setMD2Animation(scene::EMAT_STAND);
-		shark->setMaterialTexture(1,driver->getTexture("../media/Shark_ Bump.jpg"));
-		shark->setScale(vector3df(20,20,20));
+		shark->setMaterialTexture(1, driver->getTexture("../media/Shark_ Bump.jpg"));
+		shark->setScale(vector3df(20, 20, 20));
 	}
 
 	if (rock)
@@ -81,7 +81,7 @@ int main()
 		rock->setMD2Animation(scene::EMAT_STAND);
 		rock->setMaterialTexture(0, driver->getTexture("../media/RockTexture.jpg"));
 		rock->setScale(vector3df(20, 20, 20));
-		rock->setPosition(vector3df(0,20,0));
+		rock->setPosition(vector3df(0, 20, 0));
 	}
 
 	scene::ISceneNode* skybox = smgr->addSkyBoxSceneNode(
@@ -101,7 +101,7 @@ int main()
 	int stamina = 0;
 
 	//check if the items are picked up
-	bool itemPickedUp[3] = {true,true,true};
+	bool itemPickedUp[3] = { true,true,true };
 
 	//create hud object
 	HUD* hud = new HUD;
@@ -112,36 +112,36 @@ int main()
 
 	Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
 	// makes the player object, which is also added to smgr to be drawn
-	
-	
+
+
 	device->getCursorControl()->setVisible(false);
 
-	while(device->run())
+	while (device->run())
 	{
-		driver->beginScene(true, true, SColor(255,100,101,140));
-		
+		driver->beginScene(true, true, SColor(255, 100, 101, 140));
+
 		//if (InRange(*player, shark)) {
 			//font->draw(L"In range", );
 			//font->draw(stringw(InRange(cube, cube2)).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
-			
+
 
 			// WATCH OUT!! This causes the cube to be added to the array 60 times per second!
 			// Add this functionality later, if necessary. 
 			//objects.push_back(cube);
 			//font->draw(stringw(length).c_str(), rect<s32>(12, 80, 100, 100), SColor(1, 255, 255, 255));
-		}
+	//}
 
-		// collision code.
-		/*if (Col(player, shark, 10)) {
-			player->setPosition(player->getPosition() + vector3df(rand() % 1 - 1,0,0));
-		}
-		else { player->setPosition(player->getPosition() + vector3df(0, 0, 0.05)); }
-		
-		if (Col(shark, player, 10)) {
-			shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
-		}
-		else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }*/
-		
+	// collision code.
+	/*if (Col(player, shark, 10)) {
+		player->setPosition(player->getPosition() + vector3df(rand() % 1 - 1,0,0));
+	}
+	else { player->setPosition(player->getPosition() + vector3df(0, 0, 0.05)); }
+
+	if (Col(shark, player, 10)) {
+		shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
+	}
+	else { shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05)); }*/
+
 		smgr->drawAll();
 
 		guienv->clear();
@@ -157,8 +157,8 @@ int main()
 		driver->endScene();
 		player.updatePos();
 
-	
 
+	}
 	device->drop();
 
 	return 0;
