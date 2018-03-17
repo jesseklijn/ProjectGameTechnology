@@ -3,6 +3,7 @@
 #include "HUD.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Sound.h"
 
 using namespace irr;
 
