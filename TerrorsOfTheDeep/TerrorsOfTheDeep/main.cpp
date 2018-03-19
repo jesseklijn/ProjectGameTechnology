@@ -78,14 +78,16 @@ int main()
 
 	// Create two dummy objects for testing
 	// Shark
-	GameObject* shark = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/shark.obj")),
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
+	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0) /*<-- Position, scale and rotation respectively*/,
+										0, GameManager::smgr, -1111 /*<-- Parent, ISceneManager (GameManager's ISceneManager!) and instance ID*/,
+										GameManager::smgr->getMesh("../media/shark.obj") /*<-- Mesh (optional)*/,
+										GameManager::driver->getTexture("../media/Shark_Texture.jpg") /*<-- Texture (optional, mandatory if supplying mesh!)*/);
 
 	// Rock
-	GameObject* rock = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/rock.obj")),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"),
-		new const vector3df(0, 20, 0),
-		new const vector3df(20, 20, 20));
+	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+										0, GameManager::smgr, -1111,
+										GameManager::smgr->getMesh("../media/rock.obj"),
+										GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
 
 	////////// MAIN PROGRAM LOOP //////////
@@ -98,6 +100,10 @@ int main()
 		gameManager.Update();
 		player.updatePos();
 
+		// We finished changing the scene
+		// Now draw the scene in our actual window
+		GameManager::smgr->drawAll();
+
 		// Clear the HUD, update HUD values and prepare the updated HUD
 		GameManager::guienv->clear();
 		if (stamina >= 0 && stamina < 1000) {
@@ -109,10 +115,6 @@ int main()
 
 		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes
 		gameManager.Draw();
-
-		// We finished changing the scene
-		// Now draw the scene in our actual window
-		GameManager::smgr->drawAll();
 
 		// Finally, draw our HUD on the screen		
 		GameManager::guienv->drawAll();
