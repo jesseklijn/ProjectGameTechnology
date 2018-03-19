@@ -1,14 +1,23 @@
 #pragma once
-#include "irrlicht.h"
+#include <irrlicht.h>
+
+#pragma region Namespaces
+using namespace irr;
+using namespace core;
+using namespace scene;
+using namespace video;
+using namespace io;
+using namespace gui;
+#pragma endregion
 
 class GameObject
 {
 public:
 	// Constructor
-	GameObject(irr::scene::IAnimatedMeshSceneNode* relatedNode, irr::video::ITexture* relatedTexture, 
-						const irr::core::vector3df* startPosition = new irr::core::vector3df(0, 0, 0), 
-						const irr::core::vector3df* startScale = new irr::core::vector3df(1, 1, 1), 
-						const irr::core::vector3df* startRotation = new irr::core::vector3df(0, 0, 0));
+	GameObject(IAnimatedMeshSceneNode* relatedNode, ITexture* relatedTexture, 
+						const vector3df* startPosition = new vector3df(0, 0, 0), 
+						const vector3df* startScale = new vector3df(1, 1, 1), 
+						const vector3df* startRotation = new vector3df(0, 0, 0));
 	// Destructor
 	~GameObject();
 

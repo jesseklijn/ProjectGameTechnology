@@ -148,6 +148,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="GridMesh.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="DetectCollision.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="GridMesh.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
