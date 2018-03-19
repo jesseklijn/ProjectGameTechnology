@@ -4,6 +4,7 @@
 #include <utility>
 #pragma once
 #include "Camera.h"
+#include "GridMesh.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
@@ -15,8 +16,8 @@
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
 irr::IrrlichtDevice* GameManager::device =
-	createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
-		false, true, false, 0);
+createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
+	false, true, false, 0);
 
 // Initialize Irrlicht components
 irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDriver();
@@ -50,7 +51,9 @@ GameManager::GameManager()
 {
 	// Set a default font
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
-
+	GridMesh playingMesh = GridMesh(
+		new const vector3df(0, 0, 0),
+		new const vector3df(1, 1, 1));
 	Awake();
 }
 

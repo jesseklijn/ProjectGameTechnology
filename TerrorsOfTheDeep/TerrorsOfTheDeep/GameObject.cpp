@@ -27,6 +27,10 @@ GameObject::GameObject(irr::scene::IAnimatedMeshSceneNode* relatedNode, irr::vid
 	GameManager::gameObjects->push_back(*this);
 }
 
+GameObject::GameObject(const vector3df * startPosition, const vector3df * startScale, const vector3df * startRotation)
+{
+}
+
 // Destructor
 GameObject::~GameObject()
 {
