@@ -43,6 +43,7 @@ After we have set up the IDE, the compiler will know where to find the Irrlicht
 Engine header files so we can include it now in our code.
 */
 #include <irrlicht.h>
+#include "DetectCollision.h"
 
 /*
 In the Irrlicht Engine, everything can be found in the namespace 'irr'. So if
@@ -84,26 +85,6 @@ losing platform independence then.
 
 IGUIFont* font;
 
-// simple collision code. 
-bool Col(ISceneNode* objectOne, ISceneNode* objectTwo, int size) {
-	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
-		return true;
-	}
-	else { return false; }
-}
-
-bool InRange(ISceneNode* objectOne, ISceneNode* objectTwo) {
-	float dist = objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition());
-
-	if (dist <= 150) {
-		return true;
-	}
-	else { return false; }
-}
-
-void ChangePos(ISceneNode* node) {
-	node->setPosition(vector3df(1000, 1000, 1000));
-}
 /*
 This is the main method. We can now use main() on every platform.
 */
@@ -181,9 +162,7 @@ int main()
 	// Adding a sphere as a key object
 	ISceneNode* key = smgr->addSphereSceneNode();
 	key->setPosition(vector3df(-5, 0, 500));	
-	bool hasKey = false;
-	bool allowCollision = false;
-	int colTime = 10;
+
 
 	// adding the level boundaries
 	/*
@@ -241,48 +220,7 @@ int main()
 	{
 
 		driver->beginScene(true, true, SColor(255,100,101,140));
-		shark->setPosition(shark->getPosition() + vector3df(0, 0, -0.05));
-
-		if (colTime >= 0) {
-			colTime--;
-
-			if (colTime < 0) {
-				allowCollision = true;
-			}
-		}
-
-		if (allowCollision) {
-			if (Col(Player, win, 10)) {
-				Player->setPosition(Player->getPosition() + vector3df(0, 0, 0));
-
-				if (hasKey) {
-					font->draw(L"Congrats You win xDDDDD", rect<s32>(30, 100, 30, 100), SColor(255, 255, 255, 255));
-				}
-				else {
-					font->draw(L"Get a key you noob!", rect<s32>(30, 100, 30, 100), SColor(255, 255, 255, 255));
-				}
-			}
-			else
-			{
-				Player->setPosition(Player->getPosition() + vector3df(0, 0, 0.05));
-			}
-			if (Player&&key) {
-				if (Col(key, Player, 10)) {
-					hasKey = true;
-					key->setPosition(key->getPosition() + vector3df(10000, 10000, 10000));
-				}
-			}
-
-			// collision code.
-			if (Col(Player, shark, 10)) {
-				// push player out of the way. 
-				Player->setPosition(Player->getPosition() + vector3df(rand() % 1 - 1, 0, 0));
-			}
-
-			if (Col(shark, Player, 10)) {
-				shark->setPosition(shark->getPosition() + vector3df(0, 0, 0));
-			}
-		}
+		Detect(Player, win, key, shark);
 		
 		smgr->drawAll();
 		guienv->drawAll();
