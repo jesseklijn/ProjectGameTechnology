@@ -143,7 +143,7 @@ int main()
 	dimensions, etc.
 	*/
 	IrrlichtDevice *device =
-		createDevice( video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
+		createDevice( video::EDT_OPENGL, dimension2d<u32>(640, 480), 16,
 			false, false, false, 0);
 
 	if (!device)
@@ -179,11 +179,20 @@ int main()
 	win->setPosition(vector3df(-5, 0, 600));
 	
 	// Adding a sphere as a key object
-	ISceneNode* key = smgr->addCubeSceneNode();
-	key->setPosition(vector3df(-5, 0, 500));
+	ISceneNode* key = smgr->addSphereSceneNode();
+	key->setPosition(vector3df(-5, 0, 500));	
 	bool hasKey = false;
 	bool allowCollision = false;
 	int colTime = 10;
+
+	// adding the level boundaries
+	/*
+	scene::ISceneNode* durp = smgr->addSkyBoxSceneNode(driver->getTexture("../media/zeewiet.jpg"),
+		driver->getTexture("../media/zeewiet.jpg"), driver->getTexture("../media/zeewiet.jpg"),
+		driver->getTexture("../media/zeewiet.jpg"), driver->getTexture("../media/zeewiet.jpg"),
+		driver->getTexture("../media/zeewiet.jpg"));
+		*/
+	scene::ISceneNode* skydome = smgr->addSkyDomeSceneNode(driver->getTexture("../media/zeewiet.jpg"), 16, 8, 0.95f, 2.0f);
 
 	// array of SceneNode's, Don't need this for now. 
 	//core::array<scene::ISceneNode *> objects;
@@ -260,7 +269,7 @@ int main()
 			if (Player&&key) {
 				if (Col(key, Player, 10)) {
 					hasKey = true;
-					key->setPosition(key->getPosition() + vector3df(1000, 1000, 1000));
+					key->setPosition(key->getPosition() + vector3df(10000, 10000, 10000));
 				}
 			}
 
