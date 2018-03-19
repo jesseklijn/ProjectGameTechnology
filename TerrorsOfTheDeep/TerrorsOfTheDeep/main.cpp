@@ -103,9 +103,6 @@ int main()
 		if (stamina >= 0 && stamina < 1000) {
 			stamina++;
 		}
-		if (!disableHud) {
-			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
-		}
 
 		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes
 		gameManager.Draw();
@@ -114,6 +111,9 @@ int main()
 		// Now draw the scene in our actual window
 		GameManager::smgr->drawAll();
 
+		if (!disableHud) {
+			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
+		}
 		// Finally, draw our HUD on the screen		
 		GameManager::guienv->drawAll();
 
