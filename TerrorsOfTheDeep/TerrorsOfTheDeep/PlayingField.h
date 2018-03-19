@@ -7,6 +7,6 @@ public:
 	PlayingField();
 	~PlayingField();
 	bool Generate();
-	void AssignSize(int xSize, int zSize);
+	void AssignSize(int xSize, int ySize, int zSize);
 };
 

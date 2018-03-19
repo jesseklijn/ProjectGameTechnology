@@ -38,7 +38,7 @@ bool PlayingField::Generate()
 	
 }
 
-void PlayingField::AssignSize(int xSize, int zSize)
+void PlayingField::AssignSize(int xSize, int ySize, int zSize)
 {
-	Grid::AssignSize(xSize, zSize);
+	Grid::AssignSize(xSize, ySize, zSize);
 }
