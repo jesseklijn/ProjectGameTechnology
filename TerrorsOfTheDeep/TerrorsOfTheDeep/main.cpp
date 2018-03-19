@@ -38,7 +38,7 @@ using namespace gui;
 int stamina = 0;
 
 // Check if the items are picked up
-bool itemPickedUp[3] = { true, true, true };
+bool itemPickedUp[3] = { false, false, true };
 
 // Create HUD object
 HUD* hud = new HUD;
