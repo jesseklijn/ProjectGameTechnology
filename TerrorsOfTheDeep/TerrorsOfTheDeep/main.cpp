@@ -10,6 +10,8 @@
 #pragma once
 #include "Camera.h"
 #pragma once
+#include "DetectCollision.h"
+#pragma once
 #include "Sound.h"
 #pragma once
 #include "GameManager.h"
@@ -93,7 +95,8 @@ int main()
 	{
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
-
+		//!!Change parameters to correct type
+		//Detect(player, win, key, shark);
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
 		player.updatePos();
