@@ -2,7 +2,7 @@
 #pragma once
 #include <irrlicht.h>
 #pragma once
-#include "addLighting.h"
+#include "Lighting.h"
 #pragma once
 #include "HUD.h"
 #pragma once

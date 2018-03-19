@@ -143,7 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="addLighting.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -158,7 +158,7 @@
     <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="addLighting.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
     <ClInclude Include="GameManager.h" />
