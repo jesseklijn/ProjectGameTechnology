@@ -209,7 +209,7 @@ int main()
 	*/
 
 
-	playingField.AssignSize(10, 10);
+	playingField.AssignSize(10, 10, 10);
 	playingField.Generate();
 
 	while (device->run())

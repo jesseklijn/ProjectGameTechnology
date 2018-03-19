@@ -4,6 +4,6 @@ class Tile
 public:
 	Tile();
 	~Tile();
-	int xPos, zPos;
+	int xPos, yPos, zPos;
 };
 
