@@ -10,6 +10,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+!*.dll
 #we may need to uncomment it later
 
 # Fortran module files
@@ -81,6 +82,7 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+!*.lib
 
 # Visual C++ cache files
 ipch/
