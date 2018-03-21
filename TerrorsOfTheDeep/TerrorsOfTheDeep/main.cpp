@@ -128,7 +128,7 @@ int main()
 
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
-		player.updatePos();
+		player.UpdatePos();
 
 		//check the boundaries
 		camera.updatePos();

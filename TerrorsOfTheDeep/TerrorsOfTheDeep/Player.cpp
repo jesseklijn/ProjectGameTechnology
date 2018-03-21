@@ -13,6 +13,7 @@ Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* d
 {
 	irrDevice = device;
 	smgr = mgr;
+	parentNode = parent;
 
 	Material.Wireframe = false;
 	Material.Lighting = false;
@@ -32,8 +33,13 @@ Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* d
 		Box.addInternalPoint(Vertices[i].Pos);
 
 	then = irrDevice->getTimer()->getTime();
-	deltaX = 0.05;
-	deltaZ = 0.05;
+	deltaX = 0.15;
+	deltaZ = 0.15;
+
+	ICameraSceneNode* camera = smgr->getActiveCamera();
+	vector3df pos = camera->getAbsolutePosition();
+	vector3df target = camera->getTarget();
+	latestRot = target - pos;
 }
 
 
@@ -53,11 +59,11 @@ void Player::render()
 {
 	u16 indices[] = { 0,2,3, 2,1,3, 1,0,3, 2,0,1, 4,6,7, 6,5,7, 5,4,7, 6,4,5 };
 
-	video::IVideoDriver* driver = SceneManager->getVideoDriver();
+	IVideoDriver* driver = SceneManager->getVideoDriver();
 
 	driver->setMaterial(Material);
 	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-	driver->drawVertexPrimitiveList(&Vertices[0], 8, &indices[0], 8, video::EVT_STANDARD, scene::EPT_TRIANGLES, video::EIT_16BIT);
+	driver->drawVertexPrimitiveList(&Vertices[0], 8, &indices[0], 8, EVT_STANDARD, EPT_TRIANGLES, EIT_16BIT);
 }
 
 const aabbox3d<f32>&  Player::getBoundingBox() const
@@ -75,29 +81,43 @@ SMaterial& Player::getMaterial(u32 i)
 	return Material;
 }
 
-void Player::updatePos()
+void Player::UpdatePos()
 {
-	// if W down, move both hands
-	// if moving mouse in direction, move other hands
+	vector3df currentPos = getAbsolutePosition();
 
-	u32 difference = Vertices[5].Pos.X - Vertices[1].Pos.X;
-	if (difference > 60 || difference < 2) {
-		deltaX *= -1;
-		deltaZ *= -1;
+	// If the player is moving, make the arms swim, otherwise make them idle (swim really slowly)
+	float speed = (currentPos.Z == latestPos.Z) ? 0.1 : 1;
+
+	// don't let arms leave the screen
+	if (Vertices[5].Pos.X > 30 || Vertices[1].Pos.X < -30) {
+		deltaX = -0.15;
+		deltaZ = -0.15;
+	}
+	if (Vertices[5].Pos.X < 0 || Vertices[1].Pos.X > 0) {
+		deltaX = 0.15;
+		deltaZ = 0.15;
 	}
 
+	MoveArms(speed);
+
+	latestPos = currentPos;
+}
+
+void Player::MoveArms(float speed) {
+	// Left arm
 	for (int i = 0; i < 4; i++) {
-		Vertices[i].Pos.X -= deltaX;
-		Vertices[i].Pos.Z -= deltaZ;
+		Vertices[i].Pos.X -= deltaX * speed;
+		Vertices[i].Pos.Z -= deltaZ * speed;
 	}
+	// Right arm
 	for (int i = 4; i < 8; i++) {
-		Vertices[i].Pos.X += deltaX;
-		Vertices[i].Pos.Z -= deltaZ;
+		Vertices[i].Pos.X += deltaX * speed;
+		Vertices[i].Pos.Z -= deltaZ * speed;
 	}
 }
 
 // In main:
 // Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
 // In while:
-// player.updatePos();
+// player.UpdatePos();
 

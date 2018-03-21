@@ -11,16 +11,19 @@ class Player : public irr::scene::ISceneNode
 public:
 	irr::IrrlichtDevice* irrDevice;
 	irr::scene::ISceneManager* smgr;
+	irr::scene::ISceneNode* parentNode;
 
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::S3DVertex Vertices[8];
 	irr::video::SMaterial Material;
 
+	irr::core::vector3df latestPos;
+	irr::core::vector3df latestRot;
+
 	irr::u32 then;
 	float deltaX;
 	float deltaZ;
 
-	// int oxygen, stamina...
 	Player(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id, irr::IrrlichtDevice* device);
 	~Player();
 
@@ -30,6 +33,7 @@ public:
 	virtual irr::u32 getMaterialCount() const;
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
 
-	void updatePos();
+	void UpdatePos();
+	void MoveArms(float speed);
 };
 
