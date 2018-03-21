@@ -130,6 +130,9 @@ int main()
 		gameManager.Update();
 		player.updatePos();
 
+		//check the boundaries
+		camera.updatePos();
+
 		Detect(newPlayer,
 			win->mesh,
 			key->mesh,
