@@ -103,6 +103,9 @@ int main()
 		gameManager.Update();
 		player.updatePos();
 
+		//check the boundaries
+		camera.updatePos();
+
 		// We finished changing the scene
 		// Now draw the scene in our actual window
 		GameManager::smgr->drawAll();
