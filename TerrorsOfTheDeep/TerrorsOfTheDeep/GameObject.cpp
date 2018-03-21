@@ -37,6 +37,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	GameManager::gameObjects->push_back(*this);
 }
 
+
 // Destructor
 GameObject::~GameObject()
 {

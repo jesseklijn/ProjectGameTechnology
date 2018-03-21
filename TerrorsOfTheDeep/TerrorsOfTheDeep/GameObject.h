@@ -1,6 +1,7 @@
 #pragma once
 #include "irrlicht.h"
 
+
 class GameObject : public irr::scene::ISceneNode
 {
 public:
