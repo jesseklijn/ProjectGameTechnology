@@ -70,21 +70,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)lib;</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)lib;$(IRRKLANG_HOME)\include;$(IncludePath);;$(IRRKLANG_HOME)\include</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(IRRKLANG_HOME)\lib\win32-visualStudio;$(LibraryPath);$(IRRKLANG_HOME)\lib\win32-visualStudio</LibraryPath>
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(IRRKLANG_HOME)\include;$(IncludePath);;$(IRRKLANG_HOME)\include</IncludePath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(IRRKLANG_HOME)\lib\win32-visualStudio;$(LibraryPath);$(IRRKLANG_HOME)\lib\win32-visualStudio</LibraryPath>
     <ExtensionsToDeleteOnClean>*.dll;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)lib;</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)lib;$(IncludePath);$(IRRKLANG_HOME)\include</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(IRRKLANG_HOME)\lib\win32-visualStudio</LibraryPath>
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(IncludePath);$(IRRKLANG_HOME)\include</IncludePath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(LibraryPath);$(IRRKLANG_HOME)\lib\win32-visualStudio</LibraryPath>
     <ExtensionsToDeleteOnClean>*.dll;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -112,7 +112,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>irrKlang.lib;Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
