@@ -2,7 +2,7 @@
 
 bool hasKey = false;
 bool allowCollision = false;
-int colTime = 10;
+int colTime = 3000;
 
 
 // simple collision code. 
@@ -13,19 +13,30 @@ bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, i
 	else { return false; }
 }
 
-		IrrlichtDevice *device =
-			createDevice(video::EDT_SOFTWARE, dimension2d<u32>(640, 480), 16,
-				false, false, false, 0);
+void Detect(
+	irr::scene::ISceneNode* player,
+	irr::scene::ISceneNode* win,
+	irr::scene::ISceneNode* key,
+	irr::scene::ISceneNode* shark,
+	irr::scene::ISceneNode* rock,
+	irr::scene::ISceneManager* smgr
+){
+		
 
-		if (colTime < 0) {
+	if (colTime > 0) {
+		colTime--;
+
+		if (colTime <= 0) {
 			allowCollision = true;
 		}
 	}
-	shark->setPosition(shark->getPosition() + irr::core::vector3df(0, 0, -0.05));
+	
+	//shark->setPosition(shark->getPosition() + irr::core::vector3df(0, 0, -0.05));
 
 	if (allowCollision) {
-		if (Col(Player, win, 10)) {
-			Player->setPosition(Player->getPosition() + irr::core::vector3df(0, 0, 0));
+		
+		if (Col(player, win, 20)) {
+			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(0.25, 0.25, 0.25));
 
 			if (hasKey) {
 				//font->draw(L"Congrats You win xDDDDD", irr::core::rect<s32>(30, 100, 30, 100), irr::video::SColor(255, 255, 255, 255));
@@ -34,24 +45,18 @@ bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, i
 				//font->draw(L"Get a key you noob!", irr::core::rect<s32>(30, 100, 30, 100), irr::video::SColor(255, 255, 255, 255));
 			}
 		}
-		else
-		{
-			Player->setPosition(Player->getPosition() + irr::core::vector3df(0, 0, 0.05));
-		}
-		if (Player&&key) {
-			if (Col(key, Player, 10)) {
-				hasKey = true;
-				key->setPosition(key->getPosition() + irr::core::vector3df(10000, 10000, 10000));
-			}
+
+		if (Col(key, player, 20)) {
+			hasKey = true;
+			key->setPosition(key->getPosition() + irr::core::vector3df(10000, 10000, 10000));
 		}
 
-		// collision code.
-		if (Col(Player, shark, 10)) {
-			// push player out of the way. 
-			Player->setPosition(Player->getPosition() + irr::core::vector3df(rand() % 1 - 1, 0, 0));
+		if (Col(player, shark, 30)) {
+			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() +irr::core::vector3df(rand() % 2 - 1, 0, 0));
+		}
+		if (Col(player, rock, 40)) {
+			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
 
-
-
-		return 0;
 	}
+}

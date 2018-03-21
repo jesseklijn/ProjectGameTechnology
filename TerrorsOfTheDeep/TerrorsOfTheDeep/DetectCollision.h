@@ -8,6 +8,8 @@ void Detect(
 	irr::scene::ISceneNode* Player,
 	irr::scene::ISceneNode* win,
 	irr::scene::ISceneNode* key,
-	irr::scene::ISceneNode* shark
+	irr::scene::ISceneNode* shark,
+	irr::scene::ISceneNode* rock,
+	irr::scene::ISceneManager* smgr
 );
 

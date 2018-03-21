@@ -126,6 +126,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="addLighting.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />

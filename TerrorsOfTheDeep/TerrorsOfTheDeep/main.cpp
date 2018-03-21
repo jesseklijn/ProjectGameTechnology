@@ -59,6 +59,8 @@ int main()
 	GameManager gameManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
+
+	IGUIFont* font = GameManager::device->getGUIEnvironment()->getBuiltInFont();
 	
 	// Set our skybox
 	ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
@@ -86,9 +88,22 @@ int main()
 	// Rock
 	GameObject* rock = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/rock.obj")),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"),
-		new const vector3df(0, 20, 0),
+		new const vector3df(100, 100, 0),
 		new const vector3df(20, 20, 20));
 
+	// key object
+	GameObject* key = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/key.obj")),
+		GameManager::driver->getTexture("../media/key.mtl"),
+		new const vector3df(0, 50, 0),
+		new const vector3df(0.1, 0.1, 0.1));
+
+	// win condition
+	GameObject* win = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/ChestCartoon.obj")),
+		GameManager::driver->getTexture("../media/ChestCartoon.mtl"),
+		new const vector3df(0, 100, 0),
+		new const vector3df(1, 1, 1));
+
+	ISceneNode* newPlayer = &player;
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -96,7 +111,8 @@ int main()
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 		//!!Change parameters to correct type
-		//Detect(player, win, key, shark);
+		Detect(newPlayer, win->node, key->node, shark->node,rock->node, GameManager::smgr);
+
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
 		player.updatePos();
