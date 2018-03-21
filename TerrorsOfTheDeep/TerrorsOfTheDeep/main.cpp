@@ -40,7 +40,7 @@ using namespace gui;
 int stamina = 0;
 
 // Check if the items are picked up
-bool itemPickedUp[3] = { true, true, true };
+bool itemPickedUp[3] = { false, false, false };
 
 // Create HUD object
 HUD* hud = new HUD;
@@ -59,38 +59,64 @@ int main()
 	GameManager gameManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
-	
+
 	// Set our skybox
-	ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
-		GameManager::driver->getTexture("../media/irrlicht2_up.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_dn.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_lf.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_rt.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_ft.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_bk.jpg"));
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
 	// Initialize our background music
 	sound_init();
 	background_music("../media/JawsTheme.ogg");
-		
+
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
-	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, GameManager::device);
+	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, 0, GameManager::device);
 
 	// Create two dummy objects for testing
 	// Shark
 	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0) /*<-- Position, scale and rotation respectively*/,
-										0, GameManager::smgr, -1111 /*<-- Parent, ISceneManager (GameManager's ISceneManager!) and instance ID*/,
-										GameManager::smgr->getMesh("../media/shark.obj") /*<-- Mesh (optional)*/,
-										GameManager::driver->getTexture("../media/Shark_Texture.jpg") /*<-- Texture (optional, mandatory if supplying mesh!)*/);
+		0, GameManager::smgr, 1 /*<-- Parent, ISceneManager (GameManager's ISceneManager!) and instance ID*/,
+		GameManager::smgr->getMesh("../media/shark.obj") /*<-- Mesh (optional)*/,
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg") /*<-- Texture (optional, mandatory if supplying mesh!)*/);
 
-	// Rock
-	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
-										0, GameManager::smgr, -1111,
-										GameManager::smgr->getMesh("../media/rock.obj"),
-										GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	// Rocks
+	GameObject* rock = new GameObject(new vector3df(-100, -50, -100), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, 2,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
+	GameObject* rock1 = new GameObject(new vector3df(-200, -50, 75), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, 3,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	GameObject* rock2 = new GameObject(new vector3df(0, -50, -25), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1114,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	GameObject* rock3 = new GameObject(new vector3df(-300, -50, 300), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1115,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	GameObject* rock4 = new GameObject(new vector3df(-375, -50, 205), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1116,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	// Key collectible object
+	GameObject* key = new GameObject(new vector3df(-175, -40, 100), new vector3df(0.1, 0.1, 0.1), new vector3df(0, 0, 0),
+		0, GameManager::smgr, 4,
+		GameManager::smgr->getMesh("../media/key.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	// Win Condition trigger object
+	GameObject* win = new GameObject(new vector3df(-250, -40, 300), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		0, GameManager::smgr, 5,
+		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
+		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+
+	ISceneNode* newPlayer = &player;
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -98,10 +124,23 @@ int main()
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 		//!!Change parameters to correct type
-		//Detect(player, win, key, shark);
+
+
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
 		player.updatePos();
+
+		Detect(newPlayer,
+			win->mesh,
+			key->mesh,
+			shark->mesh,
+			rock->mesh,
+			rock1->mesh,
+			rock2->mesh,
+			rock3->mesh,
+			rock4->mesh,
+			itemPickedUp,
+			GameManager::smgr);
 
 		// We finished changing the scene
 		// Now draw the scene in our actual window
@@ -109,10 +148,13 @@ int main()
 
 		// Clear the HUD, update HUD values and prepare the updated HUD
 		GameManager::guienv->clear();
+
 		if (stamina >= 0 && stamina < 1000) {
 			stamina++;
 		}
-		if (!disableHud) {
+
+		if (!disableHud)
+		{
 			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
 		}
 
