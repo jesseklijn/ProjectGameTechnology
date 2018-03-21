@@ -10,8 +10,8 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
+!*.dll
 #we may need to uncomment it later
-*.dll
 
 # Fortran module files
 *.mod
@@ -21,7 +21,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -83,6 +82,7 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+!*.lib
 
 # Visual C++ cache files
 ipch/
@@ -132,5 +132,4 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
-TerrorsOfTheDeep/TerrorsOfTheDeep/Irrlicht.dll
 *.orig
