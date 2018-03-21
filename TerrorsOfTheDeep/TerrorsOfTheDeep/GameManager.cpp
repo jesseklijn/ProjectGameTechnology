@@ -4,6 +4,8 @@
 #include <utility>
 #pragma once
 #include "Camera.h"
+#pragma once
+#include "Monster.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
@@ -42,7 +44,7 @@ triangle3df* hitTriangle;
 #pragma endregion
 
 #pragma region Variables
-list<GameObject>* GameManager::gameObjects = new list<GameObject>;
+//std::vector<GameObject*>* GameManager::gameObjects = 
 #pragma endregion
 
 // Constructor
@@ -75,21 +77,22 @@ void GameManager::Start()
 // Runs the Update() for all GameObjects in GameManager::nodes.
 void GameManager::Update()
 {
-	list<GameObject>::Iterator it;
-	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
+	// https://stackoverflow.com/questions/9974868/c-call-derived-function-from-base-class-instance
+	// http://www.cplusplus.com/forum/general/87150/
+	/*for (VITEM::iterator it = m_vec.begin(); it != m_vec.end(); ++it)
 	{
-		it->Update();
-	}
+		it.Update();
+	}*/
 }
 
 // Runs the Draw() for all GameObjects in GameManager::nodes.
 void GameManager::Draw()
 {
-	list<GameObject>::Iterator it;
-	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
+	/*list<GameObject>::Iterator it;
+	for (it = GameManager::gameObjects.begin(); it != GameManager::gameObjects.end(); ++it)
 	{
 		it->Draw();
-	}
+	}*/
 }
 
 // Switch to the given GameState.

@@ -22,12 +22,14 @@ public:
 	irr::video::SMaterial Material;
 
 	// Functions
-	virtual void render();
-	virtual void OnRegisterSceneNode();
-	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
-	virtual irr::u32 getMaterialCount() const;
-	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
+	void render() override;
+	void OnRegisterSceneNode() override;
+	const irr::core::aabbox3d<irr::f32>& getBoundingBox() const override;
+	irr::u32 getMaterialCount() const override;
+	irr::video::SMaterial& getMaterial(irr::u32 i) override;
 
 	virtual void Update();
 	virtual void Draw();
+
+private:
 };

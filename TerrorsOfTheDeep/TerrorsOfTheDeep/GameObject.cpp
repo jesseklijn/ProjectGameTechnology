@@ -34,7 +34,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	}
 
 	// Add this GameObject to the GameManager, mainly for remote Update() and Draw() calls
-	GameManager::gameObjects->push_back(*this);
+	//GameManager::gameObjects->push_back(this);
 }
 
 // Destructor

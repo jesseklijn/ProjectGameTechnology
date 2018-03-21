@@ -3,12 +3,6 @@
 #pragma once
 #include "GameManager.h"
 
-// Constructor
-Monster::Monster()
-{
-
-}
-
 // Destructor
 Monster::~Monster()
 {

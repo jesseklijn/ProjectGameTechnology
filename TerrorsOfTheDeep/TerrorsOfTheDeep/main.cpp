@@ -77,15 +77,15 @@ int main()
 	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, GameManager::device);
 
 	// Create two dummy objects for testing
-	// Shark
-	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0) /*<-- Position, scale and rotation respectively*/,
-										0, GameManager::smgr, -1111 /*<-- Parent, ISceneManager (GameManager's ISceneManager!) and instance ID*/,
-										GameManager::smgr->getMesh("../media/shark.obj") /*<-- Mesh (optional)*/,
-										GameManager::driver->getTexture("../media/Shark_Texture.jpg") /*<-- Texture (optional, mandatory if supplying mesh!)*/);
+	// Shark	
+	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+									0, GameManager::smgr, -1111,
+									GameManager::smgr->getMesh("../media/shark.obj"),
+									GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
 
 	// Rock
 	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
-										0, GameManager::smgr, -1111,
+										0, GameManager::smgr, -1112,
 										GameManager::smgr->getMesh("../media/rock.obj"),
 										GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
