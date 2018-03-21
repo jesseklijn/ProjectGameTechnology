@@ -155,9 +155,7 @@ int main()
 		if (stamina >= 0 && stamina < 1000) {
 			stamina++;
 		}
-
-		if (!disableHud)
-		{
+		if (!disableHud) {
 			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
 		}
 
