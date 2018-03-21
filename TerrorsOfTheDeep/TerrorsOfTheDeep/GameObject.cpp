@@ -32,9 +32,6 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setScale(*startScale);
 		mesh->setRotation(*startRotation);
 	}
-
-	// Add this GameObject to the GameManager, mainly for remote Update() and Draw() calls
-	//GameManager::gameObjects->push_back(this);
 }
 
 // Destructor

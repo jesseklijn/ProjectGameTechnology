@@ -1,7 +1,9 @@
 #pragma once
 #include "irrlicht.h"
+#pragma once
+#include "DynamicUpdater.h"
 
-class GameObject : public irr::scene::ISceneNode
+class GameObject : public irr::scene::ISceneNode, DynamicUpdater
 {
 public:
 	// Constructor

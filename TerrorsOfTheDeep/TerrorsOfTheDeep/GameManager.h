@@ -79,7 +79,7 @@ public:
 
 	// A list of all GameObjects in the scene
 	// Once created, a GameObject automatically adds itself to this list in its constructor
-	//static std::vector<GameObject>* gameObjects;
+	static std::vector<GameObject*> gameObjects;
 
 	int GameSpeed = 1;
 	bool GamePaused = false;
@@ -96,6 +96,6 @@ public:
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
 
 private:
-	typedef std::vector<GameObject*> VITEM;
-	VITEM m_vec;
+	/*typedef std::vector<GameObject*> VITEM;
+	VITEM m_vec;*/
 };

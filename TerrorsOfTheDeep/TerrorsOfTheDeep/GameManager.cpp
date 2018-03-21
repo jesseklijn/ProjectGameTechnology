@@ -44,7 +44,7 @@ triangle3df* hitTriangle;
 #pragma endregion
 
 #pragma region Variables
-//std::vector<GameObject*>* GameManager::gameObjects = 
+std::vector<GameObject*> GameManager::gameObjects;
 #pragma endregion
 
 // Constructor
@@ -74,25 +74,19 @@ void GameManager::Start()
 
 }
 
-// Runs the Update() for all GameObjects in GameManager::nodes.
+// Runs the Update() for all GameObjects in GameManager::gameObjects.
 void GameManager::Update()
 {
-	// https://stackoverflow.com/questions/9974868/c-call-derived-function-from-base-class-instance
-	// http://www.cplusplus.com/forum/general/87150/
-	/*for (VITEM::iterator it = m_vec.begin(); it != m_vec.end(); ++it)
+	for (int i = 0; i < GameManager::gameObjects.size(); ++i)
 	{
-		it.Update();
-	}*/
+		GameManager::gameObjects[i]->Update();
+	}
 }
 
-// Runs the Draw() for all GameObjects in GameManager::nodes.
+// Runs the Draw() for all GameObjects in GameManager::gameObjects.
 void GameManager::Draw()
 {
-	/*list<GameObject>::Iterator it;
-	for (it = GameManager::gameObjects.begin(); it != GameManager::gameObjects.end(); ++it)
-	{
-		it->Draw();
-	}*/
+
 }
 
 // Switch to the given GameState.

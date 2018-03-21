@@ -3,10 +3,19 @@
 #pragma once
 #include "GameManager.h"
 
+float xSp = 0.0;
+
 // Destructor
 Monster::~Monster()
 {
 
+}
+
+void Monster::Update()
+{
+	xSp -= 0.01;
+	setPosition(irr::core::vector3df(xSp, 0, 0));
+	mesh->setPosition(getPosition());
 }
 
 // Checks whether a target can be seen.

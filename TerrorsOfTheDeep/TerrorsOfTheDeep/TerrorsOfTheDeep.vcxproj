@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="addLighting.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DynamicUpdater.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="PlayingField.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClInclude Include="DynamicUpdater.h" />
     <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <ItemGroup>

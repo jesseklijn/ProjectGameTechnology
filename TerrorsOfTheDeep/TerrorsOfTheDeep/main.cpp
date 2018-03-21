@@ -78,10 +78,26 @@ int main()
 
 	// Create two dummy objects for testing
 	// Shark	
-	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	Monster* shark = new Monster(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 									0, GameManager::smgr, -1111,
 									GameManager::smgr->getMesh("../media/shark.obj"),
 									GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
+
+	/* TODO: Find a way to integrate this in derived (child) classes.
+
+	It was in GameObject base class first, but that would register the GameObject obviously.
+	Here we create a derived class instance of Monster, which derives from GameObject.
+
+	We now use a vector array in GameManager, which can hold multiple different
+	class types, which means we can add children of GameObject! Since we add a Monster 
+	and not a GameObject here, we make the list loop run Update() for the Monster instance, 
+	not the GameObject.
+
+	Long story short: Add the line below if your own object class:
+		- Inherits from GameObject
+		- Is using an Update() function
+	*/
+	GameManager::gameObjects.push_back(shark);
 
 	// Rock
 	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),

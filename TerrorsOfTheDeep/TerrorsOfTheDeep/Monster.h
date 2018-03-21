@@ -14,13 +14,7 @@ public:
 		: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture) {}
 	~Monster();
 
-	float xSp = 0;
-
 	// Functions
-	virtual void Update()
-	{
-		xSp -= 0.1;
-		setPosition(irr::core::vector3df(xSp, 0, 0));
-	}
+	virtual void Update();
 	virtual bool IsInSight(irr::core::vector3df* startPosition, irr::core::vector3df* endPosition);
 };
