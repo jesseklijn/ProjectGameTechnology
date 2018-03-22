@@ -26,6 +26,7 @@ public:
 	irr::video::S3DVertex Vertices[8];
 	irr::video::SMaterial Material;
 	irr::u32 then;
+	irr::core::vector3df latestPos;
 	float deltaX;
 	float deltaZ;
 

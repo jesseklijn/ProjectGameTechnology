@@ -143,7 +143,7 @@ int main()
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
-	ISceneNode* newPlayer = &player;
+	ISceneNode* newPlayer = player;
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())

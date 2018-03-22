@@ -23,7 +23,6 @@ Player::Player(const irr::core::vector3df* startPosition,
 {
 	irrDevice = GameManager::device;
 	smgr = mgr;
-	parentNode = parent;
 
 	Material.Wireframe = false;
 	Material.Lighting = false;
@@ -45,11 +44,7 @@ Player::Player(const irr::core::vector3df* startPosition,
 	then = irrDevice->getTimer()->getTime();
 	deltaX = 0.15;
 	deltaZ = 0.15;
-
-	ICameraSceneNode* camera = smgr->getActiveCamera();
-	vector3df pos = camera->getAbsolutePosition();
-	vector3df target = camera->getTarget();
-	latestRot = target - pos;
+	latestPos = getAbsolutePosition();
 }
 
 Player::~Player()
@@ -70,7 +65,7 @@ void Player::Update()
 	// Inherit base class Update
 	GameObject::Update();
 
-	updatePos();
+	UpdatePos();
 }
 
 void Player::render()
