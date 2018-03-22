@@ -12,7 +12,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
 	// Sets the movement speed of our shark for now
-	moveSpeed = 0.035f;
+	moveSpeed = 1.0f;
 }
 
 // Destructor

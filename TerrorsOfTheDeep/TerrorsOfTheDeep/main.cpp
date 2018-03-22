@@ -74,7 +74,7 @@ int main()
 
 	/* Create dummy objects for testing
 	Shark*/	
-	Shark* shark = new Shark(new vector3df(80, 0, 120), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
@@ -104,7 +104,7 @@ int main()
 
 
 	// Rock
-	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));

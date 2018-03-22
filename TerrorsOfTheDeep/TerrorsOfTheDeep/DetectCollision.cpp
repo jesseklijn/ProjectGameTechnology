@@ -2,7 +2,7 @@
 
 bool hasKey = false;
 bool allowCollision = false;
-int colTime = 3000;
+int colTime = 100;
 
 
 // simple collision code. 
@@ -40,7 +40,7 @@ void Detect(
 
 	if (allowCollision) {
 		
-		if (Col(player, win, 20)) {
+		if (Col(player, win, 90)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(0.25, 0.25, 0.25));
 
 			if (pickedUp[0]) {
@@ -52,7 +52,7 @@ void Detect(
 			}
 		}
 
-		if (Col(key, player, 20)) {
+		if (Col(key, player, 50)) {
 			pickedUp[0] = true;
 			key->setPosition(key->getPosition() + irr::core::vector3df(10000, 10000, 10000));
 		}
@@ -61,19 +61,19 @@ void Detect(
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() +irr::core::vector3df(rand() % 2 - 1, 0, 0));
 			pickedUp[2] = true;
 		}
-		if (Col(player, rock, 40)) {
+		if (Col(player, rock, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
-		if (Col(player, rock1, 40)) {
+		if (Col(player, rock1, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
-		if (Col(player, rock2, 40)) {
+		if (Col(player, rock2, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
-		if (Col(player, rock3, 40)) {
+		if (Col(player, rock3, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
-		if (Col(player, rock4, 40)) {
+		if (Col(player, rock4, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
 	}
