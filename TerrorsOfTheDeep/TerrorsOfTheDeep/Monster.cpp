@@ -3,7 +3,16 @@
 #pragma once
 #include "GameManager.h"
 
-float xSp = 0.0;
+// Constructor
+Monster::Monster(const irr::core::vector3df* startPosition,
+					const irr::core::vector3df* startScale,
+					const irr::core::vector3df* startRotation,
+					irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+					irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
+					: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
+{
+
+}
 
 // Destructor
 Monster::~Monster()
@@ -11,11 +20,11 @@ Monster::~Monster()
 
 }
 
+// Overridden (from GameObject) Update-loop
 void Monster::Update()
 {
-	xSp -= 0.01;
-	setPosition(irr::core::vector3df(xSp, 0, 0));
-	mesh->setPosition(getPosition());
+	// Run the Update() of our base class
+	GameObject::Update();
 }
 
 // Checks whether a target can be seen.
@@ -23,6 +32,17 @@ bool Monster::IsInSight(irr::core::vector3df* startPosition, irr::core::vector3d
 {
 	ISceneNode* target = GameManager::PerformRaycast(*startPosition, *endPosition);
 	
+	if (target)
+		return true;
+	else
+		return false;
+}
+
+// Checks whether a player can be seen.
+bool Monster::IsInSight(Player* player)
+{
+	ISceneNode* target = GameManager::PerformRaycast(getPosition(), player->getPosition());
+
 	if (target)
 		return true;
 	else

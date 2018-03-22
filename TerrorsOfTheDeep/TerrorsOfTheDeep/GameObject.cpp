@@ -8,9 +8,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						const irr::core::vector3df* startScale,
 						const irr::core::vector3df* startRotation, 
 						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) : ISceneNode(parent, mgr, id)
+						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) 
+						: ISceneNode(parent, mgr, id)
 {
-	// Position, scale and rotation setting
+	// Set the position, scale and rotation of our GameObject
 	setPosition(*startPosition);
 	setScale(*startScale);
 	setRotation(*startRotation);
@@ -21,8 +22,8 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
 
-		// Set some default visual values for the node
-		// TODO: Add to constructor?
+		/* Set some default visual values for the node
+		TODO: Add to constructor?*/
 		mesh->setMaterialFlag(EMF_LIGHTING, false);
 		mesh->setMD2Animation(scene::EMAT_STAND);
 		mesh->setMaterialTexture(0, relatedTexture);
@@ -71,11 +72,17 @@ SMaterial& GameObject::getMaterial(u32 i)
 // Update
 void GameObject::Update()
 {
-
+	// Run the Update() of our base class
+	DynamicUpdater::Update();
 }
 
 // Draw
 void GameObject::Draw()
 {
 
+}
+
+std::string GameObject::GetTag()
+{
+	return tag;
 }

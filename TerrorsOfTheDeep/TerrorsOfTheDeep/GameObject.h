@@ -16,12 +16,14 @@ public:
 	// Destructor
 	~GameObject();
 
-	// The linked node for this GameObject
+	// Variables
 	irr::scene::IAnimatedMeshSceneNode* mesh;
-
-	// ISceneNode stuff
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
+	std::string tag = "<NONE>";
+
+	bool canMove = true;
+	float moveSpeed = 0.25f;
 
 	// Functions
 	void render() override;
@@ -32,6 +34,7 @@ public:
 
 	virtual void Update();
 	virtual void Draw();
+	virtual std::string GetTag();
 
 private:
 };

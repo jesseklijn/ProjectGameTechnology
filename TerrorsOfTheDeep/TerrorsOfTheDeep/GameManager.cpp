@@ -45,6 +45,7 @@ triangle3df* hitTriangle;
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
+std::vector<std::string> GameManager::tags;
 #pragma endregion
 
 // Constructor
@@ -52,6 +53,12 @@ GameManager::GameManager()
 {
 	// Set a default font
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+
+	// Set up tags
+	GameManager::tags.push_back("<NONE>");
+	GameManager::tags.push_back("Player");
+	GameManager::tags.push_back("Monster");
+	GameManager::tags.push_back("World Object");
 
 	Awake();
 }
@@ -132,4 +139,13 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			0);          // Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
+}
+
+// Finds the first GameObject that matches the given tag.
+GameObject* GameManager::FindGameObjectWithTag(std::string name)
+{
+	for (GameObject* gameObj : GameManager::gameObjects)
+		if (gameObj->GetTag() == name)
+			return gameObj;
+	return nullptr;
 }

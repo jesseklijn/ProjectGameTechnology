@@ -154,6 +154,7 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayingField.cpp" />
+    <ClCompile Include="Shark.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClInclude Include="DynamicUpdater.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayingField.h" />
+    <ClInclude Include="Shark.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>

@@ -54,6 +54,9 @@
     <ClCompile Include="DynamicUpdater.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shark.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="addLighting.h">
@@ -93,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DynamicUpdater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
