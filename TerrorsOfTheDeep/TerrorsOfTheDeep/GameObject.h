@@ -1,8 +1,9 @@
 #pragma once
 #include "irrlicht.h"
+#pragma once
+#include "DynamicUpdater.h"
 
-
-class GameObject : public irr::scene::ISceneNode
+class GameObject : public irr::scene::ISceneNode, DynamicUpdater
 {
 public:
 	// Constructor
@@ -15,20 +16,25 @@ public:
 	// Destructor
 	~GameObject();
 
-	// The linked node for this GameObject
+	// Variables
 	irr::scene::IAnimatedMeshSceneNode* mesh;
-
-	// ISceneNode stuff
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
+	std::string tag = "<NONE>";
+
+	bool canMove = true;
+	float moveSpeed = 0.25f;
 
 	// Functions
-	virtual void render();
-	virtual void OnRegisterSceneNode();
-	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
-	virtual irr::u32 getMaterialCount() const;
-	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
+	void render() override;
+	void OnRegisterSceneNode() override;
+	const irr::core::aabbox3d<irr::f32>& getBoundingBox() const override;
+	irr::u32 getMaterialCount() const override;
+	irr::video::SMaterial& getMaterial(irr::u32 i) override;
 
 	virtual void Update();
 	virtual void Draw();
+	virtual std::string GetTag();
+
+private:
 };

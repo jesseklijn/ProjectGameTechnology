@@ -4,6 +4,8 @@
 #include <utility>
 #pragma once
 #include "Camera.h"
+#pragma once
+#include "Monster.h"
 #include "GridMesh.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
@@ -43,7 +45,8 @@ triangle3df* hitTriangle;
 #pragma endregion
 
 #pragma region Variables
-list<GameObject>* GameManager::gameObjects = new list<GameObject>;
+std::vector<GameObject*> GameManager::gameObjects;
+std::vector<std::string> GameManager::tags;
 #pragma endregion
 
 // Constructor
@@ -51,6 +54,13 @@ GameManager::GameManager()
 {
 	// Set a default font
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+
+	// Set up tags
+	GameManager::tags.push_back("<NONE>");
+	GameManager::tags.push_back("Player");
+	GameManager::tags.push_back("Monster");
+	GameManager::tags.push_back("World Object");
+
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
 		new const vector3df(1, 1, 1),
@@ -79,24 +89,19 @@ void GameManager::Start()
 
 }
 
-// Runs the Update() for all GameObjects in GameManager::nodes.
+// Runs the Update() for all GameObjects in GameManager::gameObjects.
 void GameManager::Update()
 {
-	list<GameObject>::Iterator it;
-	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
+	for (int i = 0; i < GameManager::gameObjects.size(); ++i)
 	{
-		it->Update();
+		GameManager::gameObjects[i]->Update();
 	}
 }
 
-// Runs the Draw() for all GameObjects in GameManager::nodes.
+// Runs the Draw() for all GameObjects in GameManager::gameObjects.
 void GameManager::Draw()
 {
-	list<GameObject>::Iterator it;
-	for (it = GameManager::gameObjects->begin(); it != GameManager::gameObjects->end(); ++it)
-	{
-		it->Draw();
-	}
+
 }
 
 // Switch to the given GameState.
@@ -142,4 +147,13 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			0);          // Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
+}
+
+// Finds the first GameObject that matches the given tag.
+GameObject* GameManager::FindGameObjectWithTag(std::string name)
+{
+	for (GameObject* gameObj : GameManager::gameObjects)
+		if (gameObj->GetTag() == name)
+			return gameObj;
+	return nullptr;
 }

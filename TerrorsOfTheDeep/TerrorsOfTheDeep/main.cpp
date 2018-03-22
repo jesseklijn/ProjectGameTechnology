@@ -18,7 +18,9 @@
 #pragma once
 #include "GameObject.h"
 #pragma once
-#include "Monster.h"
+#include "Shark.h"
+#pragma once
+#include <string>
 #pragma endregion
 
 #pragma region Namespaces
@@ -69,20 +71,45 @@ int main()
 
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
-	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, 0, GameManager::device);
 
-	// Create two dummy objects for testing
-	// Shark
-	GameObject* shark = new GameObject(new vector3df(0, 20, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0) /*<-- Position, scale and rotation respectively*/,
-		0, GameManager::smgr, 1 /*<-- Parent, ISceneManager (GameManager's ISceneManager!) and instance ID*/,
-		GameManager::smgr->getMesh("../media/shark.obj") /*<-- Mesh (optional)*/,
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg") /*<-- Texture (optional, mandatory if supplying mesh!)*/);
+	/* Create dummy objects for testing
+	Shark*/	
+	Shark* shark = new Shark(new vector3df(80, 0, 120), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1111,
+		GameManager::smgr->getMesh("../media/shark.obj"),
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
+	shark->tag = "Monster";
 
-	// Rocks
-	GameObject* rock = new GameObject(new vector3df(-100, -50, -100), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
-		0, GameManager::smgr, 2,
+	/* TODO: Find a way to integrate this in derived (child) classes.
+
+	It was in GameObject base class first, but that would register the GameObject obviously.
+	Here we create a derived class instance of Monster, which derives from GameObject.
+
+	We now use a vector array in GameManager, which can hold multiple different
+	class types, which means we can add children of GameObject! Since we add a Monster
+	and not a GameObject here, we make the list loop run Update() for the Monster instance,
+	not the GameObject.
+
+	Long story short: Add the line below if your own object class:
+	- Inherits from GameObject
+	- Is using an Update() function
+	*/
+	GameManager::gameObjects.push_back(shark);
+
+	// Player
+	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
+	player->tag = "Player";
+	GameManager::gameObjects.push_back(player);
+
+
+	// Rock
+	GameObject* rock = new GameObject(new vector3df(0, 20, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	rock->tag = "World Object";
+	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-200, -50, 75), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
@@ -127,8 +154,7 @@ int main()
 
 
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
-		gameManager.Update();
-		player.UpdatePos();
+		gameManager.Update();		
 
 		//check the boundaries
 		camera.updatePos();

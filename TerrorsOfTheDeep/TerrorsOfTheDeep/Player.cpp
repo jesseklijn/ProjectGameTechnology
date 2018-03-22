@@ -1,4 +1,7 @@
+#pragma once
 #include "Player.h"
+#pragma once
+#include "GameManager.h"
 
 #pragma region Namespaces
 using namespace irr;
@@ -9,9 +12,16 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
-Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* device) : ISceneNode(parent, mgr, id)
+
+// Constructor
+Player::Player(const irr::core::vector3df* startPosition,
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
+	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
-	irrDevice = device;
+	irrDevice = GameManager::device;
 	smgr = mgr;
 	parentNode = parent;
 
@@ -42,9 +52,9 @@ Player::Player(ISceneNode* parent, ISceneManager* mgr, s32 id, IrrlichtDevice* d
 	latestRot = target - pos;
 }
 
-
 Player::~Player()
 {
+
 }
 
 void Player::OnRegisterSceneNode()
@@ -55,7 +65,15 @@ void Player::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
-void Player::render() 
+void Player::Update()
+{
+	// Inherit base class Update
+	GameObject::Update();
+
+	updatePos();
+}
+
+void Player::render()
 {
 	u16 indices[] = { 0,2,3, 2,1,3, 1,0,3, 2,0,1, 4,6,7, 6,5,7, 5,4,7, 6,4,5 };
 
@@ -119,5 +137,7 @@ void Player::MoveArms(float speed) {
 // In main:
 // Player player = Player(smgr->getActiveCamera(), smgr, -1111, device);
 // In while:
-// player.UpdatePos();
+// player.updatePos();
 
+
+// player.updatePos();

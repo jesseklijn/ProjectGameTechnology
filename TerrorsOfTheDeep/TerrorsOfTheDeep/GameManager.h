@@ -7,6 +7,8 @@
 #include <iostream>
 #pragma once
 #include "irrlicht.h"
+#pragma once
+#include <vector>
 #pragma endregion
 
 #pragma region Namespaces
@@ -27,10 +29,10 @@ class GameManager
 public:
 
 #pragma region Core Irrlicht Components
-	//Create Irrlicht device
+	// Define Irrlicht device
 	static irr::IrrlichtDevice* device;
 
-	// Get core Irrlicht components
+	// Define core Irrlicht components
 	static irr::video::IVideoDriver* driver;
 	static irr::scene::ISceneManager* smgr;
 	static irr::gui::IGUIEnvironment* guienv;
@@ -43,25 +45,24 @@ public:
 	// These flags will determine how something is selected 
 	enum
 	{
-		// I use this ISceneNode ID to indicate a scene node that is 
-		// not pickable by getSceneNodeAndCollisionPointFromRay() 
+		/* Use this ISceneNode ID to indicate a scene node that is 
+		not pickable by getSceneNodeAndCollisionPointFromRay()*/ 
 		ID_IsNotPickable = 0,
 
-		// I use this flag in ISceneNode IDs to indicate that the 
-		// scene node can be picked by ray selection. 
+		/* Use this flag in ISceneNode IDs to indicate that the 
+		scene node can be picked by ray selection.*/ 
 		IDFlag_IsPickable = 1 << 0,
 
-		// I use this flag in ISceneNode IDs to indicate that the 
-		// scene node can be highlighted.  In this example, the 
-		// homonids can be highlighted, but the level mesh can't. 
+		/* Use this flag in ISceneNode IDs to indicate that the 
+		scene node can be highlighted.*/ 
 		IDFlag_IsHighlightable = 1 << 1
 	};
 #pragma endregion
 
 #pragma region Game state
 	enum GameState {
-		Main_Menu,
-		Level_Selector,
+		MainMenu,
+		LevelSelector,
 		Credits,
 		Settings,
 		DemoScene,
@@ -75,9 +76,11 @@ public:
 
 	// Variables
 
-	// A list of all GameObjects in the scene
-	// Once created, a GameObject automatically adds itself to this list in its constructor
-	static list<GameObject>* gameObjects;
+	// A list of all GameObjects or children of GameObjects in the scene
+	static std::vector<GameObject*> gameObjects;
+
+	// A list of base tags (see constructor for filling)
+	static std::vector<std::string> tags;
 
 	int GameSpeed = 1;
 	bool GamePaused = false;
@@ -92,6 +95,5 @@ public:
 	void UnloadGameState(GameState StateToCleanUp);
 
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
-
-private: 
+	static GameObject* FindGameObjectWithTag(std::string name);
 };

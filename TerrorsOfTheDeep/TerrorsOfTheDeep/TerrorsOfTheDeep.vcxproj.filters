@@ -54,6 +54,12 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicUpdater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shark.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="GridMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,6 +99,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicUpdater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shark.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GridMesh.h">
