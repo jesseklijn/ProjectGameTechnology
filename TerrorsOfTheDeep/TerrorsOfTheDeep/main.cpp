@@ -111,37 +111,42 @@ int main()
 	rock->tag = "World Object";
 	GameManager::gameObjects.push_back(rock);
 
-	GameObject* rock1 = new GameObject(new vector3df(-200, -50, 75), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
-	GameObject* rock2 = new GameObject(new vector3df(0, -50, -25), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
-	GameObject* rock3 = new GameObject(new vector3df(-300, -50, 300), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
-	GameObject* rock4 = new GameObject(new vector3df(-375, -50, 205), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 
+	GameObject* GroundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1116,
+		GameManager::smgr->getMesh("../media/rock.obj"),
+		GameManager::driver->getTexture("../media/SandTexture.jpg"));
+
 	// Key collectible object
-	GameObject* key = new GameObject(new vector3df(-175, -40, 100), new vector3df(0.1, 0.1, 0.1), new vector3df(0, 0, 0),
+	GameObject* key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RustTexture.jpg"));
 
 	// Win Condition trigger object
-	GameObject* win = new GameObject(new vector3df(-250, -40, 300), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	GameObject* win = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 
 	ISceneNode* newPlayer = player;
 

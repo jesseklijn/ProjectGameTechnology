@@ -44,35 +44,35 @@ Camera::~Camera()
 //check boundaries
 void Camera::updatePos()
 {
-	if (GameManager::smgr->getActiveCamera()->getPosition().X > 200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().X > 1000)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(190, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(999, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().X < -200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().X < -1000)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-190, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-999, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Y > 200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Y > 500)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, 190,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, 499,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Y < -200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Y < -50)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, -190,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, -49,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z > 200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z > 1000)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			190));
+			999));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -200)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -1000)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			-190));
+			-999));
 	}
 }
 
