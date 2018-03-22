@@ -14,7 +14,7 @@ GameObject::GameObject(irr::scene::IAnimatedMeshSceneNode* relatedNode, irr::vid
 
 	// Set some default visual values for the node
 	// TODO: Add to constructor?
-	node->setMaterialFlag(EMF_LIGHTING, false);
+	node->setMaterialFlag(EMF_LIGHTING, true);
 	node->setMD2Animation(scene::EMAT_STAND);
 	node->setMaterialTexture(0, relatedTexture);
 

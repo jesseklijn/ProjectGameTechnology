@@ -20,10 +20,10 @@
 #pragma endregion
 
 #pragma region Namespaces
-//Main namespace
+// Main namespace
 using namespace irr;
 
-//Namespaces of Irrlicht
+// Namespaces of Irrlicht
 using namespace core;
 using namespace scene;
 using namespace video;
@@ -39,6 +39,11 @@ int stamina = 0;
 
 // Check if the items are picked up
 bool itemPickedUp[3] = { true, true, true };
+
+// Light colours
+irr::video::SColorf ambientColor = irr::video::SColorf(0.2f,0.2f,0.2f,0.2f);
+irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 
 // Create HUD object
 HUD* hud = new HUD;
@@ -58,14 +63,7 @@ int main()
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
 	
-	// Set our skybox
-	ISceneNode* skybox = GameManager::smgr->addSkyBoxSceneNode(
-		GameManager::driver->getTexture("../media/irrlicht2_up.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_dn.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_lf.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_rt.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_ft.jpg"),
-		GameManager::driver->getTexture("../media/irrlicht2_bk.jpg"));
+	// Creates a Skydome
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
 	// Initialize our background music
@@ -75,7 +73,14 @@ int main()
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
 	Player player = Player(GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, GameManager::device);
+	Lighting lighting = Lighting(GameManager::smgr);
 
+	// Ambient Scene Light
+	lighting.SetSceneLight(ambientColor);
+	// Set and attach flashlight to player
+	ISceneNode *playerNode = &player;
+
+	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player.getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, playerNode);
 	// Create two dummy objects for testing
 	// Shark
 	GameObject* shark = new GameObject(GameManager::smgr->addAnimatedMeshSceneNode(GameManager::smgr->getMesh("../media/shark.obj")),
@@ -87,6 +92,7 @@ int main()
 		new const vector3df(0, 20, 0),
 		new const vector3df(20, 20, 20));
 
+	
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -97,6 +103,7 @@ int main()
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
 		gameManager.Update();
 		player.updatePos();
+		
 
 		// Clear the HUD, update HUD values and prepare the updated HUD
 		GameManager::guienv->clear();
