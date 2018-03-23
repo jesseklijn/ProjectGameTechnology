@@ -170,6 +170,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicUpdater.cpp" />
     <ClCompile Include="DetectCollision.cpp" />
+    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClInclude Include="DynamicUpdater.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,7 @@
 #pragma once
 #include "Monster.h"
 #include "GridMesh.h"
+#include "EventManager.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
@@ -17,9 +18,12 @@
 
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
+
+EventManager receiver;
+
 irr::IrrlichtDevice* GameManager::device =
 createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
-	false, true, false, 0);
+	false, true, false, &receiver);
 
 // Initialize Irrlicht components
 irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDriver();

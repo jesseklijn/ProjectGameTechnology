@@ -40,26 +40,32 @@ void Shark::Update()
 		// Chase the player!
 		case Chasing:
 		{
-			/* Add a vector of length moveSpeed in the direction towards our player
-			Adds a small offset downwards since our camera is higher up*/
-			vector3df currentPosition = getPosition();
-			vector3df targetPosition = GameManager::smgr->getActiveCamera()->getPosition() + vector3df(0, -10, 0);
-			vector3df moveDirection = (targetPosition - currentPosition).normalize();
-			vector3df newPosition = currentPosition + moveDirection * moveSpeed;			
-			setPosition(newPosition);
 
-			// TODO: Rotate 90 degrees extra so the shark faces the player
-			setRotation(moveDirection.getHorizontalAngle());
-			
-			// Add the same displacement to our mesh if we have one
-			if (mesh)
-			{		
-				mesh->setPosition(newPosition);
 
-				// TODO: Rotate 90 degrees extra so the shark faces the player
-				mesh->setRotation(moveDirection.getHorizontalAngle());			
-			}
-			break;
+
+			///* Add a vector of length moveSpeed in the direction towards our player
+			//Adds a small offset downwards since our camera is higher up*/
+			//vector3df currentPosition = getPosition();
+			//vector3df targetPosition = GameManager::smgr->getActiveCamera()->getPosition() + vector3df(0, -10, 0);
+			//vector3df moveDirection = (targetPosition - currentPosition).normalize();
+			//vector3df newPosition = currentPosition + moveDirection * moveSpeed;			
+			//setPosition(newPosition);
+
+			//// TODO: Rotate 90 degrees extra so the shark faces the player
+			//setRotation(moveDirection.getHorizontalAngle());
+			//
+			//// Add the same displacement to our mesh if we have one
+			//if (mesh)
+			//{		
+			//	mesh->setPosition(newPosition);
+
+			//	// TODO: Rotate 90 degrees extra so the shark faces the player
+			//	mesh->setRotation(moveDirection.getHorizontalAngle());			
+			//}
+			//break;
+
+
+
 		}
 
 		// Attacking when in range
