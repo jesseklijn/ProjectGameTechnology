@@ -6,6 +6,7 @@
 #include "Camera.h"
 #pragma once
 #include "Monster.h"
+#pragma once
 #include "GridMesh.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
@@ -47,13 +48,15 @@ triangle3df* hitTriangle;
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
 std::vector<std::string> GameManager::tags;
+float GameManager::deltaTime = 0.0;
+float GameManager::deltaTimeMS = 0.0;
 #pragma endregion
 
 // Constructor
 GameManager::GameManager()
 {
 	// Set a default font
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
 
 	// Set up tags
 	GameManager::tags.push_back("<NONE>");
@@ -102,6 +105,21 @@ void GameManager::Update()
 void GameManager::Draw()
 {
 
+}
+
+float GameManager::Min(float value, float value2)
+{
+	return value <= value2 ? value : value2;
+}
+
+float GameManager::Max(float value, float value2)
+{
+	return value > value2 ? value : value2;
+}
+
+float GameManager::Clamp(float value, float minValue, float maxValue)
+{
+	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
 }
 
 // Switch to the given GameState.

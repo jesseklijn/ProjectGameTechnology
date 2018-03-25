@@ -22,6 +22,7 @@
 #pragma once
 #include <string>
 #pragma endregion
+#include <chrono>
 
 #pragma region Namespaces
 //Main namespace
@@ -57,6 +58,8 @@ This is the main method. We can now use main() on every platform.
 */
 int main()
 {
+	srand(static_cast<unsigned>(time(0)));
+
 	// Create a GameManager, set window caption and hide our mouse
 	GameManager gameManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
@@ -153,6 +156,9 @@ int main()
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
 	{
+		// Delta time start point
+		auto frameTimeStart = std::chrono::system_clock::now();
+
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 		//!!Change parameters to correct type
@@ -198,6 +204,12 @@ int main()
 
 		// Our frame is finished
 		GameManager::driver->endScene();
+
+		// Delta time end point, calculate time passed for the next frame
+		auto frameTimeEnd = std::chrono::system_clock::now();
+		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
+		GameManager::deltaTime = elapsed_seconds.count();
+		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f;
 	}
 	// Game end, drop our Irrlicht device
 	GameManager::device->drop();

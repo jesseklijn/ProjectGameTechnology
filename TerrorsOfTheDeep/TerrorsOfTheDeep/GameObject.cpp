@@ -83,6 +83,20 @@ void GameObject::Draw()
 
 }
 
+void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
+{
+	// Add a vector of length speed in the given direction
+	setPosition(getPosition() + (direction.normalize() * speed));
+
+	// Turn the GameObject towards the direction it is moving towards if applicable
+	if (turnToDirection)
+	{
+		setRotation(direction.getHorizontalAngle());
+		if (mesh)
+			mesh->setRotation(direction.getHorizontalAngle());
+	}
+}
+
 std::string GameObject::GetTag()
 {
 	return tag;

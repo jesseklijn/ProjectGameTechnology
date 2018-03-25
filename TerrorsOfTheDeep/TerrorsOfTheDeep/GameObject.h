@@ -35,6 +35,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual std::string GetTag();
+	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 
 private:
 };

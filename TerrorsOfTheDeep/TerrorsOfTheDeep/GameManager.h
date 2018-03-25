@@ -82,6 +82,9 @@ public:
 	// A list of base tags (see constructor for filling)
 	static std::vector<std::string> tags;
 
+	// Delta timing
+	static float deltaTime, deltaTimeMS;
+
 	int GameSpeed = 1;
 	bool GamePaused = false;
 
@@ -96,4 +99,7 @@ public:
 
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
 	static GameObject* FindGameObjectWithTag(std::string name);
+	static float Min(float value, float value2);
+	static float Max(float value, float value2);
+	static float Clamp(float value, float minValue, float maxValue);
 };

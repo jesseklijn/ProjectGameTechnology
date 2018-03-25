@@ -17,6 +17,16 @@ public:
 	~Shark();
 
 	// Variables
+	ISceneNode* target;
+	float chaseSpeedMultiplier = 1.5f;
+	float detectionRange = 1.0f;
+	float attackRange = 100.0f;
+	int idlingRange = 500;
+
+	float seekTime = 10.0f * 1000.0f;
+	float idlePositionTime = 10.0f * 1000.0f;
+
+	bool canSeeTarget = false;
 
 	// Main shark state
 	enum State
@@ -31,9 +41,12 @@ public:
 
 	// Functions
 	virtual void Update();
+	void OnStateSwitch();
 
 private:
 	// Variables
-	//GameObject* mainPlayer;
+	State statePrevious;
+	float targetDistance, chaseSpeed, seekTimer = 0.0f, idlePositionTimer = 0.0f;
+	irr::core::vector3df currentPosition, targetPosition, moveDirection;
 };
 
