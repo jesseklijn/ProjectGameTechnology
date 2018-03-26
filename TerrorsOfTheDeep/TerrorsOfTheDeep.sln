@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrorsOfTheDeep", "TerrorsOfTheDeep\TerrorsOfTheDeep.vcxproj", "{86D0DF67-DB7C-48FA-9063-808E0F63F385}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTesting", "UnitTesting\UnitTesting.vcxproj", "{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{86D0DF67-DB7C-48FA-9063-808E0F63F385}.Release|x64.Build.0 = Release|x64
 		{86D0DF67-DB7C-48FA-9063-808E0F63F385}.Release|x86.ActiveCfg = Release|Win32
 		{86D0DF67-DB7C-48FA-9063-808E0F63F385}.Release|x86.Build.0 = Release|Win32
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Debug|x64.ActiveCfg = Debug|x64
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Debug|x64.Build.0 = Debug|x64
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Debug|x86.ActiveCfg = Debug|Win32
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Debug|x86.Build.0 = Debug|Win32
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Release|x64.ActiveCfg = Release|x64
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Release|x64.Build.0 = Release|x64
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Release|x86.ActiveCfg = Release|Win32
+		{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
