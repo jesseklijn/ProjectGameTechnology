@@ -166,7 +166,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="addLighting.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicUpdater.cpp" />
     <ClCompile Include="DetectCollision.cpp" />
@@ -186,7 +186,7 @@
     <ClInclude Include="GameObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="addLighting.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
     <ClInclude Include="GameManager.h" />

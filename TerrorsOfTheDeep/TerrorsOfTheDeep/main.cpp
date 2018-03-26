@@ -2,7 +2,7 @@
 #pragma once
 #include <irrlicht.h>
 #pragma once
-#include "addLighting.h"
+#include "Lighting.h"
 #pragma once
 #include "HUD.h"
 #pragma once
@@ -24,10 +24,10 @@
 #pragma endregion
 
 #pragma region Namespaces
-//Main namespace
+// Main namespace
 using namespace irr;
 
-//Namespaces of Irrlicht
+// Namespaces of Irrlicht
 using namespace core;
 using namespace scene;
 using namespace video;
@@ -43,6 +43,11 @@ int stamina = 0;
 
 // Check if the items are picked up
 bool itemPickedUp[3] = { false, false, false };
+
+// Light colours
+irr::video::SColorf ambientColor = irr::video::SColorf(1.0f,1.0f,1.0f,1.0f);
+irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 
 // Create HUD object
 HUD* hud = new HUD;
@@ -62,7 +67,7 @@ int main()
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
 
-	// Set our skybox
+	// Set our skydome
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 
 	// Initialize our background music
@@ -71,8 +76,21 @@ int main()
 
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
+	Lighting lighting = Lighting(GameManager::smgr);
 
-	/* Create dummy objects for testing
+	// Ambient Scene Light
+	lighting.SetSceneLight(ambientColor);
+	// Set and attach flashlight to player
+	//ISceneNode *playerNode = &player;
+
+
+	// Create two dummy objects for testing
+	// Shark
+	
+	// Create two dummy objects for testing
+	// Shark
+	
+/* Create dummy objects for testing
 	Shark*/	
 	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
@@ -101,6 +119,9 @@ int main()
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
 	player->tag = "Player";
 	GameManager::gameObjects.push_back(player);
+	ISceneNode* newPlayer = player;
+
+	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
 
 
 	// Rock
@@ -148,7 +169,7 @@ int main()
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 
-	ISceneNode* newPlayer = player;
+
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
