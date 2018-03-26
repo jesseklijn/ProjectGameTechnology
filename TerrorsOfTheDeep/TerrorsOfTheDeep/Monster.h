@@ -17,6 +17,6 @@ public:
 
 	// Functions
 	virtual void Update();
-	virtual bool IsInSight(irr::core::vector3df* startPosition, irr::core::vector3df* endPosition);
-	virtual bool IsInSight(Player* player);
+	virtual bool IsInSight(irr::core::vector3df startPosition, irr::core::vector3df endPosition);
+	virtual bool IsInSight(GameObject* targetObject);
 };

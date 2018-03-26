@@ -31,18 +31,14 @@ irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
 #pragma endregion
 
 #pragma region Raycasting
-// Initialize a base selector, used for assigning selection to scene nodes 
-// It's dropped after every selector assignment, but it's easily re-usable 
-ITriangleSelector* selector;
-
 // Initialize a re-usable ray 
-line3d<f32>* ray;
+line3d<f32> ray;
 
 // Tracks the current intersection point with the level or a mesh 
-vector3df* intersection;
+vector3df intersection;
 
 // Used to show which triangle has been hit 
-triangle3df* hitTriangle;
+triangle3df hitTriangle;
 #pragma endregion
 
 #pragma region Variables
@@ -99,6 +95,8 @@ void GameManager::Update()
 	{
 		GameManager::gameObjects[i]->Update();
 	}
+
+	//std::cout << GameManager::deltaTimeMS << std::endl;
 }
 
 // Runs the Draw() for all GameObjects in GameManager::gameObjects.
@@ -146,7 +144,6 @@ Example:
 */
 ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
 {
-	line3d<f32> ray;
 	ray.start = startPosition;
 	ray.end = endPosition;
 
@@ -159,8 +156,8 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,
-			*intersection,    // This will be the position of the collision
-			*hitTriangle,    // This will be the triangle hit in the collision
+			intersection,    // This will be the position of the collision
+			hitTriangle,    // This will be the triangle hit in the collision
 			GameManager::IDFlag_IsPickable,  // This ensures that only nodes that we have set up to be pickable are considered
 			0);          // Check the entire scene (this is actually the implicit default)
 

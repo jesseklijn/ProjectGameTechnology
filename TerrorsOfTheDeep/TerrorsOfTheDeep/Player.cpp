@@ -65,6 +65,8 @@ void Player::Update()
 	// Inherit base class Update
 	GameObject::Update();
 
+	updateAbsolutePosition();
+
 	UpdatePos();
 }
 
@@ -114,6 +116,7 @@ void Player::UpdatePos()
 	MoveArms(speed);
 
 	latestPos = currentPos;
+	setPosition(getPosition());
 }
 
 void Player::MoveArms(float speed) {

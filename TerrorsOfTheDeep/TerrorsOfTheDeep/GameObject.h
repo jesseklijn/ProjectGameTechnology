@@ -20,6 +20,7 @@ public:
 	irr::scene::IAnimatedMeshSceneNode* mesh;
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
+	irr::scene::ITriangleSelector* selector;
 	std::string tag = "<NONE>";
 
 	bool canMove = true;

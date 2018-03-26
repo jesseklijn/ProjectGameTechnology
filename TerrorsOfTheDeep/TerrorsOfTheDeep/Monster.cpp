@@ -27,22 +27,29 @@ void Monster::Update()
 	GameObject::Update();
 }
 
-// Checks whether a target can be seen.
-bool Monster::IsInSight(irr::core::vector3df* startPosition, irr::core::vector3df* endPosition)
+// Checks whether a target position can be seen.
+bool Monster::IsInSight(irr::core::vector3df startPosition, irr::core::vector3df endPosition)
 {
-	ISceneNode* target = GameManager::PerformRaycast(*startPosition, *endPosition);
+	ISceneNode* target = GameManager::PerformRaycast(startPosition, endPosition);
 	
-	if (target)
+	// If I didn't find anything in the way
+	if (!target)
 		return true;
 	else
 		return false;
 }
 
 // Checks whether a player can be seen.
-bool Monster::IsInSight(Player* player)
+bool Monster::IsInSight(GameObject* targetObject)
 {
-	ISceneNode* target = GameManager::PerformRaycast(getPosition(), player->getPosition());
+	GameObject &tar = *targetObject;
 
+	// If this GameObject has no mesh, return false
+	if (!tar.mesh)
+		return false;
+
+	// If I hit a triangle of the target
+	ISceneNode* target = GameManager::PerformRaycast(getPosition(), tar.getPosition());
 	if (target)
 		return true;
 	else

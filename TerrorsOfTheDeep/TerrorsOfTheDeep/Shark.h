@@ -1,5 +1,9 @@
 #pragma once
 #include "Monster.h"
+#pragma once
+#include <iostream>
+#pragma once
+#include <vector>
 
 /* Our first Monster: the Shark!
 WARNING: Has an appetite for Player classes!
@@ -17,26 +21,21 @@ public:
 	~Shark();
 
 	// Variables
-	ISceneNode* target;
-	float chaseSpeedMultiplier = 1.5f;
-	float detectionRange = 1.0f;
+	GameObject* target;
+	float chaseSpeedMultiplier = 1.25f;
+	float detectionRange = 10000.0f;
 	float attackRange = 100.0f;
-	int idlingRange = 500;
+	int idlingRange = 2500;
 
 	float seekTime = 10.0f * 1000.0f;
 	float idlePositionTime = 10.0f * 1000.0f;
 
 	bool canSeeTarget = false;
+	bool canMove = true;
 
 	// Main shark state
-	enum State
-	{
-		Idle,
-		Chasing,
-		Attacking,
-		Seeking
-	};
-	State state = Chasing;
+	enum State { IDLE, CHASING, ATTACKING, SEEKING };
+	State state = CHASING;
 
 
 	// Functions
@@ -48,5 +47,8 @@ private:
 	State statePrevious;
 	float targetDistance, chaseSpeed, seekTimer = 0.0f, idlePositionTimer = 0.0f;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection;
+
+	// Debug
+	std::vector<std::string> stateNames;
 };
 

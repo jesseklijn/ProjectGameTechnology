@@ -32,6 +32,13 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setPosition(*startPosition);
 		mesh->setScale(*startScale);
 		mesh->setRotation(*startRotation);
+
+		/* Create selection functionality so raycasts will detect it
+		Initialize a base selector, used for assigning selection to scene nodes
+		It's dropped after every selector assignment, but it's easily re-usable*/
+		selector = GameManager::smgr->createTriangleSelector(mesh);
+		mesh->setTriangleSelector(selector);
+		selector->drop();
 	}
 }
 
@@ -75,6 +82,8 @@ void GameObject::Update()
 {
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
+
+	updateAbsolutePosition();
 }
 
 // Draw
@@ -87,8 +96,8 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 {
 	// Add a vector of length speed in the given direction
 	setPosition(getPosition() + (direction.normalize() * speed));
-
-	// Turn the GameObject towards the direction it is moving towards if applicable
+	if (mesh)
+		mesh->setPosition(getPosition());
 	if (turnToDirection)
 	{
 		setRotation(direction.getHorizontalAngle());

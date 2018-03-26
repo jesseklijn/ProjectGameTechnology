@@ -82,6 +82,7 @@ int main()
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
 	shark->tag = "Monster";
+	shark->setTriangleSelector(0);
 
 	/* TODO: Find a way to integrate this in derived (child) classes.
 

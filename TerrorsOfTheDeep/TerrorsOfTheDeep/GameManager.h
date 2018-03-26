@@ -7,8 +7,6 @@
 #include <iostream>
 #pragma once
 #include "irrlicht.h"
-#pragma once
-#include <vector>
 #pragma endregion
 
 #pragma region Namespaces
@@ -61,13 +59,13 @@ public:
 
 #pragma region Game state
 	enum GameState {
-		MainMenu,
-		LevelSelector,
-		Credits,
-		Settings,
-		DemoScene,
+		MAINMENU,
+		LEVELSELECTOR,
+		CREDITS,
+		SETTINGS,
+		DEMOSCENE,
 	};
-	GameState currentGamestate = DemoScene;
+	GameState currentGamestate = DEMOSCENE;
 #pragma endregion
 
 	// Constructor and destructor
