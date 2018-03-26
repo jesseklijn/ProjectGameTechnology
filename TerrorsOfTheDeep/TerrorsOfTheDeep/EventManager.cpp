@@ -31,3 +31,9 @@ bool EventManager::IsKeyDown(EKEY_CODE keyCode) const
 {
 	return KeyIsDown[keyCode];
 }
+
+// To handle events:
+//
+// if (gameManager.receiver.IsKeyDown(irr::KEY_KEY_P)) {
+//	*code you want to happen*
+//}

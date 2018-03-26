@@ -4,6 +4,8 @@
 #pragma once
 #include "GameObject.h"
 #pragma once
+#include "EventManager.h"
+#pragma once
 #include <iostream>
 #pragma once
 #include "irrlicht.h"
@@ -75,6 +77,9 @@ public:
 	~GameManager();
 
 	// Variables
+
+	// Event receiver
+	static EventManager receiver;
 
 	// A list of all GameObjects or children of GameObjects in the scene
 	static std::vector<GameObject*> gameObjects;
