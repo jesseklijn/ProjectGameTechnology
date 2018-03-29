@@ -19,11 +19,11 @@
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
 
-EventManager GameManager::receiver;
+EventManager GameManager::eventManager;
 
 irr::IrrlichtDevice* GameManager::device =
 createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
-	false, true, false, &receiver);
+	false, true, false, &eventManager);
 
 // Initialize Irrlicht components
 irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDriver();

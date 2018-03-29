@@ -26,7 +26,7 @@ public:
 		Attacking,
 		Seeking
 	};
-	State state = Chasing;
+	State state = Idle;
 
 
 	// Functions

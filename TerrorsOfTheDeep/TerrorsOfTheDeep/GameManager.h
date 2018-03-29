@@ -79,7 +79,7 @@ public:
 	// Variables
 
 	// Event receiver
-	static EventManager receiver;
+	static EventManager eventManager;
 
 	// A list of all GameObjects or children of GameObjects in the scene
 	static std::vector<GameObject*> gameObjects;
