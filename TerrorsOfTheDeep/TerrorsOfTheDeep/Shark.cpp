@@ -8,12 +8,23 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 				const irr::core::vector3df* startScale,
 				const irr::core::vector3df* startRotation,
 				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-				irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
-				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
+				irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	// Set our movement speed and our chase speed
+	// Shark configuration
 	moveSpeed = 0.4;
 	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
+	chaseSpeedMultiplier = 1.25f;
+
+	detectionRange = 10000.0f;
+	attackRange = 100.0f;
+	idlingRange = 2500;
+
+	seekTime = 10.0f * 1000.0f;
+	idlePositionTime = 10.0f * 1000.0f;
+
+	canSeeTarget = false;
+	canMove = true;
 
 	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
 	Not used in any other way!*/
@@ -157,10 +168,10 @@ void Shark::Update()
 	if (canMove)
 	{
 		/* Add a vector of length moveSpeed in the direction towards our target position*/
-		vector3df moveDist = targetPosition - currentPosition;
-		if (moveDist.getLength() >= moveSpeed)
+		moveDirectionTarget = targetPosition - currentPosition;
+		if (moveDirectionTarget.getLength() >= moveSpeed)
 		{
-			moveDirection = moveDist.normalize();
+			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, rotationLerp).normalize();
 			Shark::Move(moveSpeed, moveDirection, true);
 		}
 	}

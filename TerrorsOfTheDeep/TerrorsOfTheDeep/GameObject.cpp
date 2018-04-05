@@ -8,7 +8,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						const irr::core::vector3df* startScale,
 						const irr::core::vector3df* startRotation, 
 						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) 
+						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 						: ISceneNode(parent, mgr, id)
 {
 	// Set the position, scale and rotation of our GameObject
@@ -36,9 +36,12 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		/* Create selection functionality so raycasts will detect it
 		Initialize a base selector, used for assigning selection to scene nodes
 		It's dropped after every selector assignment, but it's easily re-usable*/
-		selector = GameManager::smgr->createTriangleSelector(mesh);
-		mesh->setTriangleSelector(selector);
-		selector->drop();
+		if (detectCollision)
+		{
+			selector = GameManager::smgr->createTriangleSelector(mesh);
+			mesh->setTriangleSelector(selector);
+			selector->drop();
+		}
 	}
 }
 

@@ -120,6 +120,18 @@ float GameManager::Clamp(float value, float minValue, float maxValue)
 	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
 }
 
+float GameManager::Lerp(float value, float value2, float blend)
+{
+	return value + blend * (value2 - value);
+}
+
+irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, float blend)
+{
+	return vector3df(value.X + blend * (value2.X - value.X),
+						value.Y + blend * (value2.Y - value.Y),
+						value.Z + blend * (value2.Z - value.Z));
+}
+
 // Switch to the given GameState.
 // TODO: Functionality!
 void GameManager::GameStateTransition(GameState StateToLoad)

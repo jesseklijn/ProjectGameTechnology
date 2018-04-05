@@ -80,9 +80,8 @@ int main()
 	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg"));
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
 	shark->tag = "Monster";
-	shark->setTriangleSelector(0);
 
 	/* TODO: Find a way to integrate this in derived (child) classes.
 
