@@ -6,6 +6,7 @@
 #include "Camera.h"
 #pragma once
 #include "Monster.h"
+#pragma once
 #include "GridMesh.h"
 #include "EventManager.h"
 
@@ -19,11 +20,11 @@
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
 
-EventManager GameManager::receiver;
+EventManager GameManager::eventManager;
 
 irr::IrrlichtDevice* GameManager::device =
 createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1024, 720), 64,
-	false, true, false, &receiver);
+	false, true, false, &eventManager);
 
 // Initialize Irrlicht components
 irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDriver();
@@ -34,30 +35,28 @@ irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
 #pragma endregion
 
 #pragma region Raycasting
-// Initialize a base selector, used for assigning selection to scene nodes 
-// It's dropped after every selector assignment, but it's easily re-usable 
-ITriangleSelector* selector;
-
 // Initialize a re-usable ray 
-line3d<f32>* ray;
+line3d<f32> ray;
 
 // Tracks the current intersection point with the level or a mesh 
-vector3df* intersection;
+vector3df intersection;
 
 // Used to show which triangle has been hit 
-triangle3df* hitTriangle;
+triangle3df hitTriangle;
 #pragma endregion
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
 std::vector<std::string> GameManager::tags;
+float GameManager::deltaTime = 0.0;
+float GameManager::deltaTimeMS = 0.0;
 #pragma endregion
 
 // Constructor
 GameManager::GameManager()
 {
 	// Set a default font
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
 
 	// Set up tags
 	GameManager::tags.push_back("<NONE>");
@@ -100,12 +99,41 @@ void GameManager::Update()
 	{
 		GameManager::gameObjects[i]->Update();
 	}
+
+	//std::cout << GameManager::deltaTimeMS << std::endl;
 }
 
 // Runs the Draw() for all GameObjects in GameManager::gameObjects.
 void GameManager::Draw()
 {
 
+}
+
+float GameManager::Min(float value, float value2)
+{
+	return value <= value2 ? value : value2;
+}
+
+float GameManager::Max(float value, float value2)
+{
+	return value > value2 ? value : value2;
+}
+
+float GameManager::Clamp(float value, float minValue, float maxValue)
+{
+	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
+}
+
+float GameManager::Lerp(float value, float value2, float blend)
+{
+	return value + blend * (value2 - value);
+}
+
+irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, float blend)
+{
+	return vector3df(value.X + blend * (value2.X - value.X),
+						value.Y + blend * (value2.Y - value.Y),
+						value.Z + blend * (value2.Z - value.Z));
 }
 
 // Switch to the given GameState.
@@ -132,7 +160,6 @@ Example:
 */
 ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
 {
-	line3d<f32> ray;
 	ray.start = startPosition;
 	ray.end = endPosition;
 
@@ -145,8 +172,8 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,
-			*intersection,    // This will be the position of the collision
-			*hitTriangle,    // This will be the triangle hit in the collision
+			intersection,    // This will be the position of the collision
+			hitTriangle,    // This will be the triangle hit in the collision
 			GameManager::IDFlag_IsPickable,  // This ensures that only nodes that we have set up to be pickable are considered
 			0);          // Check the entire scene (this is actually the implicit default)
 

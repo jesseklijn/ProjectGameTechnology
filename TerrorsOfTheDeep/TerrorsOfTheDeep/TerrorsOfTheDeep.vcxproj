@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\lib;$(IRRKLANG_HOME)\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(IRRKLANG_HOME)\include;$(IncludePath);;$(IRRKLANG_HOME)\include</IncludePath>

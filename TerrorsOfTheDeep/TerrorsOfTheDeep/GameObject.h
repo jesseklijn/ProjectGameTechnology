@@ -11,7 +11,7 @@ public:
 				const irr::core::vector3df* startScale,
 				const irr::core::vector3df* startRotation, 
 				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-				irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0);
+				irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
 
 	// Destructor
 	~GameObject();
@@ -20,6 +20,7 @@ public:
 	irr::scene::IAnimatedMeshSceneNode* mesh;
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
+	irr::scene::ITriangleSelector* selector;
 	std::string tag = "<NONE>";
 
 	bool canMove = true;
@@ -35,6 +36,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual std::string GetTag();
+	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 
 private:
 };
