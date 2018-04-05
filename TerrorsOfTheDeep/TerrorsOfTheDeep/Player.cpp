@@ -42,8 +42,8 @@ Player::Player(const irr::core::vector3df* startPosition,
 		Box.addInternalPoint(Vertices[i].Pos);
 
 	then = irrDevice->getTimer()->getTime();
-	deltaX = 0.15;
-	deltaZ = 0.15;
+	deltaX = 0.15f;
+	deltaZ = 0.15f;
 	latestPos = getAbsolutePosition();
 }
 
@@ -64,6 +64,8 @@ void Player::Update()
 {
 	// Inherit base class Update
 	GameObject::Update();
+
+	updateAbsolutePosition();
 
 	UpdatePos();
 }
@@ -99,21 +101,22 @@ void Player::UpdatePos()
 	vector3df currentPos = getAbsolutePosition();
 
 	// If the player is moving, make the arms swim, otherwise make them idle (swim really slowly)
-	float speed = (currentPos.Z == latestPos.Z) ? 0.1 : 1;
+	float speed = (currentPos.Z == latestPos.Z) ? 0.1f : 1.0f;
 
 	// don't let arms leave the screen
 	if (Vertices[5].Pos.X > 30 || Vertices[1].Pos.X < -30) {
-		deltaX = -0.15;
-		deltaZ = -0.15;
+		deltaX = -0.15f;
+		deltaZ = -0.15f;
 	}
 	if (Vertices[5].Pos.X < 0 || Vertices[1].Pos.X > 0) {
-		deltaX = 0.15;
-		deltaZ = 0.15;
+		deltaX = 0.15f;
+		deltaZ = 0.15f;
 	}
 
 	MoveArms(speed);
 
 	latestPos = currentPos;
+	setPosition(getPosition());
 }
 
 void Player::MoveArms(float speed) {

@@ -1,5 +1,9 @@
 #pragma once
 #include "Monster.h"
+#pragma once
+#include <iostream>
+#pragma once
+#include <vector>
 
 /* Our first Monster: the Shark!
 WARNING: Has an appetite for Player classes!
@@ -13,27 +17,15 @@ public:
 		const irr::core::vector3df* startScale,
 		const irr::core::vector3df* startRotation,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0);
+		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
 	~Shark();
-
-	// Variables
-
-	// Main shark state
-	enum State
-	{
-		Idle,
-		Chasing,
-		Attacking,
-		Seeking
-	};
-	State state = Idle;
-
 
 	// Functions
 	virtual void Update();
+	void OnStateSwitch();
 
 private:
-	// Variables
-	//GameObject* mainPlayer;
+	// Debug
+	std::vector<std::string> stateNames;
 };
 
