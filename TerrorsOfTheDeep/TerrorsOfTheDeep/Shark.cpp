@@ -69,7 +69,9 @@ void Shark::Update()
 	if (target)
 	{
 		canSeeTarget = Monster::IsInSight(getAbsolutePosition(), target->getAbsolutePosition());
-		targetDistance = (target->getAbsolutePosition() - getAbsolutePosition()).getLength();
+
+		if (canSeeTarget)
+			targetDistance = (target->getAbsolutePosition() - getAbsolutePosition()).getLength();
 	}
 
 	// If target can potentially be spotted
@@ -92,13 +94,6 @@ void Shark::Update()
 		Have we seen him recently? Try and seek him out. Otherwise, idle*/
 		if (seekTimer > 0.0f)
 			state = SEEKING;
-	}
-
-	// State switch detector
-	if (statePrevious != state)
-	{
-		OnStateSwitch();
-		statePrevious = state;
 	}															
 
 	// Decide what to do depending on our state
@@ -156,6 +151,13 @@ void Shark::Update()
 			std::cout << "[ERROR] Invalid state, defaulting to IDLE..." << std::endl;
 			break;
 		}
+	}
+
+	// State switch detector
+	if (statePrevious != state)
+	{
+		OnStateSwitch();
+		statePrevious = state;
 	}
 
 	// If we're not at our targetPosition, move the shark
