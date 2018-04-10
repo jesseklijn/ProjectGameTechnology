@@ -109,7 +109,7 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 	}
 }
 
-DynamicUpdater::Tag GameObject::GetTag()
+GameObject::Tag GameObject::GetTag()
 {
 	return tag;
 }

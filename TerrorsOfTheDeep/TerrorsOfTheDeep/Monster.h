@@ -35,7 +35,7 @@ public:
 	bool canAnimate = true;
 
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
-	std::vector<DynamicUpdater::Tag> targetTags;
+	std::vector<GameObject::Tag> targetTags;
 
 	// Main monster state
 	enum State { IDLE, CHASING, ATTACKING, SEEKING };

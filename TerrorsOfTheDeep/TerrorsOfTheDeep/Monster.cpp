@@ -17,8 +17,8 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	chaseSpeedMultiplier = 2.0f;
 	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
 
-	targetTags.push_back(DynamicUpdater::PLAYER);
-	targetTags.push_back(DynamicUpdater::CREATURE);
+	targetTags.push_back(GameObject::PLAYER);
+	targetTags.push_back(GameObject::CREATURE);
 }
 
 // Destructor
@@ -33,7 +33,7 @@ GameObject* Monster::GetTarget()
 	tempTargets.clear();
 	for (int i = 0; i < GameManager::gameObjects.size(); i++)
 	{
-		DynamicUpdater::Tag currentTag = GameManager::gameObjects[i]->GetTag();
+		GameObject::Tag currentTag = GameManager::gameObjects[i]->GetTag();
 
 		// If this object's tag is contained in this monster's prey tag list
 		if (GameManager::FindTagInTagList(targetTags, currentTag) != -1)
@@ -42,7 +42,7 @@ GameObject* Monster::GetTarget()
 			if (canSeeTarget)
 			{
 				// If the player is part of the valid objects, return the player immediately
-				if (currentTag == DynamicUpdater::PLAYER)
+				if (currentTag == GameObject::PLAYER)
 					return GameManager::gameObjects[i];
 
 				tempTargets.push_back(GameManager::gameObjects[i]);

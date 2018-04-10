@@ -130,35 +130,35 @@ int main()
 		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock->tag = DynamicUpdater::WORLD_OBJECT;
+	rock->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock1->tag = DynamicUpdater::WORLD_OBJECT;
+	rock1->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock1);
 
 	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock2->tag = DynamicUpdater::WORLD_OBJECT;
+	rock2->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock2);
 
 	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock3->tag = DynamicUpdater::WORLD_OBJECT;
+	rock3->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock3);
 
 	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock4->tag = DynamicUpdater::WORLD_OBJECT;
+	rock4->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock4);
 
 	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
@@ -171,7 +171,7 @@ int main()
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
-	key->tag = DynamicUpdater::KEY;
+	key->tag = GameObject::KEY;
 	GameManager::gameObjects.push_back(key);
 
 	// Win Condition trigger object
@@ -179,7 +179,7 @@ int main()
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
-	chest->tag = DynamicUpdater::CHEST;
+	chest->tag = GameObject::CHEST;
 	GameManager::gameObjects.push_back(chest);
 
 

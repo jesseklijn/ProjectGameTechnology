@@ -134,7 +134,7 @@ irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::ve
 
 Used in deciding whether a GameObject is a prey for a Monster for example by giving
 the monster's tag list and the target object's tag, but can be used for anything else as well.*/
-int GameManager::FindTagInTagList(std::vector<DynamicUpdater::Tag> vectorList, DynamicUpdater::Tag listTag)
+int GameManager::FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag)
 {
 	for (int i = 0; i < vectorList.size(); i++)
 	{
@@ -189,7 +189,7 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 }
 
 // Finds the first GameObject that matches the given tag.
-GameObject* GameManager::FindGameObjectWithTag(DynamicUpdater::Tag name)
+GameObject* GameManager::FindGameObjectWithTag(GameObject::Tag name)
 {
 	for (GameObject* gameObj : GameManager::gameObjects)
 		if (gameObj->GetTag() == name)
