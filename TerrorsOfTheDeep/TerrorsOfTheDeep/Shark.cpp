@@ -36,10 +36,6 @@ void Shark::OnStateSwitch()
 	std::cout << stateNames[(int)state] << std::endl;
 }
 
-/* Overridden (from GameObject - Monster)
-
-Main player chasing code for vertical slice. Since the player
-is parented to the camera, the main camera's position is used.*/
 void Shark::Update()
 {
 	// Update base
@@ -63,9 +59,8 @@ void Shark::Update()
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
 
-	/* Get our potential target and target information
-	TODO: Use the player as target in case camera will be seperated from the player?*/
-	target = GameManager::FindGameObjectWithTag(DynamicUpdater::PLAYER);
+	// Get our potential target and target information
+	target = Monster::GetTarget();
 	if (target)
 	{
 		canSeeTarget = Monster::IsInSight(getAbsolutePosition(), target->getAbsolutePosition());
@@ -79,8 +74,6 @@ void Shark::Update()
 	{
 		if (canSeeTarget) 
 		{
-			/* Switch to Chasing
-			TODO: Implement raycast obstruction checks here before going further*/
 			state = CHASING;
 
 			// But switch to Attacking if we're close enough to attack the player

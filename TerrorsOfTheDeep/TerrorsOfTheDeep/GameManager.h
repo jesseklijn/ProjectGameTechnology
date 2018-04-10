@@ -104,4 +104,5 @@ public:
 	static float Clamp(float value, float minValue, float maxValue);
 	static float Lerp(float value, float value2, float blend);
 	static irr::core::vector3df Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend);
+	static int FindTagInTagList(std::vector<DynamicUpdater::Tag> vectorList, DynamicUpdater::Tag listTag);
 };

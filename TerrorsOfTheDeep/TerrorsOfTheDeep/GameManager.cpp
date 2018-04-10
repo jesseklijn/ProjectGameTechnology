@@ -55,7 +55,6 @@ float GameManager::time = 0.0;
 // Constructor
 GameManager::GameManager()
 {
-	// Set a default font
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
 
 	GridMesh playingMesh = GridMesh(
@@ -86,15 +85,13 @@ void GameManager::Start()
 
 }
 
-// Runs the Update() for all GameObjects in GameManager::gameObjects.
 void GameManager::Update()
 {
+	// Runs the Update() for all GameObjects in GameManager::gameObjects.
 	for (int i = 0; i < GameManager::gameObjects.size(); ++i)
 	{
 		GameManager::gameObjects[i]->Update();
 	}
-
-	//std::cout << GameManager::deltaTimeMS << std::endl;
 }
 
 // Runs the Draw() for all GameObjects in GameManager::gameObjects.
@@ -131,6 +128,20 @@ irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::ve
 		value.Z + (blend * (value2.Z - value.Z)));
 
 	return after;
+}
+
+/* Returns the index of the given tag's position in the given tag list.
+
+Used in deciding whether a GameObject is a prey for a Monster for example by giving
+the monster's tag list and the target object's tag, but can be used for anything else as well.*/
+int GameManager::FindTagInTagList(std::vector<DynamicUpdater::Tag> vectorList, DynamicUpdater::Tag listTag)
+{
+	for (int i = 0; i < vectorList.size(); i++)
+	{
+		if (vectorList[i] == listTag)
+			return i;
+	}
+	return -1;
 }
 
 // Switch to the given GameState.

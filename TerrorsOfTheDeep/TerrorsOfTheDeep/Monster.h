@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #pragma once
 #include "Player.h"
+#pragma once
+#include <vector>
 
 // Defines a monster, as in a boss enemy.
 class Monster : public GameObject
@@ -33,6 +35,7 @@ public:
 	bool canAnimate = true;
 
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
+	std::vector<DynamicUpdater::Tag> targetTags;
 
 	// Main monster state
 	enum State { IDLE, CHASING, ATTACKING, SEEKING };
@@ -41,6 +44,10 @@ public:
 
 	// Functions
 	virtual void Update();
+	virtual GameObject* GetTarget();
 	virtual bool IsInSight(irr::core::vector3df startPosition, irr::core::vector3df endPosition);
 	virtual bool IsInSight(GameObject* targetObject);
+
+private:
+	std::vector<GameObject*> tempTargets;
 };
