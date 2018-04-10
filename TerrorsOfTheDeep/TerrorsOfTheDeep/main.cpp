@@ -98,8 +98,7 @@ int main()
 	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
-	shark->tag = GameObject::MONSTER;
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);	
 
 	/* TODO: Find a way to integrate this in derived (child) classes.
 
@@ -120,7 +119,6 @@ int main()
 	// Player
 	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
-	player->tag = DynamicUpdater::PLAYER;
 	GameManager::gameObjects.push_back(player);
 
 	ISceneNode* newPlayer = player;
@@ -173,7 +171,7 @@ int main()
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
-	key->tag = DynamicUpdater::WORLD_OBJECT;
+	key->tag = DynamicUpdater::KEY;
 	GameManager::gameObjects.push_back(key);
 
 	// Win Condition trigger object
@@ -181,7 +179,7 @@ int main()
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
-	chest->tag = DynamicUpdater::WORLD_OBJECT;
+	chest->tag = DynamicUpdater::CHEST;
 	GameManager::gameObjects.push_back(chest);
 
 
