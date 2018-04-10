@@ -11,20 +11,10 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 				irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	// Shark configuration
-	moveSpeed = 0.4;
-	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
-	chaseSpeedMultiplier = 1.25f;
-
-	detectionRange = 10000.0f;
-	attackRange = 100.0f;
-	idlingRange = 2500;
-
-	seekTime = 10.0f * 1000.0f;
-	idlePositionTime = 10.0f * 1000.0f;
-
-	canSeeTarget = false;
-	canMove = true;
+	if (canAnimate && (relatedMesh && relatedTexture))
+	{
+		
+	}
 
 	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
 	Not used in any other way!*/
@@ -40,6 +30,7 @@ Shark::~Shark()
 
 }
 
+// Triggered only when the shark switches states
 void Shark::OnStateSwitch()
 {
 	std::cout << stateNames[(int)state] << std::endl;
@@ -54,11 +45,19 @@ void Shark::Update()
 	// Update base
 	GameObject::Update();
 
+	// Animation
+	if (canAnimate && mesh)
+	{
+
+	}
+
 	/* Determine core state
 	Set defaults and gather basic shark information*/
 	statePrevious = state;
 	state = IDLE;
 	currentPosition = getPosition();
+	canSeeTarget = false;
+	targetDistance = INFINITY;
 
 	// Update our timers
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
@@ -66,16 +65,11 @@ void Shark::Update()
 
 	/* Get our potential target and target information
 	TODO: Use the player as target in case camera will be seperated from the player?*/
-	target = GameManager::FindGameObjectWithTag("Player");
+	target = GameManager::FindGameObjectWithTag(DynamicUpdater::PLAYER);
 	if (target)
 	{
 		canSeeTarget = Monster::IsInSight(getAbsolutePosition(), target->getAbsolutePosition());
-		targetDistance = (target->getPosition() - getPosition()).getLength();
-	}
-	else
-	{
-		canSeeTarget = false;
-		targetDistance = INFINITY;
+		targetDistance = (target->getAbsolutePosition() - getAbsolutePosition()).getLength();
 	}
 
 	// If target can potentially be spotted
@@ -116,7 +110,7 @@ void Shark::Update()
 			// Get a new idle position on timer trigger
 			if (idlePositionTimer <= 0.0f)
 			{
-				targetPosition = vector3df(rand() % idlingRange * 2.0f - idlingRange, 0.0f, rand() % idlingRange * 2.0f - idlingRange);
+				targetPosition = vector3df(rand() % (int)idlingRange * 2.0f - (int)idlingRange, 0.0f, rand() % (int)idlingRange * 2.0f - (int)idlingRange);
 				idlePositionTimer = idlePositionTime;
 			}
 
@@ -166,13 +160,16 @@ void Shark::Update()
 
 	// If we're not at our targetPosition, move the shark
 	if (canMove)
-	{
-		/* Add a vector of length moveSpeed in the direction towards our target position*/
+	{		
 		moveDirectionTarget = targetPosition - currentPosition;
 		if (moveDirectionTarget.getLength() >= moveSpeed)
 		{
-			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, rotationLerp).normalize();
-			Shark::Move(moveSpeed, moveDirection, true);
+			// Calculate an agility factor that lerps the shark sharper towards the target the closer it gets to it
+			float agility = 1.0 + (canSeeTarget ? (-moveDirectionTarget.getLength() + detectionRange) / detectionRange * agilityFactor : 0.0);
+			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, (rotationLerp * agility) * GameManager::deltaTime).normalize();
+
+			/* Add a vector of length moveSpeed in the direction towards our target position*/
+			Shark::Move((canSeeTarget ? chaseSpeed : moveSpeed) * GameManager::deltaTime, moveDirection, true);
 		}
 	}
 }

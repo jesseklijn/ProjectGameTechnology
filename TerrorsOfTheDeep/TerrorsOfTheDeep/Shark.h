@@ -27,5 +27,8 @@ public:
 private:
 	// Debug
 	std::vector<std::string> stateNames;
+
+	// Animation
+	std::vector<irr::video::S3DVertex> baseVertexPositions;
 };
 

@@ -11,7 +11,9 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 					irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 					: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-
+	moveSpeed = 100.0f;
+	chaseSpeedMultiplier = 2.0f;
+	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
 }
 
 // Destructor

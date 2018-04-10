@@ -13,7 +13,7 @@
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 
@@ -47,9 +47,9 @@ triangle3df hitTriangle;
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
-std::vector<std::string> GameManager::tags;
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
+float GameManager::time = 0.0;
 #pragma endregion
 
 // Constructor
@@ -57,12 +57,6 @@ GameManager::GameManager()
 {
 	// Set a default font
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
-
-	// Set up tags
-	GameManager::tags.push_back("<NONE>");
-	GameManager::tags.push_back("Player");
-	GameManager::tags.push_back("Monster");
-	GameManager::tags.push_back("World Object");
 
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
@@ -129,11 +123,14 @@ float GameManager::Lerp(float value, float value2, float blend)
 	return value + blend * (value2 - value);
 }
 
-irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, float blend)
+irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend)
 {
-	return vector3df(value.X + blend * (value2.X - value.X),
-						value.Y + blend * (value2.Y - value.Y),
-						value.Z + blend * (value2.Z - value.Z));
+	//vector3df before = vector3df(value.X, value.Y, value.Z);
+	vector3df after = vector3df(value.X + (blend * (value2.X - value.X)),
+		value.Y + (blend * (value2.Y - value.Y)),
+		value.Z + (blend * (value2.Z - value.Z)));
+
+	return after;
 }
 
 // Switch to the given GameState.
@@ -181,7 +178,7 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 }
 
 // Finds the first GameObject that matches the given tag.
-GameObject* GameManager::FindGameObjectWithTag(std::string name)
+GameObject* GameManager::FindGameObjectWithTag(DynamicUpdater::Tag name)
 {
 	for (GameObject* gameObj : GameManager::gameObjects)
 		if (gameObj->GetTag() == name)

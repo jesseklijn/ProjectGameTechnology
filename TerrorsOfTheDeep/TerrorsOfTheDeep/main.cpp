@@ -99,7 +99,7 @@ int main()
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
-	shark->tag = "Monster";
+	shark->tag = GameObject::MONSTER;
 
 	/* TODO: Find a way to integrate this in derived (child) classes.
 
@@ -120,10 +120,10 @@ int main()
 	// Player
 	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
-	player->tag = "Player";
+	player->tag = DynamicUpdater::PLAYER;
 	GameManager::gameObjects.push_back(player);
-	ISceneNode* newPlayer = player;
 
+	ISceneNode* newPlayer = player;
 	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
 
 
@@ -132,30 +132,38 @@ int main()
 		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock->tag = "World Object";
+	rock->tag = DynamicUpdater::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	rock1->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(rock1);
 
 	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	rock2->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(rock2);
 
 	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	rock3->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(rock3);
 
 	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	rock4->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(rock4);
 
-	GameObject* GroundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
+	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/SandTexture.jpg"));
@@ -165,12 +173,16 @@ int main()
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
+	key->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(key);
 
 	// Win Condition trigger object
-	GameObject* win = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
+	GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
+	chest->tag = DynamicUpdater::WORLD_OBJECT;
+	GameManager::gameObjects.push_back(chest);
 
 
 
@@ -192,7 +204,7 @@ int main()
 		camera.updatePos();
 
 		Detect(newPlayer,
-			win->mesh,
+			chest->mesh,
 			key->mesh,
 			shark->mesh,
 			rock->mesh,
@@ -231,6 +243,7 @@ int main()
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
 		GameManager::deltaTime = elapsed_seconds.count();
 		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f;
+		GameManager::time += elapsed_seconds.count();
 	}
 	// Game end, drop our Irrlicht device
 	GameManager::device->drop();

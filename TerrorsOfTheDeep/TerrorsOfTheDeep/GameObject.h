@@ -3,7 +3,7 @@
 #pragma once
 #include "DynamicUpdater.h"
 
-class GameObject : public irr::scene::ISceneNode, DynamicUpdater
+class GameObject : public irr::scene::ISceneNode, public DynamicUpdater
 {
 public:
 	// Constructor
@@ -21,7 +21,7 @@ public:
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
 	irr::scene::ITriangleSelector* selector;
-	std::string tag = "<NONE>";
+	Tag tag = NONE;
 
 	bool canMove = true;
 	float moveSpeed = 0.25f;
@@ -35,7 +35,7 @@ public:
 
 	virtual void Update();
 	virtual void Draw();
-	virtual std::string GetTag();
+	virtual Tag GetTag();
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 
 private:

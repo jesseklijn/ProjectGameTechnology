@@ -17,20 +17,21 @@ public:
 
 	// Variables
 	GameObject* target;
-	float chaseSpeedMultiplier = 1.25f;
-	float detectionRange = 10000.0f;
+	float idlingRange = 2500.0f;
+	float detectionRange = 15000.0f;
 	float attackRange = 100.0f;
-	int idlingRange = 2500;
-
 	float seekTime = 10.0f * 1000.0f;
-	float idlePositionTime = 10.0f * 1000.0f;
+	float idlePositionTime = 10.0f * 1000.0f;	
+	float targetDistance, chaseSpeed, chaseSpeedMultiplier, seekTimer = 0.0f, idlePositionTimer = 0.0f;
 
 	bool rotatesSmoothly = true;
-	float rotationLerp = 0.00001;
+	double rotationLerp = 0.001;
+	float agilityFactor = 4.0f;
+
 	bool canSeeTarget = false;
 	bool canMove = true;
+	bool canAnimate = true;
 
-	float targetDistance, chaseSpeed, seekTimer = 0.0f, idlePositionTimer = 0.0f;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
 	// Main monster state
