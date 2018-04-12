@@ -95,10 +95,11 @@ int main()
 	
 /* Create dummy objects for testing
 	Shark*/	
-	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
+	Creature* sharkC = new Creature(new vector3df(500, 50, 0), new vector3df(8, 8, 8), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);	
+	sharkC->tag = GameObject::CREATURE;
 
 	/* TODO: Find a way to integrate this in derived (child) classes.
 
@@ -114,6 +115,13 @@ int main()
 	- Inherits from GameObject
 	- Is using an Update() function
 	*/
+	GameManager::gameObjects.push_back(sharkC);
+
+	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1111,
+		GameManager::smgr->getMesh("../media/shark.obj"),
+		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
+	shark->tag = GameObject::MONSTER;
 	GameManager::gameObjects.push_back(shark);
 
 	// Player

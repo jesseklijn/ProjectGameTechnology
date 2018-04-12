@@ -3,6 +3,8 @@
 #pragma once
 #include <utility>
 #pragma once
+#include <algorithm>
+#pragma once
 #include "Camera.h"
 #pragma once
 #include "Monster.h"
@@ -195,4 +197,23 @@ GameObject* GameManager::FindGameObjectWithTag(GameObject::Tag name)
 		if (gameObj->GetTag() == name)
 			return gameObj;
 	return nullptr;
+}
+
+GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name)
+{
+	float closestDistance = INFINITY, currentDistance;
+	GameObject* closestObject = nullptr;
+	for (GameObject* gameObj : GameManager::gameObjects)
+	{
+		if (gameObj != origin && gameObj->GetTag() == name)
+		{
+			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
+			if (currentDistance < closestDistance)
+			{
+				closestDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
+				closestObject = gameObj;
+			}
+		}
+	}
+	return closestObject;
 }

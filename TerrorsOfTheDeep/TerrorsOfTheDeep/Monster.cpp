@@ -9,13 +9,16 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 					const irr::core::vector3df* startRotation,
 					irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 					irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-					: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
+					: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	tag = GameObject::MONSTER;
 
-	moveSpeed = 100.0f;
-	chaseSpeedMultiplier = 2.0f;
-	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
+	canAttack = true;
+	canFlee = false;
+
+	moveSpeed = idleSpeed;
+	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
+	fleeSpeed = chaseSpeed;
 
 	targetTags.push_back(GameObject::PLAYER);
 	targetTags.push_back(GameObject::CREATURE);
@@ -42,7 +45,7 @@ GameObject* Monster::GetTarget()
 			if (canSeeTarget)
 			{
 				// If the player is part of the valid objects, return the player immediately
-				if (currentTag == GameObject::PLAYER)
+				if (currentTag == GameObject::CREATURE)
 					return GameManager::gameObjects[i];
 
 				tempTargets.push_back(GameManager::gameObjects[i]);
@@ -60,7 +63,8 @@ GameObject* Monster::GetTarget()
 // Overridden (from GameObject) Update-loop
 void Monster::Update()
 {
-	// Run the Update() of our base class
+	/* Run the Update() of our base class.
+	Since this is a boss type creature, we have our own Update() in children, so don't inherit Update() from Creature.*/
 	GameObject::Update();
 }
 

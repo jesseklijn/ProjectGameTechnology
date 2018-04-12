@@ -99,6 +99,7 @@ public:
 
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
 	static GameObject* FindGameObjectWithTag(GameObject::Tag name);
+	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name);
 	static float Min(float value, float value2);
 	static float Max(float value, float value2);
 	static float Clamp(float value, float minValue, float maxValue);

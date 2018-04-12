@@ -167,6 +167,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicUpdater.cpp" />
@@ -185,9 +186,9 @@
     <ClCompile Include="Shark.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Tile.cpp" />
-
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
