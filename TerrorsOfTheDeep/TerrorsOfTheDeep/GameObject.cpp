@@ -8,8 +8,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						const irr::core::vector3df* startScale,
 						const irr::core::vector3df* startRotation, 
 						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-						: ISceneNode(parent, mgr, id)
+						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
+						float mass)
+						: PhysicsObject(parent, mgr, id, startPosition, mass)
 {
 	// Set the position, scale and rotation of our GameObject
 	setPosition(*startPosition);
@@ -20,7 +21,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	if (relatedMesh && relatedTexture)
 	{
 		// Set mesh details
-		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
+		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
@@ -83,10 +84,18 @@ SMaterial& GameObject::getMaterial(u32 i)
 // Update
 void GameObject::Update()
 {
+	// Inherit base class Update
+	PhysicsObject::Update();
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
 	updateAbsolutePosition();
+
+	if (mesh)
+	{
+		mesh->setPosition(getAbsolutePosition());
+		mesh->setRotation(getRotation());
+	}
 }
 
 // Draw

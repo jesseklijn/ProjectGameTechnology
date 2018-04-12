@@ -178,6 +178,7 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayingField.cpp" />
     <ClCompile Include="Shark.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="GridMesh.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayingField.h" />
     <ClInclude Include="Shark.h" />
