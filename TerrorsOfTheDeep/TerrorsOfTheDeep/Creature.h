@@ -31,24 +31,27 @@ public:
 	float idlePositionTimer = 0.0f;
 
 	GameObject* targetAttack = nullptr;
-	GameObject* targetFlee = nullptr;
+	GameObject* targetFleeingFrom = nullptr;
 	float chaseDetectionRange = 10000.0f;
 	float attackRange = 100.0f;
 	float seekTime = 10.0f * 1000.0f;
 	float seekTimer = 0.0f;
 	float agilityFactor = 10.0f, agility;
 	float targetDistance;
-	float idleSpeed = 70.0f;
+	float idleSpeed = 60.0f;
 	float chaseSpeed, fleeSpeed;
-	float chaseSpeedMultiplier = 2.5f;
+	float chaseSpeedMultiplier = 3.5f;
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
 	float fleeingDetectionRange = 1000.0f;
-	float fleeingTime = 15.0f * 1000.0f;
+	float fleeingTime = 8.0f * 1000.0f;
 	float fleeingTimer = 0.0f;
+	float fleeingPositionTime = 1.5f * 1000.0f;
+	float fleeingPositionTimer = 0.0f;
+	int fleeingAngle = 90;
 
-	double rotationLerp = 0.0001;
+	double rotationLerp = 0.0008;
 
 	// Debug
 	std::vector<std::string> stateNames;

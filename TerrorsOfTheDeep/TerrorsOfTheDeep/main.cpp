@@ -63,6 +63,8 @@ This is the main method. We can now use main() on every platform.
 */
 int main()
 {
+	/* Seed the random number generator, so we don't end up with
+	the same random numbers on every run */
 	srand(static_cast<unsigned>(time(0)));
 
 	// Create a GameManager, set window caption and hide our mouse
@@ -85,36 +87,14 @@ int main()
 	lighting.SetSceneLight(ambientColor);
 	// Set and attach flashlight to player
 	//ISceneNode *playerNode = &player;
-
-
-	// Create two dummy objects for testing
-	// Shark
 	
-	// Create two dummy objects for testing
-	// Shark
-	
-/* Create dummy objects for testing
+	/* Create dummy objects for testing
 	Shark*/	
-	Creature* sharkC = new Creature(new vector3df(500, 50, 0), new vector3df(8, 8, 8), new vector3df(0, 0, 0),
+	Creature* sharkC = new Creature(new vector3df(400, 50, 700), new vector3df(8, 8, 8), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);	
 	sharkC->tag = GameObject::CREATURE;
-
-	/* TODO: Find a way to integrate this in derived (child) classes.
-
-	It was in GameObject base class first, but that would register the GameObject obviously.
-	Here we create a derived class instance of Monster, which derives from GameObject.
-
-	We now use a vector array in GameManager, which can hold multiple different
-	class types, which means we can add children of GameObject! Since we add a Monster
-	and not a GameObject here, we make the list loop run Update() for the Monster instance,
-	not the GameObject.
-
-	Long story short: Add the line below if your own object class:
-	- Inherits from GameObject
-	- Is using an Update() function
-	*/
 	GameManager::gameObjects.push_back(sharkC);
 
 	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),

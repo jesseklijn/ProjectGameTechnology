@@ -115,7 +115,7 @@ void Shark::ExecuteState()
 		// Attacking when in range
 		case ATTACKING:
 		{
-			moveSpeed = idleSpeed;
+			moveSpeed = chaseSpeed;
 
 			// RawrXD
 			break;
@@ -147,7 +147,6 @@ void Shark::ExecuteState()
 	}
 }
 
-// Triggered only when the shark switches states
 void Shark::OnStateSwitch()
 {
 	std::cout << stateNames[(int)state] << std::endl;
@@ -161,7 +160,7 @@ void Shark::Update()
 	// Update states and movement
 	Shark::UpdateState();
 	Shark::ExecuteState();
-	Creature::Move();
+	Shark::Move();
 
 	// Animation
 	if (canAnimate && mesh)

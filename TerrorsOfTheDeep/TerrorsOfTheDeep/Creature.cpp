@@ -32,10 +32,9 @@ Creature::~Creature()
 
 }
 
-// Triggered only when the creature switches states
 void Creature::OnStateSwitch()
 {
-	std::cout << stateNames[(int)state] << std::endl;
+	std::cout << "Creature: " + stateNames[(int)state] << std::endl;
 }
 
 void Creature::UpdateState()
@@ -52,15 +51,16 @@ void Creature::UpdateState()
 	// Update our timers
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	fleeingTimer = GameManager::Clamp(fleeingTimer - GameManager::deltaTimeMS, 0.0f, fleeingTime);
+	fleeingPositionTimer = GameManager::Clamp(fleeingPositionTimer - GameManager::deltaTimeMS, 0.0f, fleeingPositionTime);
 
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
-		targetFlee = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER);
+		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER);
 
-		if (targetFlee)
+		if (targetFleeingFrom)
 		{
-			if ((targetFlee->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)
+			if ((targetFleeingFrom->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)
 				fleeingTimer = fleeingTime;
 
 			if (fleeingTimer > 0.0f)
@@ -74,7 +74,6 @@ void Creature::ExecuteState()
 	// Decide what to do depending on our state
 	switch (state)
 	{
-		// Idling
 		case IDLE:
 		{
 			moveSpeed = idleSpeed;
@@ -82,21 +81,33 @@ void Creature::ExecuteState()
 			// Get a new idle position on timer trigger
 			if (idlePositionTimer <= 0.0f)
 			{
-				targetPosition = vector3df(rand() % (int)idlingRange * 2.0f - (int)idlingRange, 0.0f, rand() % (int)idlingRange * 2.0f - (int)idlingRange);
+				targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
 				idlePositionTimer = idlePositionTime;
 			}
 
 			break;
 		}
 
-		// Idling
 		case FLEEING:
 		{
 			moveSpeed = fleeSpeed;
 
-			// Set a target position away from the closest predator
-			if (targetFlee)
-				targetPosition = currentPosition + (currentPosition - targetFlee->getAbsolutePosition()).normalize() * moveSpeed;
+			/* Set a target position away from the closest predator
+			This position is randomized to a max fleeingAngle * 2 degree cone in the other direction */
+			if (targetFleeingFrom)
+			{
+				if (fleeingPositionTimer <= 0.0f)
+				{
+					float newAngle = GameManager::Clamp(rand() % (fleeingAngle * 2), -fleeingAngle, fleeingAngle);
+					vector3df newDirection = GameManager::Lerp(currentPosition - targetFleeingFrom->getAbsolutePosition(),
+																vector3df(0, 0, 0) - currentPosition, 1.0);
+
+					newDirection.rotateXZBy(newAngle, currentPosition);
+					targetPosition = currentPosition + newDirection;
+
+					fleeingPositionTimer = fleeingPositionTime;
+				}
+			}				
 
 			break;
 		}

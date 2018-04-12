@@ -16,7 +16,10 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canAttack = true;
 	canFlee = false;
 
+	rotationLerp = 0.0001;
+	idleSpeed = 90.0f;
 	moveSpeed = idleSpeed;
+	chaseSpeedMultiplier = 2.5f;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 	fleeSpeed = chaseSpeed;
 
@@ -45,7 +48,7 @@ GameObject* Monster::GetTarget()
 			if (canSeeTarget)
 			{
 				// If the player is part of the valid objects, return the player immediately
-				if (currentTag == GameObject::CREATURE)
+				if (currentTag == GameObject::PLAYER)
 					return GameManager::gameObjects[i];
 
 				tempTargets.push_back(GameManager::gameObjects[i]);
