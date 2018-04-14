@@ -5,11 +5,11 @@
 
 // Constructor
 Shark::Shark(const irr::core::vector3df* startPosition,
-				const irr::core::vector3df* startScale,
-				const irr::core::vector3df* startRotation,
-				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-				irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	if (canAnimate && (relatedMesh && relatedTexture))
 	{
@@ -157,8 +157,14 @@ void Shark::Update()
 	// Update base
 	Monster::Update();
 
-	// Update states and movement
-	Shark::UpdateState();
+	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
+	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	if (stateUpdateTimer <= 0.0)
+	{
+		Shark::UpdateState();
+		stateUpdateTimer = stateUpdateTime;
+	}
 	Shark::ExecuteState();
 	Shark::Move();
 

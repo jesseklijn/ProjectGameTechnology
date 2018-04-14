@@ -48,11 +48,6 @@ void Creature::UpdateState()
 	targetDistance = INFINITY;
 	moveSpeed = idleSpeed;
 
-	// Update our timers
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	fleeingTimer = GameManager::Clamp(fleeingTimer - GameManager::deltaTimeMS, 0.0f, fleeingTime);
-	fleeingPositionTimer = GameManager::Clamp(fleeingPositionTimer - GameManager::deltaTimeMS, 0.0f, fleeingPositionTime);
-
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
@@ -146,9 +141,18 @@ void Creature::Update()
 {
 	// Update base
 	GameObject::Update();
+	
+	// Update our timers
+	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
+	fleeingTimer = GameManager::Clamp(fleeingTimer - GameManager::deltaTimeMS, 0.0f, fleeingTime);
+	fleeingPositionTimer = GameManager::Clamp(fleeingPositionTimer - GameManager::deltaTimeMS, 0.0f, fleeingPositionTime);
 
-	// Update states and movement
-	Creature::UpdateState();
+	if (stateUpdateTimer <= 0.0)
+	{
+		Creature::UpdateState();
+		stateUpdateTimer = stateUpdateTime;
+	}
 	Creature::ExecuteState();
 	Creature::Move();
 }

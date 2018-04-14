@@ -38,9 +38,15 @@ public:
 	float seekTimer = 0.0f;
 	float agilityFactor = 10.0f, agility;
 	float targetDistance;
+
+	float stateUpdateTime = 1.0f * 1000.0f;
+	float stateUpdateTimer = 0.0f;
+
 	float idleSpeed = 60.0f;
 	float chaseSpeed, fleeSpeed;
-	float chaseSpeedMultiplier = 3.5f;
+	float chaseSpeedMultiplier = 2.0f;
+	float fleeSpeedMultiplier = chaseSpeedMultiplier;
+
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 

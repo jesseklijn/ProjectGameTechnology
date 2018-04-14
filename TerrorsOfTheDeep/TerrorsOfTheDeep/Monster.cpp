@@ -5,11 +5,11 @@
 
 // Constructor
 Monster::Monster(const irr::core::vector3df* startPosition,
-					const irr::core::vector3df* startScale,
-					const irr::core::vector3df* startRotation,
-					irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-					irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-					: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	tag = GameObject::MONSTER;
 
@@ -17,11 +17,9 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canFlee = false;
 
 	rotationLerp = 0.0001;
-	idleSpeed = 90.0f;
-	moveSpeed = idleSpeed;
-	chaseSpeedMultiplier = 2.5f;
+	idleSpeed = 100.0f;
+	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
-	fleeSpeed = chaseSpeed;
 
 	targetTags.push_back(GameObject::PLAYER);
 	targetTags.push_back(GameObject::CREATURE);
@@ -48,7 +46,7 @@ GameObject* Monster::GetTarget()
 			if (canSeeTarget)
 			{
 				// If the player is part of the valid objects, return the player immediately
-				if (currentTag == GameObject::PLAYER)
+				if (currentTag == GameObject::CREATURE)
 					return GameManager::gameObjects[i];
 
 				tempTargets.push_back(GameManager::gameObjects[i]);

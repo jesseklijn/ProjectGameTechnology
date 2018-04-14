@@ -20,6 +20,12 @@
 #pragma once
 #include "Shark.h"
 #pragma once
+#include "Dolphin.h"
+#pragma once
+#include "Goldback.h"
+#pragma once
+#include "Bass.h"
+#pragma once
 #include <string>
 #pragma endregion
 #include <chrono>
@@ -55,6 +61,10 @@ HUD* hud = new HUD;
 
 // Whether to hide or show the HUD
 bool disableHud = false;
+
+int dolphinCount = 3;
+int goldbackCount = 60;
+int bassCount = 60;
 #pragma endregion
 
 
@@ -87,17 +97,36 @@ int main()
 	lighting.SetSceneLight(ambientColor);
 	// Set and attach flashlight to player
 	//ISceneNode *playerNode = &player;
-	
-	/* Create dummy objects for testing
-	Shark*/	
-	Creature* sharkC = new Creature(new vector3df(400, 50, 700), new vector3df(8, 8, 8), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1111,
-		GameManager::smgr->getMesh("../media/shark.obj"),
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);	
-	sharkC->tag = GameObject::CREATURE;
-	GameManager::gameObjects.push_back(sharkC);
 
-	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(20, 20, 20), new vector3df(0, 0, 0),
+	// Spawn critters
+	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; ++dolphinIndex)
+	{
+		Dolphin* dolphin = new Dolphin(new vector3df(400 + dolphinIndex * 40, 50, 700 - dolphinIndex * 40), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/dolphin.obj"),
+			GameManager::driver->getTexture("../media/skydome.jpg"), false);
+		GameManager::gameObjects.push_back(dolphin);
+	}
+
+	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
+	{
+		Goldback* goldbackFish = new Goldback(new vector3df(-400 + goldbackIndex * 5, 50, 700 + goldbackIndex * 5), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/GoldenFish.obj"),
+			GameManager::driver->getTexture("../media/naranjaojo.png"), false);		
+		GameManager::gameObjects.push_back(goldbackFish);
+	}
+
+	for (int bassIndex = 0; bassIndex < bassCount; ++bassIndex)
+	{
+		Bass* bassFish = new Bass(new vector3df(-400 + bassIndex * 5, 50, 700 + bassIndex * 5), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/Rudd_Fish.obj"),
+			GameManager::driver->getTexture("../media/Rudd-Fish_Colourmap.png"), false);
+		GameManager::gameObjects.push_back(bassFish);
+	}
+
+	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(30, 30, 30), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
@@ -167,6 +196,7 @@ int main()
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
+	chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 	chest->tag = GameObject::CHEST;
 	GameManager::gameObjects.push_back(chest);
 
