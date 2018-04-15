@@ -9,7 +9,6 @@ Bass::Bass(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Critter(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	fleeSpeedMultiplier = 3.5f;
 	moveSpeed = idleSpeed;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 }

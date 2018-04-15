@@ -62,9 +62,10 @@ HUD* hud = new HUD;
 // Whether to hide or show the HUD
 bool disableHud = false;
 
+// Creature generation
 int dolphinCount = 3;
-int goldbackCount = 60;
-int bassCount = 60;
+int goldbackCount = 50;
+int bassCount = 50;
 #pragma endregion
 
 
@@ -84,10 +85,11 @@ int main()
 
 	// Set our skydome
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
+	skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
 	// Initialize our background music
 	sound_init();
-	background_music("../media/JawsTheme.ogg");
+	background_music("../media/AmbientUnderwaterMaddnes.ogg");
 
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
@@ -101,7 +103,10 @@ int main()
 	// Spawn critters
 	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; ++dolphinIndex)
 	{
-		Dolphin* dolphin = new Dolphin(new vector3df(400 + dolphinIndex * 40, 50, 700 - dolphinIndex * 40), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		Dolphin* dolphin = new Dolphin(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX, 
+			rand() % GameManager::worldRadiusY, 
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/dolphin.obj"),
 			GameManager::driver->getTexture("../media/skydome.jpg"), false);
@@ -110,7 +115,10 @@ int main()
 
 	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
 	{
-		Goldback* goldbackFish = new Goldback(new vector3df(-400 + goldbackIndex * 5, 50, 700 + goldbackIndex * 5), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		Goldback* goldbackFish = new Goldback(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			rand() % GameManager::worldRadiusY,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/GoldenFish.obj"),
 			GameManager::driver->getTexture("../media/naranjaojo.png"), false);		
@@ -119,14 +127,17 @@ int main()
 
 	for (int bassIndex = 0; bassIndex < bassCount; ++bassIndex)
 	{
-		Bass* bassFish = new Bass(new vector3df(-400 + bassIndex * 5, 50, 700 + bassIndex * 5), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		Bass* bassFish = new Bass(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			rand() % GameManager::worldRadiusY,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/Rudd_Fish.obj"),
 			GameManager::driver->getTexture("../media/Rudd-Fish_Colourmap.png"), false);
 		GameManager::gameObjects.push_back(bassFish);
 	}
 
-	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(30, 30, 30), new vector3df(0, 0, 0),
+	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
@@ -178,7 +189,7 @@ int main()
 	rock4->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock4);
 
-	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
+	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/SandTexture.jpg"));

@@ -11,9 +11,7 @@ Critter::Critter(const irr::core::vector3df* startPosition,
 	canAttack = false;
 	canFlee = true;
 
-	fleeSpeedMultiplier = 2.0f;
 	rotationLerp = 0.0008;
-	idleSpeed = 120.0f;
 	moveSpeed = idleSpeed;	
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 }

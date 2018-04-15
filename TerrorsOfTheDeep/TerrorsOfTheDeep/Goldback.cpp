@@ -9,7 +9,6 @@ Goldback::Goldback(const irr::core::vector3df* startPosition,
 	: Critter(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	rotationLerp = 0.001;
-	fleeSpeedMultiplier = 2.5f;
 	moveSpeed = idleSpeed;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 

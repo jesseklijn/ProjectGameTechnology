@@ -40,7 +40,7 @@ void Shark::UpdateState()
 	// Get our potential target and target information
 	if (canAttack)
 	{
-		targetAttack = Monster::GetTarget();
+		targetAttack = Monster::GetTarget(CLOSEST, true, chaseDetectionRange, true);
 		if (targetAttack)
 		{
 			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), targetAttack->getAbsolutePosition());

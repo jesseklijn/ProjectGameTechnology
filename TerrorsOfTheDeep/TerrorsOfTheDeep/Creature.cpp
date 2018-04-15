@@ -16,10 +16,11 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 
 	moveSpeed = idleSpeed;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
-	fleeSpeed = chaseSpeed;
+	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 
 	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
 	Not used in any other way!*/
+	stateNames.push_back("NONE");
 	stateNames.push_back("IDLE");
 	stateNames.push_back("CHASING");
 	stateNames.push_back("ATTACKING");
@@ -34,7 +35,7 @@ Creature::~Creature()
 
 void Creature::OnStateSwitch()
 {
-	std::cout << "Creature: " + stateNames[(int)state] << std::endl;
+	//std::cout << "Creature: " + stateNames[(int)state] << std::endl;
 }
 
 void Creature::UpdateState()
@@ -51,16 +52,14 @@ void Creature::UpdateState()
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
-		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER);
-
+		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER, INFINITY, true);
 		if (targetFleeingFrom)
 		{
 			if ((targetFleeingFrom->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)
 				fleeingTimer = fleeingTime;
-
-			if (fleeingTimer > 0.0f)
-				state = FLEEING;
 		}
+		if (fleeingTimer > 0.0f)
+			state = FLEEING;
 	}
 }
 
@@ -76,7 +75,19 @@ void Creature::ExecuteState()
 			// Get a new idle position on timer trigger
 			if (idlePositionTimer <= 0.0f)
 			{
-				targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
+				// If we're close enough to the world center point, idle normally in 360 degrees
+				vector3df toWorldCenter = currentPosition - vector3df(0, 0, 0);
+				if (toWorldCenter.getLength() < maxDistFromCenter)
+					targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
+				// Otherwise, generate a direction that generally points back to world center
+				else
+				{
+					float newAngle = GameManager::Clamp(rand() % (idlingAngle * 2), -idlingAngle, idlingAngle);
+					vector3df newDirection = toWorldCenter;
+					newDirection.rotateXZBy(newAngle, currentPosition);
+					targetPosition = currentPosition + newDirection;
+				}
+
 				idlePositionTimer = idlePositionTime;
 			}
 
@@ -95,10 +106,10 @@ void Creature::ExecuteState()
 				{
 					float newAngle = GameManager::Clamp(rand() % (fleeingAngle * 2), -fleeingAngle, fleeingAngle);
 					vector3df newDirection = GameManager::Lerp(currentPosition - targetFleeingFrom->getAbsolutePosition(),
-																vector3df(0, 0, 0) - currentPosition, 1.0);
+																vector3df(0, 0, 0) - currentPosition, 0.0);
 
 					newDirection.rotateXZBy(newAngle, currentPosition);
-					targetPosition = currentPosition + newDirection;
+					targetPosition = currentPosition + newDirection.normalize() * 5000.0;
 
 					fleeingPositionTimer = fleeingPositionTime;
 				}
