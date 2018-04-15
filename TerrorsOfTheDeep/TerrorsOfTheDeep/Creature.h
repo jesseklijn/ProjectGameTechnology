@@ -45,15 +45,17 @@ public:
 	float idleSpeed = 60.0f;
 	float chaseSpeed, fleeSpeed;
 	float chaseSpeedMultiplier = 2.0f;
-	float fleeSpeedMultiplier = chaseSpeedMultiplier;
+	float fleeSpeedMultiplier = 4.5f;
+	int idlingAngle = 60;
+	float maxDistFromCenter = 400000.0f;
 
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
 	float fleeingDetectionRange = 1000.0f;
-	float fleeingTime = 8.0f * 1000.0f;
+	float fleeingTime = 4.0f * 1000.0f;
 	float fleeingTimer = 0.0f;
-	float fleeingPositionTime = 1.5f * 1000.0f;
+	float fleeingPositionTime = 0.5f * 1000.0f;
 	float fleeingPositionTimer = 0.0f;
 	int fleeingAngle = 90;
 
@@ -67,8 +69,8 @@ public:
 
 
 	// Main creature states
-	enum State { IDLE, CHASING, ATTACKING, SEEKING, FLEEING };
-	State state = IDLE;
+	enum State { NONE, IDLE, CHASING, ATTACKING, SEEKING, FLEEING };
+	State state = NONE;
 	State statePrevious = state;
 
 

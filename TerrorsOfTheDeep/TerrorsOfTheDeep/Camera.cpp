@@ -32,7 +32,8 @@ Camera::Camera(ISceneManager* smgr)
 	keyMap[3].KeyCode = KEY_KEY_D;
 
 	// Add a camera in the scene
-	smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
+	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
+	camera->setFarValue(5000.0f);
 }
 
 // Destructor
@@ -44,19 +45,19 @@ Camera::~Camera()
 //check boundaries
 void Camera::updatePos()
 {
-	if (GameManager::smgr->getActiveCamera()->getPosition().X > 1000)
+	if (GameManager::smgr->getActiveCamera()->getPosition().X > GameManager::worldRadiusX)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(999, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::worldRadiusX - 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().X < -1000)
+	if (GameManager::smgr->getActiveCamera()->getPosition().X < -GameManager::worldRadiusX)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-999, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-GameManager::worldRadiusX + 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Y > 500)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Y > GameManager::worldRadiusY)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, 499,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::worldRadiusY - 1,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
 	if (GameManager::smgr->getActiveCamera()->getPosition().Y < -50)
@@ -64,15 +65,15 @@ void Camera::updatePos()
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, -49,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z > 1000)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z > GameManager::worldRadiusZ)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			999));
+			GameManager::worldRadiusZ - 1));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -1000)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -GameManager::worldRadiusZ)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			-999));
+			-GameManager::worldRadiusZ + 1));
 	}
 }
 

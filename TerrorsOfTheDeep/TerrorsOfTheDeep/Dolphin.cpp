@@ -9,7 +9,6 @@ Dolphin::Dolphin(const irr::core::vector3df* startPosition,
 	: Critter(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	rotationLerp = 0.001;
-	fleeSpeedMultiplier = 3.5f;
 	moveSpeed = idleSpeed;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 }

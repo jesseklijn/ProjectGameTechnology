@@ -87,6 +87,7 @@ public:
 
 	int GameSpeed = 1;
 	bool GamePaused = false;
+	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
 
 	// Functions
 	void Awake();
@@ -98,12 +99,19 @@ public:
 	void UnloadGameState(GameState StateToCleanUp);
 
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
-	static GameObject* FindGameObjectWithTag(GameObject::Tag name);
-	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name);
+
+	static int FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag);
+	static GameObject* FindGameObjectWithTag(GameObject::Tag tag);
+	static std::vector<GameObject*> FindGameObjectsWithTag(GameObject::Tag tag); 
+	static std::vector<GameObject*> FindGameObjectsWithTags(std::vector<GameObject::Tag> tagList);
+	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false); 
+	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
+
 	static float Min(float value, float value2);
 	static float Max(float value, float value2);
 	static float Clamp(float value, float minValue, float maxValue);
 	static float Lerp(float value, float value2, float blend);
 	static irr::core::vector3df Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend);
-	static int FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag);
 };

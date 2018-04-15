@@ -17,7 +17,7 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canFlee = false;
 
 	rotationLerp = 0.0001;
-	idleSpeed = 100.0f;
+	idleSpeed = 90.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 
@@ -31,34 +31,63 @@ Monster::~Monster()
 
 }
 
-// Returns a target based on this monster's tags
-GameObject* Monster::GetTarget()
+/* Finds the player in-game and decides whether or not it is a valid target.
+Detection range and a raycast can be enabled for specified checks.
+
+This is a shortcut instead of having to specify extra Player override functionality
+in the other GameManager::FindX(); functions, which should be for general usage. */
+GameObject* Monster::PlayerCanBeSeen(float detectionRange, bool visibilityCheck)
 {
-	tempTargets.clear();
-	for (int i = 0; i < GameManager::gameObjects.size(); i++)
+	Player* player = (Player*)GameManager::FindGameObjectWithTag(PLAYER);
+	if (player)
 	{
-		GameObject::Tag currentTag = GameManager::gameObjects[i]->GetTag();
-
-		// If this object's tag is contained in this monster's prey tag list
-		if (GameManager::FindTagInTagList(targetTags, currentTag) != -1)
+		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();
+		if (currentDistance < detectionRange)
 		{
-			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), GameManager::gameObjects[i]->getAbsolutePosition());
-			if (canSeeTarget)
+			if (!visibilityCheck || Monster::IsInSight(getAbsolutePosition(), player->getAbsolutePosition()))
 			{
-				// If the player is part of the valid objects, return the player immediately
-				if (currentTag == GameObject::CREATURE)
-					return GameManager::gameObjects[i];
-
-				tempTargets.push_back(GameManager::gameObjects[i]);
+				return player;
 			}
 		}
 	}
-
-	// TODO: Priority sorting
-	if (tempTargets.size() > 0)
-		return tempTargets[0];
-
 	return nullptr;
+}
+
+/* Returns a target based on this monster's tags. Optionally a player detection override, detection range and visibility check can
+be enabled for more specific searches. Returns a nullptr if no target was found with the given specifications. */
+GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOverride, float detectionRange, bool visibilityCheck)
+{
+	// If the player should override all other detection
+	if (playerDetectOverride)
+	{
+		// Return the player if he/she's a valid target
+		GameObject* player = (Player*)Monster::PlayerCanBeSeen(detectionRange, visibilityCheck);
+		if (player != nullptr)
+			return player;
+	}
+
+	switch (priorityMode)
+	{		
+		case CLOSEST:
+		{
+			// Finds the nearest GameObject that satisfies this Monster's prey tag list, regardless of class.
+			return GameManager::FindNearestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			break;
+		}
+
+		case FURTHEST:
+		{
+			// Finds the furthest GameObject that satisfies this Monster's prey tag list, regardless of class.
+			return GameManager::FindFurthestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			break;
+		}
+
+		default:
+		{
+			std::cout << "[ERROR] Invalid priority mode, returning nullptr...";
+			return nullptr;
+		}
+	}
 }
 
 // Overridden (from GameObject) Update-loop
