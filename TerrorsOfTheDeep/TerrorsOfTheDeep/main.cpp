@@ -21,6 +21,9 @@
 #include "Shark.h"
 #pragma once
 #include <string>
+#pragma once
+
+#include "FlockingEntity.h"
 #pragma endregion
 
 #pragma region Namespaces
@@ -73,7 +76,7 @@ int main()
 	Camera camera = Camera(GameManager::smgr);
 
 	/* Create dummy objects for testing
-	Shark*/	
+	Shark*/
 	Shark* shark = new Shark(new vector3df(400, 50, 0), new vector3df(10, 10, 10), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
@@ -103,10 +106,19 @@ int main()
 	GameManager::gameObjects.push_back(player);
 
 
+
+	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
+		GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
+		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
+	flockOfFish->tag = "Fish";
+	GameManager::gameObjects.push_back(flockOfFish);
+
+	
+
 	// Rock
 	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1112,
-		GameManager::smgr->getMesh("../media/rock.obj"),
+	 GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock->tag = "World Object";
 	GameManager::gameObjects.push_back(rock);
@@ -159,7 +171,7 @@ int main()
 
 
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
-		gameManager.Update();		
+		gameManager.Update();
 
 		//check the boundaries
 		camera.updatePos();

@@ -45,6 +45,7 @@ void GridMesh::GenerateMesh()
 	}
 	return;
 }
+
 void GridMesh::render()
 {
 	irr::u16 indices[] = { 0,2,3, 2,1,3 };
