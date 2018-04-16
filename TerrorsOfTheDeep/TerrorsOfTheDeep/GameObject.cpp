@@ -26,6 +26,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		TODO: Add to constructor?*/
 		mesh->setMaterialFlag(EMF_LIGHTING, true);
 		mesh->setMD2Animation(scene::EMAT_STAND);
+		mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 		mesh->setMaterialTexture(0, relatedTexture);
 
 		// Set the position, scale and rotation of our mesh
