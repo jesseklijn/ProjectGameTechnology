@@ -141,11 +141,16 @@ int main()
 		GameManager::gameObjects.push_back(bassFish);
 	}
 
+	GameObject* ship = new GameObject(new vector3df(400, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1111,
+		GameManager::smgr->getMesh("../media/ruinsArc.obj"),
+		0, false);
+	GameManager::gameObjects.push_back(ship);
+
 	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
-		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
-	shark->tag = GameObject::MONSTER;
+		0, false);
 	GameManager::gameObjects.push_back(shark);
 
 	// Player
@@ -171,35 +176,30 @@ int main()
 		0, GameManager::smgr, -1112,
 	 GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock1->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock1);
 
 	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock2->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock2);
 
 	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock3->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock3);
 
 	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	rock4->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock4);
 
 	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),

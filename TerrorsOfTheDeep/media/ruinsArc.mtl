@@ -1,0 +1,59 @@
+# Blender MTL File: 'ruins entrance.blend'
+# Material Count: 5
+
+newmtl Material.003
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl pilar1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.520784 0.483137 0.432941
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\3D\3d obj\pilar1.png
+
+newmtl sucio1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.272941 0.222745 0.175686
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\3D\3d obj\sucio1.png
+map_Bump C:\\3D\\texturas\\difuse3_NRM.png
+
+newmtl sucio2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.420392 0.354510 0.288627
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\3D\3d obj\sucio2.png
+map_Bump C:\\Users\\Public\\Documents\\KillyVera\\sucio2_NRM.png
+
+newmtl texturew
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.483137 0.407843 0.329412
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\3D\3d obj\texturew.png
+map_Bump C:\\Users\\Public\\Documents\\KillyVera\\texturewall_NRM.png

@@ -11,13 +11,14 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 						: ISceneNode(parent, mgr, id)
 {
-	// Set the position, scale and rotation of our GameObject
+	tag = GameObject::WORLD_OBJECT;
+
 	setPosition(*startPosition);
 	setScale(*startScale);
 	setRotation(*startRotation);
 
 	// If a mesh and texture were given
-	if (relatedMesh && relatedTexture)
+	if (relatedMesh)
 	{
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
@@ -27,7 +28,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setMaterialFlag(EMF_LIGHTING, false);
 		mesh->setMaterialFlag(EMF_FOG_ENABLE, true);
 		mesh->setMD2Animation(scene::EMAT_STAND);
-		mesh->setMaterialTexture(0, relatedTexture);
+
+		if (relatedTexture)
+			mesh->setMaterialTexture(0, relatedTexture);
 
 		// Set the position, scale and rotation of our mesh
 		mesh->setPosition(*startPosition);

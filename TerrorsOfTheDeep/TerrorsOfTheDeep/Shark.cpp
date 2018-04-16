@@ -11,7 +11,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	if (canAnimate && (relatedMesh && relatedTexture))
+	if (canAnimate && relatedMesh)
 	{
 		
 	}
