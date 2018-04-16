@@ -91,6 +91,7 @@ void PhysicsObject::updatePosition()
 	setPosition(position_);
 
 	force_ = vector3df(0);
+	velocity_ = vector3df(0);
 }
 
 void PhysicsObject::turnToDirection(vector3df direction)
@@ -100,7 +101,12 @@ void PhysicsObject::turnToDirection(vector3df direction)
 		mesh->setRotation(direction.getHorizontalAngle());
 }
 
+void PhysicsObject::addForce(vector3df force)
+{
+	force_ += force;
+}
+
 // TODO: proper movement - on user input add to force
-// TODO: proper gravity
+// TODO: proper gravity - cap on velocity
 // TODO: friction!
-// TODO: buoyant force
+// TODO: buoyance

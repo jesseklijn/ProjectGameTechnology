@@ -32,5 +32,5 @@ public:
 	virtual void Update();
 	void updatePosition();
 	void turnToDirection(irr::core::vector3df direction);
+	void addForce(irr::core::vector3df force);
 };
-

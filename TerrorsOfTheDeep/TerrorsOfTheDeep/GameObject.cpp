@@ -105,14 +105,20 @@ void GameObject::Draw()
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
 	// Add a vector of length speed in the given direction
-	setPosition(getPosition() + (direction.normalize() * speed));
-	if (mesh)
-		mesh->setPosition(getPosition());
+	//setPosition(getPosition() + (direction.normalize() * speed));
+	//if (mesh)
+	//	mesh->setPosition(getPosition());
+	//if (turnToDirection)
+	//{
+	//	setRotation(direction.getHorizontalAngle());
+	//	if (mesh)
+	//		mesh->setRotation(direction.getHorizontalAngle());
+	//}
+
+	PhysicsObject::addForce(moveSpeed * direction);
 	if (turnToDirection)
 	{
-		setRotation(direction.getHorizontalAngle());
-		if (mesh)
-			mesh->setRotation(direction.getHorizontalAngle());
+		PhysicsObject::turnToDirection(direction);
 	}
 }
 
