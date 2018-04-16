@@ -64,11 +64,17 @@ void PhysicsObject::Update()
 {
 	if (id_ != 9000)
 	{
-		UpdatePosition();
+		updatePosition();
+	}
+
+	if (mesh)
+	{
+		mesh->setPosition(getAbsolutePosition());
+		mesh->setRotation(getRotation());
 	}
 }
 
-void PhysicsObject::UpdatePosition()
+void PhysicsObject::updatePosition()
 {
 	position_ = getPosition();
 
@@ -85,6 +91,13 @@ void PhysicsObject::UpdatePosition()
 	setPosition(position_);
 
 	force_ = vector3df(0);
+}
+
+void PhysicsObject::turnToDirection(vector3df direction)
+{
+	setRotation(direction.getHorizontalAngle());
+	if (mesh)
+		mesh->setRotation(direction.getHorizontalAngle());
 }
 
 // TODO: proper movement - on user input add to force

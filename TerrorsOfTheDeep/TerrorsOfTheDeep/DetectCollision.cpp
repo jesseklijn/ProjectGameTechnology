@@ -54,7 +54,8 @@ void Detect(
 
 		if (Col(key, player, 50)) {
 			pickedUp[0] = true;
-			key->setPosition(key->getPosition() + irr::core::vector3df(10000, 10000, 10000));
+			key->setScale(core::vector3df(0.01, 0.01, 0.01));
+			//key->setPosition(key->getPosition() + core::vector3df(10000, 10000, 10000));
 		}
 
 		if (Col(player, shark, 30)) {

@@ -30,6 +30,7 @@ public:
 	irr::video::SMaterial& getMaterial(irr::u32 i) override;
 
 	virtual void Update();
-	void UpdatePosition();
+	void updatePosition();
+	void turnToDirection(irr::core::vector3df direction);
 };
 

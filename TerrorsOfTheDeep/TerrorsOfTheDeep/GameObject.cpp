@@ -22,6 +22,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	{
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);
+		if (mesh)
+		{
+			PhysicsObject::mesh = mesh;
+		}
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
@@ -90,12 +94,6 @@ void GameObject::Update()
 	DynamicUpdater::Update();
 
 	updateAbsolutePosition();
-
-	if (mesh)
-	{
-		mesh->setPosition(getAbsolutePosition());
-		mesh->setRotation(getRotation());
-	}
 }
 
 // Draw

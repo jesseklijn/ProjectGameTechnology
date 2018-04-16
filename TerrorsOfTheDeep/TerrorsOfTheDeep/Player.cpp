@@ -23,6 +23,7 @@ Player::Player(const irr::core::vector3df* startPosition,
 	irrDevice = GameManager::device;
 	smgr = mgr;
 
+	parent_ = parent;
 	//mesh->setRotation(vector3df(180, 0, 180));
 }
 
