@@ -24,9 +24,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
-		mesh->setMaterialFlag(EMF_LIGHTING, false);
+		mesh->setMaterialFlag(EMF_LIGHTING, true);
 		mesh->setMaterialFlag(EMF_FOG_ENABLE, true);
 		mesh->setMD2Animation(scene::EMAT_STAND);
+		mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 		mesh->setMaterialTexture(0, relatedTexture);
 
 		// Set the position, scale and rotation of our mesh

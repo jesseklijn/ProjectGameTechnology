@@ -12,7 +12,7 @@ Goldback::Goldback(const irr::core::vector3df* startPosition,
 	moveSpeed = idleSpeed;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
 
-	mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
+	//mesh->setMaterialFlag(irr::video::EMF_LIGHTING, false);
 }
 
 Goldback::~Goldback()
