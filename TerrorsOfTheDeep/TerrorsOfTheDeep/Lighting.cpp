@@ -31,10 +31,13 @@ void Lighting::SetSceneLight(irr::video::SColorf color)
 }
 
 // Creates a point light e.g. a torch
-ILightSceneNode* Lighting::CreatePointLight(irr::video::SColorf color, irr::core::vector3df pos, bool castShadow, ISceneNode* parentNode)
+ILightSceneNode* Lighting::CreatePointLight(irr::video::SColorf color, irr::core::vector3df pos, float radius, irr::core::vector3df dir, bool castShadow, ISceneNode* parentNode)
 {
 	ILightSceneNode* light = smgr->addLightSceneNode(parentNode, pos, color);
 	light->setLightType(video::ELT_POINT);
+	light->setRadius((radius));
+	//irr::video::SLight lightData;
+	//light->setLightData(lightData);
 	if (castShadow)
 		light->enableCastShadow(true);
 	return light;
@@ -47,6 +50,8 @@ ILightSceneNode* Lighting::CreateDirectionalLight(irr::video::SColorf color, irr
 	light->setLightType(video::ELT_DIRECTIONAL);
 	light->setRadius(radius);
 	light->setRotation(dir);
+	//irr::video::SLight lightData;
+	//light->setLightData(lightData);
 	if (castShadow)
 		light->enableCastShadow(true);
 	return light;
@@ -63,9 +68,11 @@ ILightSceneNode* Lighting::CreateSpotLight(irr::video::SColorf color, irr::core:
 	light->setRotation(dir);
 	irr::video::SLight lightData;
 	lightData = light->getLightData();
-	lightData.Attenuation.X = 1.f;
-	lightData.InnerCone = 90.f;
-	lightData.OuterCone = 180.f;
+	lightData.Attenuation.X = 0.75f;
+	lightData.InnerCone = 20.f;
+	lightData.OuterCone = 60.f;
+	lightData.Falloff = 20.f;
+	lightData.SpecularColor = video::SColorf(0.1f, 0.1f, 0.1f, 0.f);
 	light->setLightData(lightData);
 	
 	if (castShadow)
