@@ -178,6 +178,8 @@
     <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="ExampleUnitTest.cpp" />
+	<ClCompile Include="Fish.cpp" />
+	<ClCompile Include="FlockingEntity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
@@ -200,6 +202,8 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
+	<ClInclude Include="Fish.h" />
+	<ClInclude Include="FlockingEntity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GridMesh.h" />

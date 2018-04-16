@@ -27,6 +27,9 @@
 #include "Bass.h"
 #pragma once
 #include <string>
+#pragma once
+
+#include "FlockingEntity.h"
 #pragma endregion
 #include <chrono>
 
@@ -113,6 +116,7 @@ int main()
 		GameManager::gameObjects.push_back(dolphin);
 	}
 
+
 	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
 	{
 		Goldback* goldbackFish = new Goldback(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
@@ -153,10 +157,19 @@ int main()
 	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
 
 
+
+	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
+		GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
+		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
+	flockOfFish->tag = GameObject::CREATURE;
+	GameManager::gameObjects.push_back(flockOfFish);
+
+	
+
 	// Rock
 	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1112,
-		GameManager::smgr->getMesh("../media/rock.obj"),
+	 GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock);
@@ -225,7 +238,7 @@ int main()
 
 
 		// Update our scene. gameManager.Update will also call Update for all GameObjects and their linked nodes
-		gameManager.Update();		
+		gameManager.Update();
 
 		//check the boundaries
 		camera.updatePos();
