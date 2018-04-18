@@ -31,7 +31,7 @@ void Lighting::SetSceneLight(irr::video::SColorf color)
 }
 
 // Creates a point light e.g. a torch
-ILightSceneNode* Lighting::CreatePointLight(irr::video::SColorf color, irr::core::vector3df pos, float radius, irr::core::vector3df dir, bool castShadow, ISceneNode* parentNode)
+ILightSceneNode* Lighting::CreatePointLight(irr::video::SColorf color, irr::core::vector3df pos, float radius, bool castShadow, ISceneNode* parentNode)
 {
 	ILightSceneNode* light = smgr->addLightSceneNode(parentNode, pos, color);
 	light->setLightType(video::ELT_POINT);
@@ -65,14 +65,12 @@ ILightSceneNode* Lighting::CreateSpotLight(irr::video::SColorf color, irr::core:
 	
 	light->setLightType(video::ELT_SPOT);
 	light->setRadius(radius);
-	light->setRotation(dir);
-	irr::video::SLight lightData;
-	lightData = light->getLightData();
+	irr::video::SLight lightData = light->getLightData();
 	lightData.Attenuation.X = 0.75f;
 	lightData.InnerCone = 20.f;
 	lightData.OuterCone = 60.f;
 	lightData.Falloff = 20.f;
-	lightData.SpecularColor = video::SColorf(0.1f, 0.1f, 0.1f, 0.f);
+	lightData.SpecularColor = video::SColorf(0.0f, 0.0f, 0.0f, 0.f);
 	light->setLightData(lightData);
 	
 	if (castShadow)

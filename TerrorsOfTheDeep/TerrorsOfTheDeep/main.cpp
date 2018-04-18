@@ -54,11 +54,20 @@ int stamina = 0;
 // Check if the items are picked up
 bool itemPickedUp[3] = { false, false, false };
 
-// Light colours
+// Constants
+const int NO_PARENT = 0;
+const float KEYLIGHT_RADIUS = 50.f;
+const float CHESTLIGHT_RADIUS = 90.f;
+
+// Light data
 irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 const float FLASHLIGHT_RANGE = 1000.f;
+vector3df chestLightOffset = vector3df(40,30,0);
+vector3df keyLightOffset = vector3df(0, 20, 0);
+
+
 
 // Create HUD object
 HUD* hud = new HUD;
@@ -159,6 +168,8 @@ int main()
 	//ILightSceneNode* flashlight = lighting.CreatePointLight(flashlightColor, player->getAbsolutePosition(), false, player);
 	//ILightSceneNode* eyeRight = lighting.CreateDirectionalLight(sharkEyesColor, shark->getPosition(), shark->getRotation(), 200.f,false, shark);
 	//ILightSceneNode* eyeLeft = lighting.CreateDirectionalLight(sharkEyesColor, vector3df(shark->getPosition().X+50, shark->getPosition().Y+10, shark->getPosition().Z-50), shark->getRotation(), 200.f, false, shark);
+	//ILightSceneNode* testLight = lighting.CreatePointLight(sharkEyesColor, vector3df(shark->getPosition().X, shark->getPosition().Y, shark->getPosition().Z), 500.f, vector3df(10, 10, 10), false, shark);
+
 
 
 	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
@@ -217,7 +228,7 @@ int main()
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
 	key->tag = GameObject::KEY;
 	GameManager::gameObjects.push_back(key);
-	ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.2f, 0.5f, 1.f), key->getPosition(), 200.f, key->getRotation(), false, key);
+	ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, NO_PARENT);
 
 	// Win Condition trigger object
 	GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
@@ -227,6 +238,7 @@ int main()
 	chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 	chest->tag = GameObject::CHEST;
 	GameManager::gameObjects.push_back(chest);
+	ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, NO_PARENT);
 
 
 
