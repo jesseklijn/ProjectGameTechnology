@@ -60,7 +60,7 @@ const int GameManager::worldRadiusZ = 5000.0f;
 // Constructor
 GameManager::GameManager()
 {
-	GameManager::driver->setFog(SColor(0, 0, 0, 0), EFT_FOG_LINEAR, 50.0f, 3000.0f, 0.01f);
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, -1000.0f, 5000.0f, 0.0005f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
 
 	GridMesh playingMesh = GridMesh(

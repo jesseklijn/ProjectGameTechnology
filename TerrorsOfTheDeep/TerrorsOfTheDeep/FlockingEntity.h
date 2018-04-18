@@ -17,7 +17,7 @@ public:
 	~FlockingEntity();
 	virtual void Update();
 	std::vector<Fish*> flockOfFishes;
-	irr::core::vector3df spawnRadius = irr::core::vector3df(10,50,10);
+	irr::core::vector3df spawnRadius = irr::core::vector3df(50, 50, 50);
 	irr::core::vector3df fishSizeOffset = irr::core::vector3df(0.5F, 0.5F, 0.5F);
 	int amountOfFish = 200, baseFishSpeed = 1;
 	

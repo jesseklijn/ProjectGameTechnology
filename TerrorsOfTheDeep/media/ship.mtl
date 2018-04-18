@@ -1,8 +1,8 @@
-# Blender MTL File: 'ship.blend'
+# Blender MTL File: 'None'
 # Material Count: 5
 
 newmtl flag_logo_texture.JPG
-Ns 90.196078
+Ns 88.235294
 Ka 1.000000 1.000000 1.000000
 Kd 0.025368 0.025368 0.025368
 Ks 0.000000 0.000000 0.000000
@@ -35,7 +35,7 @@ illum 2
 map_Kd wood_planks1.jpg
 
 newmtl wood_details.002_wood
-Ns 90.196078
+Ns 88.235294
 Ka 1.000000 1.000000 1.000000
 Kd 0.016699 0.016947 0.016016
 Ks 0.104242 0.104242 0.104242
@@ -46,7 +46,7 @@ illum 2
 map_Kd wood_planks1.jpg
 
 newmtl wood_details_wood_pla
-Ns 90.196078
+Ns 88.235294
 Ka 1.000000 1.000000 1.000000
 Kd 0.003214 0.003262 0.003082
 Ks 0.104242 0.104242 0.104242

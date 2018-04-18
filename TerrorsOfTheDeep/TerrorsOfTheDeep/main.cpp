@@ -18,13 +18,9 @@
 #pragma once
 #include "GameObject.h"
 #pragma once
+#include "Critter.h"
+#pragma once
 #include "Shark.h"
-#pragma once
-#include "Dolphin.h"
-#pragma once
-#include "Goldback.h"
-#pragma once
-#include "Bass.h"
 #pragma once
 #include <string>
 #pragma once
@@ -69,6 +65,13 @@ bool disableHud = false;
 int dolphinCount = 3;
 int goldbackCount = 50;
 int bassCount = 50;
+
+// Scenery generation
+int shipCount = 4;
+int arcCount = 2;
+int rockCount = 100;
+
+int hillHeight = 200;
 #pragma endregion
 
 
@@ -97,16 +100,24 @@ int main()
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
 	Lighting lighting = Lighting(GameManager::smgr);
-
-	// Ambient Scene Light
 	lighting.SetSceneLight(ambientColor);
-	// Set and attach flashlight to player
-	//ISceneNode *playerNode = &player;
+
+	// Spawn the ground
+	GameObject* groundPlane = new GameObject(new vector3df(0, -100, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		0, GameManager::smgr, -1116,
+		GameManager::smgr->getMesh("../media/plane.obj"),
+		0);
+
+	// Randomly generate terrain hills
+	IMeshBuffer* planeBuffer = groundPlane->mesh->getMesh()->getMeshBuffer(0);
+	S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
+	for (int i = 0; i < planeBuffer->getVertexCount(); i++)
+		mb_vertices[i].Pos.Y += rand() % (hillHeight * 2) - hillHeight;
 
 	// Spawn critters
-	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; ++dolphinIndex)
+	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; dolphinIndex++)
 	{
-		Dolphin* dolphin = new Dolphin(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX, 
+		Critter* dolphin = new Critter(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
 			rand() % GameManager::worldRadiusY, 
 			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
@@ -116,10 +127,9 @@ int main()
 		GameManager::gameObjects.push_back(dolphin);
 	}
 
-
-	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
+	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; goldbackIndex++)
 	{
-		Goldback* goldbackFish = new Goldback(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		Critter* goldbackFish = new Critter(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
 			rand() % GameManager::worldRadiusY,
 			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
@@ -129,9 +139,9 @@ int main()
 		GameManager::gameObjects.push_back(goldbackFish);
 	}
 
-	for (int bassIndex = 0; bassIndex < bassCount; ++bassIndex)
+	for (int bassIndex = 0; bassIndex < bassCount; bassIndex++)
 	{
-		Bass* bassFish = new Bass(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		Critter* bassFish = new Critter(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
 			rand() % GameManager::worldRadiusY,
 			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
@@ -141,71 +151,65 @@ int main()
 		GameManager::gameObjects.push_back(bassFish);
 	}
 
-	GameObject* ship = new GameObject(new vector3df(400, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1111,
-		GameManager::smgr->getMesh("../media/ruinsArc.obj"),
-		0, false);
-	GameManager::gameObjects.push_back(ship);
+	// Spawn world objects
+	for (int shipIndex = 0; shipIndex < shipCount; shipIndex++)
+	{
+		GameObject* ship = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			-50,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(rand() % 25, rand() % 15, rand() % 15),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/ship.obj"),
+			0, false);
+		GameManager::gameObjects.push_back(ship);
+	}
 
-	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
+	for (int arcIndex = 0; arcIndex < arcCount; arcIndex++)
+	{
+		GameObject* arc = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			-50,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(rand() % 25, rand() % 15, rand() % 15),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/ruinsArc.obj"),
+			0, false);
+		GameManager::gameObjects.push_back(arc);
+	}
+
+	for (int rockIndex = 0; rockIndex < rockCount; rockIndex++)
+	{
+		GameObject* rock = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			-50,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f),
+			new vector3df(rand() % 360, rand() % 360, rand() % 360),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh("../media/rock.obj"),
+			GameManager::driver->getTexture("../media/RockTexture.jpg"), false);
+		GameManager::gameObjects.push_back(rock);
+	}
+
+	// Spawn player
+	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
+	GameManager::gameObjects.push_back(player);
+
+	// Attach flashlight to player
+	ISceneNode* newPlayer = player;
+	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
+
+	// Spawn shark
+	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		0, false);
 	GameManager::gameObjects.push_back(shark);
 
-	// Player
-	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
-	GameManager::gameObjects.push_back(player);
-
-	ISceneNode* newPlayer = player;
-	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
-
-
-
-	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
+	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 	flockOfFish->tag = GameObject::CREATURE;
 	GameManager::gameObjects.push_back(flockOfFish);
-
-	
-
-	// Rock
-	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1112,
-	 GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	GameManager::gameObjects.push_back(rock);
-
-	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
-		0, GameManager::smgr, 3,
-		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	GameManager::gameObjects.push_back(rock1);
-
-	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1114,
-		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	GameManager::gameObjects.push_back(rock2);
-
-	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1115,
-		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	GameManager::gameObjects.push_back(rock3);
-
-	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1116,
-		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
-	GameManager::gameObjects.push_back(rock4);
-
-	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1116,
-		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/SandTexture.jpg"));
 
 	// Key collectible object
 	GameObject* key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
@@ -215,7 +219,7 @@ int main()
 	key->tag = GameObject::KEY;
 	GameManager::gameObjects.push_back(key);
 
-	// Win Condition trigger object
+	// Win condition trigger object
 	GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
@@ -247,11 +251,6 @@ int main()
 			chest->mesh,
 			key->mesh,
 			shark->mesh,
-			rock->mesh,
-			rock1->mesh,
-			rock2->mesh,
-			rock3->mesh,
-			rock4->mesh,
 			itemPickedUp,
 			GameManager::smgr);
 

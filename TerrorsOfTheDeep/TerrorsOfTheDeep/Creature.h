@@ -47,7 +47,6 @@ public:
 	float chaseSpeedMultiplier = 2.0f;
 	float fleeSpeedMultiplier = 4.5f;
 	int idlingAngle = 60;
-	float maxDistFromCenter = 400000.0f;
 
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;

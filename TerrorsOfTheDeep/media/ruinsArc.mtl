@@ -1,15 +1,5 @@
 # Blender MTL File: 'ruins entrance.blend'
-# Material Count: 5
-
-newmtl Material.003
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
+# Material Count: 4
 
 newmtl pilar1
 Ns 96.078431
@@ -20,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\3D\3d obj\pilar1.png
+map_Kd textures\pilar1.png
 
 newmtl sucio1
 Ns 96.078431
@@ -31,8 +21,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\3D\3d obj\sucio1.png
-map_Bump C:\\3D\\texturas\\difuse3_NRM.png
+map_Kd textures\sucio1.png
+map_Bump textures\\difuse3_NRM.png
 
 newmtl sucio2
 Ns 96.078431
@@ -43,8 +33,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\3D\3d obj\sucio2.png
-map_Bump C:\\Users\\Public\\Documents\\KillyVera\\sucio2_NRM.png
+map_Kd textures\sucio2.png
+map_Bump textures\\sucio2_NRM.png
 
 newmtl texturew
 Ns 96.078431
@@ -55,5 +45,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\3D\3d obj\texturew.png
-map_Bump C:\\Users\\Public\\Documents\\KillyVera\\texturewall_NRM.png
+map_Kd textures\texturew.png
+map_Bump textures\\texturewall_NRM.png
