@@ -63,6 +63,9 @@ GameManager::GameManager()
 	GameManager::tags.push_back("Player");
 	GameManager::tags.push_back("Monster");
 	GameManager::tags.push_back("World Object");
+	GameManager::tags.push_back("Ground");
+	GameManager::tags.push_back("Key");
+	GameManager::tags.push_back("Win");
 
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),

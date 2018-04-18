@@ -115,7 +115,7 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 	//		mesh->setRotation(direction.getHorizontalAngle());
 	//}
 
-	PhysicsObject::addForce(moveSpeed * direction);
+	PhysicsObject::addForce(moveSpeed * direction.normalize());
 	if (turnToDirection)
 	{
 		PhysicsObject::turnToDirection(direction);

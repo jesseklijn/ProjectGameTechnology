@@ -22,9 +22,9 @@ PhysicsObject::PhysicsObject(ISceneNode* parent, ISceneManager* mgr, s32 id, con
 	force_ = vector3df(0);
 	position_ = *startPosition;
 
-	//parent_ = parent;
+	parent = parent;
 
-	gravity = vector3df(0, -0.001, 0);
+	gravityConstant = vector3df(0, -0.001, 0);
 }
 
 
@@ -62,10 +62,7 @@ SMaterial& PhysicsObject::getMaterial(u32 i)
 
 void PhysicsObject::Update()
 {
-	if (id_ != 9000)
-	{
-		updatePosition();
-	}
+	updatePosition();
 
 	if (mesh)
 	{
@@ -76,22 +73,48 @@ void PhysicsObject::Update()
 
 void PhysicsObject::updatePosition()
 {
-	position_ = getPosition();
+	if (id_ != 9000)
+	{
+		position_ = getPosition();
+	} else
+	{
+		position_ = parent->getPosition();
+	}
 
 	if (velocity_.Y > -0.1)
 	{
-		force_ += gravity;
+		force_ += gravityForce();
 	}
-	vector3df acceleration = (1 / mass_) * force_;
-	velocity_ += acceleration;
-	if (position_.Y > -50)
+	force_ += dragForce();
+	force_ += buoyancyForce();
+
+	// VELOCITY VERLET
+	//position_ += velocity_ * time_step + (0.5 * acceleration_ * time_step ^ 2);
+	//vector3df new_acceleration = force_ / mass_;
+	//vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
+	//velocity_ += avg_acceleration * time_step;
+
+	position_ += velocity_ + (0.5 * acceleration_);
+	vector3df newAcceleration = force_ / mass_;
+	vector3df avgAcceleration = (acceleration_ + newAcceleration) / 2;
+	velocity_ += avgAcceleration;
+	acceleration_ = newAcceleration;
+
+	if (id_ != 9000)
 	{
-		position_ += velocity_;
+		setPosition(position_);
 	}
-	setPosition(position_);
+	else
+	{
+		parent->setPosition(position_);
+	}
 
 	force_ = vector3df(0);
-	velocity_ = vector3df(0);
+	if (position_.Y < -85)
+	{
+		velocity_.Y = 0;
+	}
+	velocity_ *= 0.1;
 }
 
 void PhysicsObject::turnToDirection(vector3df direction)
@@ -101,12 +124,30 @@ void PhysicsObject::turnToDirection(vector3df direction)
 		mesh->setRotation(direction.getHorizontalAngle());
 }
 
+vector3df PhysicsObject::dragForce()
+{
+	// 0.5 * densityWater * velocity^2 * dragCoefficient * crossSectionalArea
+	return 0.5 * velocity_ * velocity_;
+}
+
+vector3df PhysicsObject::gravityForce()
+{
+	return gravityConstant * mass_;
+}
+
+vector3df PhysicsObject::buoyancyForce()
+{
+	// densityWater * volumeObject
+}
+
 void PhysicsObject::addForce(vector3df force)
 {
 	force_ += force;
 }
 
+// TODO: better draaaaag!
+// TODO: better buoyance
+// TODO: use timesteps
+// TODO: player movement not through camera
 // TODO: proper movement - on user input add to force
 // TODO: proper gravity - cap on velocity
-// TODO: friction!
-// TODO: buoyance

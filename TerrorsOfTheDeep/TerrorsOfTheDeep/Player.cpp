@@ -19,12 +19,10 @@ Player::Player(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, float mass)
-	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, mass){
+	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, mass)
+{
 	irrDevice = GameManager::device;
 	smgr = mgr;
-
-	parent_ = parent;
-	//mesh->setRotation(vector3df(180, 0, 180));
 }
 
 Player::~Player()

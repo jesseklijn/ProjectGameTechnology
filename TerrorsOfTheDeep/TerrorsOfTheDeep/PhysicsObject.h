@@ -4,13 +4,14 @@ class PhysicsObject : public irr::scene::ISceneNode
 {
 	irr::core::vector3df position_;
 	irr::core::vector3df velocity_;
+	irr::core::vector3df acceleration_;
 	irr::core::vector3df force_;
 	irr::s32 id_;
 	float mass_;
 
 public:
-	irr::core::vector3df gravity;
-	irr::scene::ISceneNode* parent_;
+	irr::core::vector3df gravityConstant;
+	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 		const irr::core::vector3df* startPosition, float mass = 1);
@@ -32,5 +33,11 @@ public:
 	virtual void Update();
 	void updatePosition();
 	void turnToDirection(irr::core::vector3df direction);
+
+	irr::core::vector3df dragForce();
+	irr::core::vector3df gravityForce();
+	irr::core::vector3df buoyancyForce();
+
+
 	void addForce(irr::core::vector3df force);
 };
