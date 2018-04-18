@@ -52,9 +52,9 @@ std::vector<GameObject*> GameManager::gameObjects;
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
 float GameManager::time = 0.0;
-const int GameManager::worldRadiusX = 5000.0f;
-const int GameManager::worldRadiusY = 2000.0f;
-const int GameManager::worldRadiusZ = 5000.0f;
+const int GameManager::worldRadiusX = 8000.0f;
+const int GameManager::worldRadiusY = 3500.0f;
+const int GameManager::worldRadiusZ = 8000.0f;
 #pragma endregion
 
 // Constructor
