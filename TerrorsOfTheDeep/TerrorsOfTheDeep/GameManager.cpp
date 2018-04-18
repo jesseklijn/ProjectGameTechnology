@@ -94,7 +94,7 @@ void GameManager::Start()
 void GameManager::Update()
 {
 	// Runs the Update() for all GameObjects in GameManager::gameObjects.
-	for (int i = 0; i < GameManager::gameObjects.size(); ++i)
+	for (int i = 0; i < GameManager::gameObjects.size(); i++)
 	{
 		GameManager::gameObjects[i]->Update();
 	}

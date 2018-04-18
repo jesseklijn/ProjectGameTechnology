@@ -1,0 +1,46 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl BrickOldGray
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 8.999999 8.999999 8.999999
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd Ruins\\TempleRuin_01\\3td_BrickOldGray_02.jpg
+
+newmtl BrickOldeSharp
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 8.999999 8.999999 8.999999
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd Ruins\\TempleRuin_01\\3td_BrickOldSharp_03.jpg
+
+newmtl BrickRoundGrass1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 8.999999 8.999999 8.999999
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd Ruins\\TempleRuin_01\\3td_BrickRoundGrass_01.jpg
+
+newmtl Crete_mossy1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 8.999999 8.999999 8.999999
+Ke 0.000000 0.000000 0.000000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd Ruins\\TempleRuin_01\\3td_Concrete_mossy_01.jpg

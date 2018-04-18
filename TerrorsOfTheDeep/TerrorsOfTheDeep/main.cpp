@@ -67,11 +67,12 @@ int goldbackCount = 50;
 int bassCount = 50;
 
 // Scenery generation
-int shipCount = 4;
-int arcCount = 2;
+int shipCount = 8;
+int arcCount = 5;
 int rockCount = 100;
+int ruinsCount = 25;
 
-int hillHeight = 200;
+int hillHeight = 250;
 #pragma endregion
 
 
@@ -112,7 +113,8 @@ int main()
 	IMeshBuffer* planeBuffer = groundPlane->mesh->getMesh()->getMeshBuffer(0);
 	S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
 	for (int i = 0; i < planeBuffer->getVertexCount(); i++)
-		mb_vertices[i].Pos.Y += rand() % (hillHeight * 2) - hillHeight;
+		mb_vertices[i].Pos.Y += rand() % (hillHeight * 2) - hillHeight;	
+
 
 	// Spawn critters
 	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; dolphinIndex++)
@@ -164,16 +166,23 @@ int main()
 		GameManager::gameObjects.push_back(ship);
 	}
 
-	for (int arcIndex = 0; arcIndex < arcCount; arcIndex++)
+	std::vector<std::string> meshDirectories;
+	meshDirectories.push_back("../media/ruinsArc.obj");
+	meshDirectories.push_back("../media/ruinsCathedral.obj");
+	meshDirectories.push_back("../media/ruinsFoundation.obj");
+	meshDirectories.push_back("../media/ruinsPillar.obj");
+	meshDirectories.push_back("../media/ruinsTempleRuin1.obj");
+	meshDirectories.push_back("../media/ruinsTempleRuin2.obj");
+	for (int ruinsIndex = 0; ruinsIndex < ruinsCount; ruinsIndex++)
 	{
-		GameObject* arc = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* ruin = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
 			-50,
 			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
 			new vector3df(1, 1, 1), new vector3df(rand() % 25, rand() % 15, rand() % 15),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/ruinsArc.obj"),
 			0, false);
-		GameManager::gameObjects.push_back(arc);
+		GameManager::gameObjects.push_back(ruin);
 	}
 
 	for (int rockIndex = 0; rockIndex < rockCount; rockIndex++)
@@ -188,6 +197,13 @@ int main()
 			GameManager::driver->getTexture("../media/RockTexture.jpg"), false);
 		GameManager::gameObjects.push_back(rock);
 	}
+
+	GameObject* ruinsPillar = new GameObject(new vector3df(0, -50, 0),
+		new vector3df(1, 1, 1), new vector3df(rand() % 25, rand() % 15, rand() % 15),
+		0, GameManager::smgr, -1111,
+		GameManager::smgr->getMesh("../media/ruinsTempleRuin2.obj"),
+		0, false);
+	GameManager::gameObjects.push_back(ruinsPillar);
 
 	// Spawn player
 	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
