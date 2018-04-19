@@ -10,7 +10,7 @@ class PhysicsObject : public irr::scene::ISceneNode
 	float mass_;
 
 public:
-	irr::core::vector3df gravityConstant;
+	float gravityConstant;
 	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
@@ -37,6 +37,7 @@ public:
 	irr::core::vector3df dragForce();
 	irr::core::vector3df gravityForce();
 	irr::core::vector3df buoyancyForce();
+	void verlet();
 
 
 	void addForce(irr::core::vector3df force);

@@ -1,4 +1,5 @@
 #include "PhysicsObject.h"
+#include "GameManager.h"
 
 
 #pragma region Namespaces
@@ -13,8 +14,8 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
-PhysicsObject::PhysicsObject(ISceneNode* parent, ISceneManager* mgr, s32 id, const vector3df* startPosition, float mass)
-	: ISceneNode(parent, mgr, id)
+PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, const vector3df* startPosition, float mass)
+	: ISceneNode(parentPar, mgr, id)
 {
 	id_ = id;
 	mass_ = mass;
@@ -22,9 +23,9 @@ PhysicsObject::PhysicsObject(ISceneNode* parent, ISceneManager* mgr, s32 id, con
 	force_ = vector3df(0);
 	position_ = *startPosition;
 
-	parent = parent;
+	parent = parentPar;
 
-	gravityConstant = vector3df(0, -0.001, 0);
+	gravityConstant = -9.8;
 }
 
 
@@ -81,24 +82,8 @@ void PhysicsObject::updatePosition()
 		position_ = parent->getPosition();
 	}
 
-	if (velocity_.Y > -0.1)
-	{
-		force_ += gravityForce();
-	}
-	force_ += dragForce();
-	force_ += buoyancyForce();
-
-	// VELOCITY VERLET
-	//position_ += velocity_ * time_step + (0.5 * acceleration_ * time_step ^ 2);
-	//vector3df new_acceleration = force_ / mass_;
-	//vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
-	//velocity_ += avg_acceleration * time_step;
-
-	position_ += velocity_ + (0.5 * acceleration_);
-	vector3df newAcceleration = force_ / mass_;
-	vector3df avgAcceleration = (acceleration_ + newAcceleration) / 2;
-	velocity_ += avgAcceleration;
-	acceleration_ = newAcceleration;
+	force_ += gravityForce() + dragForce() + buoyancyForce();
+	verlet();
 
 	if (id_ != 9000)
 	{
@@ -110,11 +95,11 @@ void PhysicsObject::updatePosition()
 	}
 
 	force_ = vector3df(0);
-	if (position_.Y < -85)
+	if (position_.Y < -85 && velocity_.Y < 0)
 	{
 		velocity_.Y = 0;
 	}
-	velocity_ *= 0.1;
+	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
 }
 
 void PhysicsObject::turnToDirection(vector3df direction)
@@ -127,17 +112,33 @@ void PhysicsObject::turnToDirection(vector3df direction)
 vector3df PhysicsObject::dragForce()
 {
 	// 0.5 * densityWater * velocity^2 * dragCoefficient * crossSectionalArea
-	return 0.5 * velocity_ * velocity_;
+	return -0.5 * velocity_ * velocity_;
 }
 
 vector3df PhysicsObject::gravityForce()
 {
-	return gravityConstant * mass_;
+	float gravity = (position_.Y < -85) ? 0 : gravityConstant * mass_;
+	return vector3df(0, gravity, 0);
 }
 
 vector3df PhysicsObject::buoyancyForce()
 {
+	// Only if not on the floor
 	// densityWater * volumeObject
+	// since denisity of human is around 1, take mass for volume
+	float buoyancy = (position_.Y < -85) ? 0 : mass_ * 9.8;
+	return vector3df(0, buoyancy, 0);
+}
+
+void PhysicsObject::verlet()
+{
+	float timeStep = GameManager::deltaTime;
+
+	// VELOCITY VERLET
+	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
+	vector3df new_acceleration = force_ / mass_;
+	vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
+	velocity_ += avg_acceleration * timeStep;
 }
 
 void PhysicsObject::addForce(vector3df force)
@@ -145,9 +146,9 @@ void PhysicsObject::addForce(vector3df force)
 	force_ += force;
 }
 
-// TODO: better draaaaag!
-// TODO: better buoyance
+// TODO: better draaaaag: get something for those constants
+// TODO: better buoyance: actually use volume somehow
 // TODO: use timesteps
 // TODO: player movement not through camera
 // TODO: proper movement - on user input add to force
-// TODO: proper gravity - cap on velocity
+// TODO: proper gravity - cap on velocity (should happen through drag
