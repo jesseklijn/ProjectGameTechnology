@@ -162,8 +162,12 @@ void Creature::Update()
 
 	if (stateUpdateTimer <= 0.0)
 	{
-		Creature::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		if ((getAbsolutePosition() - GameManager::smgr->getActiveCamera()->getAbsolutePosition()).getLength() < GameManager::creatureStateRange)
+			Creature::UpdateState();
+		else
+			state = IDLE;
+
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Creature::ExecuteState();
 	Creature::Move();

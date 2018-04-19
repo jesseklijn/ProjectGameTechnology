@@ -62,11 +62,11 @@ HUD* hud = new HUD;
 bool disableHud = false;
 
 // Scenery generation
-int critterCount = 250;
-int shipCount = 3;
-int rockCount = 50;
-int ruinsCount = 24;
-int hillHeight = 150;
+int critterCount = 1500;
+int shipCount = 6;
+int rockCount = 100;
+int ruinsCount = 50;
+int hillHeight = 200;
 #pragma endregion
 
 
@@ -101,56 +101,38 @@ int main()
 	GameObject* groundPlane = new GameObject(new vector3df(0, -100, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/plane.obj"),
-		0);
+		0, false);
 
 	// Randomly generate terrain hills
 	IMeshBuffer* planeBuffer = groundPlane->mesh->getMesh()->getMeshBuffer(0);
 	S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
 	for (int i = 0; i < planeBuffer->getVertexCount(); i++)
-		mb_vertices[i].Pos.Y += rand() % (hillHeight * 2) - hillHeight;	
-
+		mb_vertices[i].Pos.Y += rand() % (hillHeight * 2) - hillHeight;
 
 	// Spawn critters
 	std::vector<io::path> meshDirectories;
 	std::vector<io::path> meshTextures;
-	meshDirectories.push_back("../media/dolphin.obj"); meshTextures.push_back("../media/skydome.jpg");
+	meshDirectories.push_back("../media/dolphin.obj"); meshTextures.push_back("");
+	meshDirectories.push_back("../media/Fish1.obj"); meshTextures.push_back("");
+	meshDirectories.push_back("../media/Fish2.obj"); meshTextures.push_back("");
+	meshDirectories.push_back("../media/Fish3.obj"); meshTextures.push_back("");
+	meshDirectories.push_back("../media/Manta ray.obj"); meshTextures.push_back("");
 	meshDirectories.push_back("../media/GoldenFish.obj"); meshTextures.push_back("../media/naranjaojo.png");
 	meshDirectories.push_back("../media/Rudd_Fish.obj"); meshTextures.push_back("../media/Rudd-Fish_Colourmap.png");
 	for (int critterIndex = 0; critterIndex < critterCount; critterIndex++)
 	{
 		int typeIndex = rand() % meshDirectories.size();
 		Critter* critter = new Critter(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
-			rand() % GameManager::worldRadiusY, 
+			rand() % GameManager::worldRadiusY,
 			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-			GameManager::driver->getTexture(meshTextures[typeIndex]), false);
+			meshTextures[typeIndex] != "" ? GameManager::driver->getTexture(meshTextures[typeIndex]) : 0, false);
 		GameManager::gameObjects.push_back(critter);
 	}
 
-	// Spawn ruins
-	meshDirectories.clear(); meshTextures.clear();
-	meshDirectories.push_back("../media/ruinsArc.obj");
-	meshDirectories.push_back("../media/ruinsCathedral.obj");
-	meshDirectories.push_back("../media/ruinsFoundation.obj");
-	meshDirectories.push_back("../media/ruinsPillar.obj");
-	meshDirectories.push_back("../media/ruinsTempleRuin1.obj");
-	meshDirectories.push_back("../media/ruinsTempleRuin2.obj");
-	for (int ruinsIndex = 0; ruinsIndex < ruinsCount; ruinsIndex++)
-	{
-		int typeIndex = rand() % meshDirectories.size();
-		GameObject* ruin = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
-			-50,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
-			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-			0, GameManager::smgr, -1111,
-			GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-			0);
-		GameManager::gameObjects.push_back(ruin);
-	}
-
-	// Spawn ships
+	// Spawn world objects
 	for (int shipIndex = 0; shipIndex < shipCount; shipIndex++)
 	{
 		GameObject* ship = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
@@ -163,7 +145,27 @@ int main()
 		GameManager::gameObjects.push_back(ship);
 	}
 
-	// Spawn rocks
+	meshDirectories.clear();
+	meshTextures.clear();
+	meshDirectories.push_back("../media/ruinsArc.obj");
+	meshDirectories.push_back("../media/ruinsCathedral.obj");
+	meshDirectories.push_back("../media/ruinsFoundation.obj");
+	meshDirectories.push_back("../media/ruinsPillar.obj");
+	meshDirectories.push_back("../media/ruinsTempleRuin1.obj");
+	meshDirectories.push_back("../media/ruinsTempleRuin2.obj");
+	for (int ruinsIndex = 0; ruinsIndex < ruinsCount; ruinsIndex++)
+	{
+		int typeIndex = rand() % meshDirectories.size();
+		GameObject* ruin = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+			-50,
+			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			new vector3df(1, 1, 1), new vector3df(rand() % 25, rand() % 15, rand() % 15),
+			0, GameManager::smgr, -1111,
+			GameManager::smgr->getMesh(meshDirectories[typeIndex]),
+			0);
+		GameManager::gameObjects.push_back(ruin);
+	}
+
 	for (int rockIndex = 0; rockIndex < rockCount; rockIndex++)
 	{
 		GameObject* rock = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
@@ -174,7 +176,7 @@ int main()
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/rock.obj"),
 			GameManager::driver->getTexture("../media/RockTexture.jpg"));
-		GameManager::gameObjects.push_back(rock);
+		//GameManager::gameObjects.push_back(rock);
 	}
 
 	// Spawn player
@@ -187,9 +189,9 @@ int main()
 	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
 
 	// Spawn shark
-	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(2, 2, 2), new vector3df(0, 0, 0),
+	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
-		GameManager::smgr->getMesh("../media/shark.obj"),
+		GameManager::smgr->getMesh("../media/Shark.obj"),
 		0, false);
 	GameManager::gameObjects.push_back(shark);
 

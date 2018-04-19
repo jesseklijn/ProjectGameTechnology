@@ -88,6 +88,7 @@ public:
 	int GameSpeed = 1;
 	bool GamePaused = false;
 	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
+	static const float creatureStateRange;
 
 	// Functions
 	void Awake();
