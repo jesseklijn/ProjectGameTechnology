@@ -59,46 +59,6 @@ void Detect(
 				}
 			}
 		}
-
-
-		/*
-		if (Col(player, win, 90)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(0.25, 0.25, 0.25));
-
-			if (pickedUp[0]) {
-				pickedUp[1] = true;
-				//font->draw(L"Win Text", irr::core::rect<s32>(30, 100, 30, 100), irr::video::SColor(255, 255, 255, 255));
-			}
-			else {
-				//font->draw(L"Key text", irr::core::rect<s32>(30, 100, 30, 100), irr::video::SColor(255, 255, 255, 255));
-			}
-		}
-
-		if (Col(key, player, 50)) {
-			pickedUp[0] = true;
-			key->setPosition(key->getPosition() + irr::core::vector3df(10000, 10000, 10000));
-		}
-
-		if (Col(player, shark, 30)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() +irr::core::vector3df(rand() % 2 - 1, 0, 0));
-			pickedUp[2] = true;
-		}
-		if (Col(player, rock, 150)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
-		}
-		if (Col(player, rock1, 150)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
-		}
-		if (Col(player, rock2, 150)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
-		}
-		if (Col(player, rock3, 150)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
-		}
-		if (Col(player, rock4, 150)) {
-			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
-		}
-		*/
 	}
 }
 
