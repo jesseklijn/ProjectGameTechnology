@@ -81,10 +81,10 @@ void Fish::ApplyFlocking(std::vector<Fish*> flockOfFishes, irr::core::vector3df 
 float Fish::CalculateDistance(irr::core::vector3df A, irr::core::vector3df B)
 {
 	//distance is (b.x-a.x)^2 + (b.y-a.y)^2
-	float distX = (B.X - A.X) * (B.X - A.X);
-	float distY = (B.Y - A.Y) * (B.Y - A.Y);
-
-	float lengthRoot = distX + distY;
+	auto distX = (B.X - A.X) * (B.X - A.X);
+	auto distY = (B.Y - A.Y) * (B.Y - A.Y);
+	auto distZ = (B.Z - A.Z) * (B.Z - A.Z);
+	auto lengthRoot = distX + distY + distZ;
 
 
 	return sqrt(lengthRoot);
