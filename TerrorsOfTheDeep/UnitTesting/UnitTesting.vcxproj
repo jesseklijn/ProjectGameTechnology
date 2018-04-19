@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="exampleTest.cpp" />
+    <ClCompile Include="FlockingUnitTest.cpp" />
     <ClCompile Include="mainTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

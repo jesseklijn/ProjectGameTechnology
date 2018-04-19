@@ -84,12 +84,6 @@
     <ClCompile Include="DetectCollision.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
-    <ClInclude Include="Fish.cpp">
-      <Filter>Source Files\</Filter>
-    </ClInclude>
-	 <ClCompile Include="FlockingEntity.cpp">
-      <Filter>Source Files\</Filter>
-    </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
@@ -138,6 +132,12 @@
     <ClCompile Include="Bass.cpp">
       <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
     </ClCompile>
+    <ClCompile Include="Fish.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
+    </ClCompile>
+    <ClCompile Include="FlockingEntity.cpp">
+      <Filter>Source Files\Game Objects\Creatures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -154,12 +154,6 @@
     </ClInclude>
     <ClInclude Include="DynamicUpdater.h">
       <Filter>Header Files\Game Objects</Filter>
-    </ClInclude>
-	<ClInclude Include="Fish.h">
-      <Filter>Header Files\</Filter>
-    </ClInclude>
-	<ClInclude Include="FlockingEntity.h">
-      <Filter>Header Files\</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Header Files\Controllers</Filter>
@@ -208,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="Bass.h">
       <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
+    </ClInclude>
+    <ClInclude Include="Fish.h">
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
+    </ClInclude>
+    <ClInclude Include="FlockingEntity.h">
+      <Filter>Header Files\Game Objects\Creatures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
