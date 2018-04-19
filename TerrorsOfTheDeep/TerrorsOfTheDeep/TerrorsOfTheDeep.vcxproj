@@ -26,7 +26,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -39,7 +39,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -112,7 +112,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>irrKlang.lib;Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -178,8 +178,8 @@
     <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="ExampleUnitTest.cpp" />
-	<ClCompile Include="Fish.cpp" />
-	<ClCompile Include="FlockingEntity.cpp" />
+    <ClCompile Include="Fish.cpp" />
+    <ClCompile Include="FlockingEntity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
@@ -202,8 +202,8 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
-	<ClInclude Include="Fish.h" />
-	<ClInclude Include="FlockingEntity.h" />
+    <ClInclude Include="Fish.h" />
+    <ClInclude Include="FlockingEntity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GridMesh.h" />
