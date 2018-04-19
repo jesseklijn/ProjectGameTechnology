@@ -3,7 +3,9 @@
 //Needs to always be included
 #include "catch.hpp"
 //specific cpp file where the unit test is
-#include "../TerrorsOfTheDeep/ExampleUnitTest.cpp"
+#include "ExampleUnitTest.cpp"
+
+
 
 //unit test
 TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
@@ -14,7 +16,6 @@ TEST_CASE("Example: ints are multiplied", "[UnitTestExample]")
 	REQUIRE(UnitTestExample(4) == 6);
 	REQUIRE(UnitTestExample(10) == 20);
 }
-
 //to run the unit test, set this project as startup project and pres ctrl + f5
 
 //see the ExampleUnitTest.cpp file in the TerrorsOfTheDeep project for reference
