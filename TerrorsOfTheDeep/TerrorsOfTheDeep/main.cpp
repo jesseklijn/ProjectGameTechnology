@@ -156,7 +156,6 @@ int main()
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
 	shark->tag = GameObject::MONSTER;
-	shark->chaseSpeed = 0;
 	GameManager::gameObjects.push_back(shark);
 
 	// Player
