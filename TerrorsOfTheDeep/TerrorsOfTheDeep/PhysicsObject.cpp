@@ -148,7 +148,5 @@ void PhysicsObject::addForce(vector3df force)
 
 // TODO: better draaaaag: get something for those constants
 // TODO: better buoyance: actually use volume somehow
-// TODO: use timesteps
 // TODO: player movement not through camera
 // TODO: proper movement - on user input add to force
-// TODO: proper gravity - cap on velocity (should happen through drag
