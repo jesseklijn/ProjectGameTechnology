@@ -1,4 +1,5 @@
 #include "DetectCollision.h"
+#include "GameManager.h"
 
 bool hasKey = false;
 bool allowCollision = false;
@@ -6,12 +7,10 @@ int colTime = 100;
 
 
 // simple collision code. 
-bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, int size) {
-	if (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size) {
-		return true;
-	}
-	else { return false; }
+bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
+	return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
 }
+
 
 void Detect(
 	irr::scene::ISceneNode* player,
@@ -40,6 +39,29 @@ void Detect(
 
 	if (allowCollision) {
 		
+		for(int i = 0; i < GameManager::gameObjects.size(); i++)
+		{
+			GameObject* obj1 = GameManager::gameObjects[i];
+
+			for(int j = i+1; j < GameManager::gameObjects.size(); j++)
+			{
+				GameObject* obj2 = GameManager::gameObjects[j];
+				float temp = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
+				float size = (temp * 0.43);
+
+				
+				if (obj1 != obj2)
+				{
+					if (Col(obj1, obj2, size))
+					{
+						std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+					}
+				}
+			}
+		}
+
+
+		/*
 		if (Col(player, win, 90)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(0.25, 0.25, 0.25));
 
@@ -76,6 +98,7 @@ void Detect(
 		if (Col(player, rock4, 150)) {
 			smgr->getActiveCamera()->setPosition(smgr->getActiveCamera()->getPosition() + irr::core::vector3df(1, 1, 1));
 		}
+		*/
 	}
 }
 
