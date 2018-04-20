@@ -12,7 +12,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	// Shark configuration
-	moveSpeed = 0.4;
+	moveSpeed = 0.04;
 	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
 	chaseSpeedMultiplier = 1.25f;
 

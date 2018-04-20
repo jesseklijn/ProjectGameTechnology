@@ -25,7 +25,7 @@ PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, 
 
 	parent = parentPar;
 
-	gravityConstant = -9.8;
+	gravityConstant = -9.8;	//9.81
 }
 
 
@@ -126,19 +126,21 @@ vector3df PhysicsObject::buoyancyForce()
 	// Only if not on the floor
 	// densityWater * volumeObject
 	// since denisity of human is around 1, take mass for volume
+	// multiplied to balance with gravity
 	float buoyancy = (position_.Y < -85) ? 0 : mass_ * 9.8;
 	return vector3df(0, buoyancy, 0);
 }
 
 void PhysicsObject::verlet()
 {
-	float timeStep = GameManager::deltaTime;
+	float timeStep = GameManager::deltaTimeMS;
 
 	// VELOCITY VERLET
 	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
 	vector3df new_acceleration = force_ / mass_;
 	vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
 	velocity_ += avg_acceleration * timeStep;
+	acceleration_ = new_acceleration;
 }
 
 void PhysicsObject::addForce(vector3df force)
