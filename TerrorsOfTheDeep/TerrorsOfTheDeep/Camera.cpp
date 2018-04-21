@@ -33,7 +33,7 @@ Camera::Camera(ISceneManager* smgr)
 
 	// Add a camera in the scene
 	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
-	camera->setFarValue(7500.0f);
+	camera->setFarValue(8000.0f);
 }
 
 // Destructor

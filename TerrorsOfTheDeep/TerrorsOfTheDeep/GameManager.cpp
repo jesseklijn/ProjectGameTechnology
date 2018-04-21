@@ -15,7 +15,7 @@
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 
@@ -52,17 +52,17 @@ std::vector<GameObject*> GameManager::gameObjects;
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
 float GameManager::time = 0.0;
-const int GameManager::worldRadiusX = 12000.0f;
+const int GameManager::worldRadiusX = 8000.0f;
 const int GameManager::worldRadiusY = 3500.0f;
-const int GameManager::worldRadiusZ = 12000.0f;
-const float GameManager::creatureStateRange = 2000.0f;
+const int GameManager::worldRadiusZ = 8000.0f;
+const float GameManager::creatureStateRange = 2500.0f;
 #pragma endregion
 
 // Constructor
 GameManager::GameManager()
 {
 	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, -1000.0f, 5000.0f, 0.0005f);
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
@@ -164,12 +164,6 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 	ray.start = startPosition;
 	ray.end = endPosition;
 
-	// This call is all you need to perform ray/triangle collision on every scene node
-	// that has a triangle selector, including the Quake level mesh.  It finds the nearest
-	// collision point/triangle, and returns the scene node containing that point.
-	// Irrlicht provides other types of selection, including ray/triangle selector,
-	// ray/box and ellipse/triangle selector, plus associated helpers.
-	// See the methods of ISceneCollisionManager
 	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,
@@ -188,10 +182,8 @@ the monster's tag list and the target object's tag, but can be used for anything
 int GameManager::FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag)
 {
 	for (int i = 0; i < vectorList.size(); i++)
-	{
 		if (vectorList[i] == listTag)
 			return i;
-	}
 	return -1;
 }
 

@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib Manta ray.mtl
+mtllib MantaRay.mtl
 o MantaRay
 v -0.186252 3.518380 0.225762
 v -9.831248 3.431269 4.965599

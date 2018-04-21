@@ -16,7 +16,7 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canAttack = true;
 	canFlee = false;
 
-	rotationLerp = 0.00001;
+	rotationLerp = 0.000015;
 	idleSpeed = 300.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;

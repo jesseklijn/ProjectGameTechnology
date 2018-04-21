@@ -163,7 +163,7 @@ void Shark::Update()
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Shark::ExecuteState();
 	Shark::Move();
