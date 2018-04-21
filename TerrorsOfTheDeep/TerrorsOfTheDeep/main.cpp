@@ -250,7 +250,7 @@ int main()
 	GameManager::gameObjects.push_back(skull);
 
 	// Spawn player
-	Player* player = new Player(new vector3df(0, 1000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
 	GameManager::gameObjects.push_back(player);
 
@@ -259,7 +259,7 @@ int main()
 	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, newPlayer->getPosition(), GameManager::smgr->getActiveCamera()->getTarget(), 5.0f, true, newPlayer);
 
 	// Spawn shark
-	Shark* shark = new Shark(new vector3df(4000, 1000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	Shark* shark = new Shark(new vector3df(4000, 500, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/Shark.obj"),
 		0, false);
