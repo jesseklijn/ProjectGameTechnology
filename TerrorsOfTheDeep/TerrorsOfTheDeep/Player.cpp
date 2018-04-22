@@ -25,6 +25,8 @@ Player::Player(const irr::core::vector3df* startPosition,
 
 	irrDevice = GameManager::device;
 	smgr = mgr;
+
+	latestPos = getAbsolutePosition();
 }
 
 Player::~Player()
@@ -52,6 +54,10 @@ void Player::Update()
 	updateAbsolutePosition();
 
 	UpdatePos();
+
+	vector3df currentPos = getAbsolutePosition();
+	setVelocity(currentPos - latestPos);
+	latestPos = currentPos;
 }
 
 void Player::render()

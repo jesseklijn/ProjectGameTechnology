@@ -206,14 +206,14 @@
     <ClInclude Include="Bass.h">
       <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Fish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FlockingEntity.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

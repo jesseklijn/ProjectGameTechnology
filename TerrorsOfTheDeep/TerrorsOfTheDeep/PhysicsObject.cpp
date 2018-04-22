@@ -77,22 +77,22 @@ void PhysicsObject::updatePosition()
 	if (id_ != 9000)
 	{
 		position_ = getPosition();
-	} else
-	{
-		position_ = parent->getPosition();
-	}
+	//} else
+	//{
+	//	position_ = parent->getPosition();
+	//}
 
 	force_ += gravityForce() + dragForce() + buoyancyForce();
 	verlet();
 
-	if (id_ != 9000)
-	{
+	//if (id_ != 9000)
+	//{
 		setPosition(position_);
 	}
-	else
-	{
-		parent->setPosition(position_);
-	}
+	//else
+	//{
+	//	parent->setPosition(position_);
+	//}
 
 	force_ = vector3df(0);
 	if (position_.Y < -85 && velocity_.Y < 0)
@@ -148,5 +148,15 @@ void PhysicsObject::addForce(vector3df force)
 	force_ += force;
 }
 
+vector3df PhysicsObject::getVelocity()
+{
+	return velocity_;
+}
+
+void PhysicsObject::setVelocity(vector3df velocity)
+{
+	velocity_ = velocity;
+}
+
 // TODO: better drag: get something for those constants
-// TODO: better buoyance: actually use volume somehow
+// TODO: better buoyance: actually use different volumes somehow

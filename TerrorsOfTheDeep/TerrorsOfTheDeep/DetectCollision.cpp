@@ -37,18 +37,62 @@ void Detect(bool pickedUp[])
 				for (int j = 1; j < GameManager::gameObjects.size(); j++)
 				{
 					GameObject* obj2 = GameManager::gameObjects[j];
-					float temp = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
-					//float size = (temp * 0.43);
-					float size = 100;
+					float temp = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
+					float size = (temp * 0.43);
+					//float size = 100;
 
 					if (obj1 != obj2)
 					{
 						if (Col(obj1, obj2, size))
 						{
 							std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
-							if (obj1->tag == GameObject::PLAYER && obj2->tag == GameObject::KEY)
+							if (obj1->tag == GameObject::PLAYER)
 							{
-								obj2->setScale(vector3df(0.1));
+								switch (obj2->tag)
+								{
+								case GameObject::KEY:
+									hasKey = true;
+									pickedUp[0] = true;
+									// enable 'has key'
+									// destroy key (or make invisible or smth)
+									break;
+								case GameObject::CHEST:
+									pickedUp[1] = hasKey;
+									// if has key -> win
+									// else nothing (or text?)
+									break;
+								case GameObject::WORLD_OBJECT:
+									// collision resolution
+									Resolve(obj1, obj2);
+									break;
+								case GameObject::GROUND:
+									// vertical collision resolution
+									break;
+								case GameObject::MONSTER:
+									pickedUp[2] = true;
+									break;
+								default:
+									break;
+								}
+								//obj2->setPosition(obj2->getPosition() + vector3df(0, 300, 0));
+							} else
+							{
+								switch (obj2->tag)
+								{
+								case GameObject::KEY:
+									// same as world_object
+								case GameObject::CHEST:
+									// same as world_object
+								case GameObject::WORLD_OBJECT:
+									// collision resolution
+									Resolve(obj1, obj2);
+									break;
+								case GameObject::GROUND:
+									// vertical collision resolution
+									break;
+								default:
+									break;
+								}
 							}
 						}
 					}
@@ -58,3 +102,25 @@ void Detect(bool pickedUp[])
 	}
 }
 
+void Resolve(GameObject* obj1, GameObject* obj2)
+{
+	vector3df currentVelocity = obj1->getVelocity();
+	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+	if (obj1->tag == GameObject::PLAYER)
+	{
+		GameManager::smgr->getActiveCamera()->setPosition(obj1->getAbsolutePosition() + 5 * reflection);
+	} else
+	{
+		obj1->setVelocity(reflection);
+	}
+}
+
+float Dot(vector3df vector1, vector3df vector2)
+{
+	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+}
+//public static Vector3 Reflect(Vector3 vector, Vector3 normal)
+//{
+//	return vector - 2 * Vector3.Dot(vector, normal) * normal;
+//}

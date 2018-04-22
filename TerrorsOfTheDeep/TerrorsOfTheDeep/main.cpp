@@ -55,8 +55,8 @@ int stamina = 0;
 bool itemPickedUp[3] = { false, false, false };
 
 // Light colours
-irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
-//irr::video::SColorf ambientColor = irr::video::SColorf(1, 1, 1, 1);	// for when you need to see stuff
+//irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
+irr::video::SColorf ambientColor = irr::video::SColorf(1, 1, 1, 1);	// for when you need to see stuff
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 const float FLASHLIGHT_RANGE = 1000.f;
@@ -97,6 +97,7 @@ int main()
 
 	// Adds the camera and binds the keys to the camera's movement
 	Camera camera = Camera(GameManager::smgr);
+	GameManager::smgr->getActiveCamera()->setPosition(vector3df(20, 0, 20));
 	Lighting lighting = Lighting(GameManager::smgr);
 
 	// Ambient Scene Light
@@ -213,6 +214,8 @@ int main()
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/SandTexture.jpg"));
+	groundPlane->tag = GameObject::GROUND;
+	GameManager::gameObjects.push_back(groundPlane);
 
 	// Key collectible object
 	GameObject* key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),

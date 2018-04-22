@@ -40,6 +40,7 @@ public:
 	irr::core::vector3df buoyancyForce();
 	void verlet();
 
-
 	void addForce(irr::core::vector3df force);
+	irr::core::vector3df getVelocity();
+	void setVelocity(irr::core::vector3df velocity);
 };
