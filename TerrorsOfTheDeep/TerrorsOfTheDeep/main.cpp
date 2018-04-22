@@ -56,6 +56,7 @@ bool itemPickedUp[3] = { false, false, false };
 
 // Light colours
 irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
+//irr::video::SColorf ambientColor = irr::video::SColorf(1, 1, 1, 1);	// for when you need to see stuff
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 const float FLASHLIGHT_RANGE = 1000.f;

@@ -97,7 +97,7 @@ void PhysicsObject::updatePosition()
 	force_ = vector3df(0);
 	if (position_.Y < -85 && velocity_.Y < 0)
 	{
-		velocity_.Y = 0;
+		velocity_.Y = 1;
 	}
 	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
 }

@@ -15,7 +15,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 	{
 		
 	}
-	mass = 80;
+	//mass = 80;
 }
 
 // Destructor

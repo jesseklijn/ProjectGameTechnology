@@ -8,7 +8,10 @@ int colTime = 100;
 
 // simple collision code. 
 bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
-	return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
+	vector3df dif = objectOne->getAbsolutePosition() - objectTwo->getAbsolutePosition();
+	float difSize = sqrt(dif.X * dif.X + dif.Y * dif.Y + dif.Z * dif.Z);
+	return (difSize < size);
+	//return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
 }
 
 
@@ -26,22 +29,28 @@ void Detect(bool pickedUp[])
 
 	if (allowCollision) {
 		
-		for(int i = 0; i < GameManager::gameObjects.size(); i++)
+		for (int i = 0; i < GameManager::gameObjects.size(); i++)
 		{
 			GameObject* obj1 = GameManager::gameObjects[i];
+			if (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER) {
 
-			for(int j = i+1; j < GameManager::gameObjects.size(); j++)
-			{
-				GameObject* obj2 = GameManager::gameObjects[j];
-				float temp = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
-				float size = (temp * 0.43);
-
-				
-				if (obj1 != obj2)
+				for (int j = 1; j < GameManager::gameObjects.size(); j++)
 				{
-					if (Col(obj1, obj2, size))
+					GameObject* obj2 = GameManager::gameObjects[j];
+					float temp = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
+					//float size = (temp * 0.43);
+					float size = 100;
+
+					if (obj1 != obj2)
 					{
-						std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+						if (Col(obj1, obj2, size))
+						{
+							std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+							if (obj1->tag == GameObject::PLAYER && obj2->tag == GameObject::KEY)
+							{
+								obj2->setScale(vector3df(0.1));
+							}
+						}
 					}
 				}
 			}
