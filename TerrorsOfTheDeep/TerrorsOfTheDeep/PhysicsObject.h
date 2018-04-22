@@ -2,15 +2,16 @@
 #include <irrlicht.h>
 class PhysicsObject : public irr::scene::ISceneNode
 {
+	float density_;
 	irr::core::vector3df position_;
 	irr::core::vector3df velocity_;
 	irr::core::vector3df acceleration_;
 	irr::core::vector3df force_;
 	irr::s32 id_;
-	float mass_;
 
 public:
 	float gravityConstant;
+	float mass;
 	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,

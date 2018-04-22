@@ -12,7 +12,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	// Shark configuration
-	moveSpeed = 0.04;
+	moveSpeed = 4;
 	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
 	chaseSpeedMultiplier = 1.25f;
 
@@ -25,6 +25,8 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 
 	canSeeTarget = false;
 	canMove = true;
+
+	mass = 80;
 
 	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
 	Not used in any other way!*/

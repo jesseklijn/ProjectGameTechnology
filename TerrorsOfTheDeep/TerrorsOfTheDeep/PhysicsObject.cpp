@@ -14,11 +14,11 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
-PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, const vector3df* startPosition, float mass)
+PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, const vector3df* startPosition, float massPar)
 	: ISceneNode(parentPar, mgr, id)
 {
 	id_ = id;
-	mass_ = mass;
+	mass = massPar;
 	velocity_ = vector3df(0);
 	force_ = vector3df(0);
 	position_ = *startPosition;
@@ -117,7 +117,7 @@ vector3df PhysicsObject::dragForce()
 
 vector3df PhysicsObject::gravityForce()
 {
-	float gravity = (position_.Y < -85) ? 0 : gravityConstant * mass_;
+	float gravity = (position_.Y < -85) ? 0 : gravityConstant * mass;
 	return vector3df(0, gravity, 0);
 }
 
@@ -127,7 +127,7 @@ vector3df PhysicsObject::buoyancyForce()
 	// densityWater * volumeObject
 	// since denisity of human is around 1, take mass for volume
 	// multiplied to balance with gravity
-	float buoyancy = (position_.Y < -85) ? 0 : mass_ * 9.8;
+	float buoyancy = (position_.Y < -85) ? 0 : mass * 9.8;
 	return vector3df(0, buoyancy, 0);
 }
 
@@ -137,7 +137,7 @@ void PhysicsObject::verlet()
 
 	// VELOCITY VERLET
 	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
-	vector3df new_acceleration = force_ / mass_;
+	vector3df new_acceleration = force_ / mass;
 	vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
 	velocity_ += avg_acceleration * timeStep;
 	acceleration_ = new_acceleration;
@@ -148,7 +148,5 @@ void PhysicsObject::addForce(vector3df force)
 	force_ += force;
 }
 
-// TODO: better draaaaag: get something for those constants
+// TODO: better drag: get something for those constants
 // TODO: better buoyance: actually use volume somehow
-// TODO: player movement not through camera
-// TODO: proper movement - on user input add to force

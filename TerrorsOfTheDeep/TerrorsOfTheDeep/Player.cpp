@@ -18,8 +18,8 @@ Player::Player(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, float mass)
-	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, mass)
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
+	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
 	irrDevice = GameManager::device;
 	smgr = mgr;
@@ -42,6 +42,10 @@ void Player::Update()
 {
 	// Inherit base class Update
 	GameObject::Update();
+
+	// TODO: player movement not through camera
+	// TODO: proper movement - on user input add to force
+	// TODO: make it look like actual swimming with the back and forth thing
 
 	updateAbsolutePosition();
 

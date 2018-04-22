@@ -55,6 +55,8 @@ HUD* hud = new HUD;
 
 // Whether to hide or show the HUD
 bool disableHud = false;
+
+float rockMass = 500;
 #pragma endregion
 
 
@@ -122,7 +124,7 @@ int main()
 	// Player
 	Player* player = new Player(new vector3df(0, -0.8, 1.5), new vector3df(4, 4, 4), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh, 
-		GameManager::driver->getTexture("../media/armsTexture.png"), 80);
+		GameManager::driver->getTexture("../media/armsTexture.png"));
 	player->tag = "Player";
 	GameManager::gameObjects.push_back(player);
 	ISceneNode* newPlayer = player;
@@ -134,31 +136,31 @@ int main()
 	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
 	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
 	GameManager::gameObjects.push_back(rock1);
 
 	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
 	GameManager::gameObjects.push_back(rock2);
 
 	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
 	GameManager::gameObjects.push_back(rock3);
 
 	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
-		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
 	GameManager::gameObjects.push_back(rock4);
 
 	GameObject* GroundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(3000, 1, 3000), new vector3df(0, 0, 0),
