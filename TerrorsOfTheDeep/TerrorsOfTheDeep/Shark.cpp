@@ -149,7 +149,7 @@ void Shark::ExecuteState()
 
 void Shark::OnStateSwitch()
 {
-	std::cout << stateNames[(int)state] << std::endl;
+	//std::cout << stateNames[(int)state] << std::endl;
 }
 
 void Shark::Update()

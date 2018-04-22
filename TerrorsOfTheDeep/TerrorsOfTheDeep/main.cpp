@@ -62,7 +62,7 @@ HUD* hud = new HUD;
 bool disableHud = false;
 
 // Scenery generation
-int critterCount = 350;
+int critterCount = 300;
 int shipCount = 6;
 int rockCount = 60;
 int ruinsCount = 25;
@@ -288,7 +288,11 @@ int main()
 	chest->tag = GameObject::CHEST;
 	GameManager::gameObjects.push_back(chest);
 
+	cout << GameManager::partGridSizeX << ", " << GameManager::partGridSizeY << ", " << GameManager::partGridSizeZ << endl;
 
+	ISceneNode* cube = GameManager::smgr->addCubeSceneNode();
+	cube->setPosition(vector3df(0, 500, 0));
+	cube->setScale(vector3df((float)GameManager::partGridCellSizeX / 5.0f, (float)GameManager::partGridCellSizeY / 5.0f, (float)GameManager::partGridCellSizeZ / 5.0f));
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())

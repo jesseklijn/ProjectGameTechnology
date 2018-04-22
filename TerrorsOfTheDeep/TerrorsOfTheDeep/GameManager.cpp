@@ -49,6 +49,7 @@ triangle3df hitTriangle;
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
+std::vector<vector<GameObject*>> GameManager::partGrid;
 
 // Timing
 float GameManager::deltaTime = 0.0;
@@ -63,6 +64,12 @@ float GameManager::creatureStateRange = 2500.0f;
 const int GameManager::worldRadiusX = 8000.0f;
 const int GameManager::worldRadiusY = 3500.0f;
 const int GameManager::worldRadiusZ = 8000.0f;
+const int GameManager::partGridCellSizeX = 500;
+const int GameManager::partGridCellSizeY = 500;
+const int GameManager::partGridCellSizeZ = 500;
+const int GameManager::partGridSizeX = ceil(GameManager::worldRadiusX / GameManager::partGridCellSizeX);
+const int GameManager::partGridSizeY = ceil(GameManager::worldRadiusY / GameManager::partGridCellSizeY);
+const int GameManager::partGridSizeZ = ceil(GameManager::worldRadiusZ / GameManager::partGridCellSizeZ);
 #pragma endregion
 
 // Constructor
@@ -71,6 +78,19 @@ GameManager::GameManager()
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
 	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0005f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+
+	/* Test
+	vector<GameObject*> newCellList;
+	for (int i = 0; i < 10; i++)
+	{
+		GameObject* test = new GameObject(new vector3df(0, 0, 0), new vector3df(0, 0, 0), new vector3df(0, 0, 0),
+			0, GameManager::smgr, 1);
+		test->setName("Test");
+		newCellList.push_back(test);
+	}
+	partGrid.push_back(newCellList);
+	for (int j = 0; j < 10; j++)
+		std::cout << partGrid[0][j]->getName() << j << std::endl << std::endl << std::endl;*/
 
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),

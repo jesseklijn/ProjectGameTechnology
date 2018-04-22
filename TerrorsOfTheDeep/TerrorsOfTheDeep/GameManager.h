@@ -82,14 +82,22 @@ public:
 	// A list of all GameObjects or children of GameObjects in the scene
 	static std::vector<GameObject*> gameObjects;
 
-	// Delta timing
-	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, time;
+	/* A list of all grid cell lists, containing GameObjects.
+	
+	Getting the right grid cell list requires a conversion from 3D to 1D coordinates as followed:
+	partGrid[x * GameManager::partGridSizeY * GameManager::partGridSizeZ + y * GameManager::partGridSizeZ + z]
+	*/
+	static std::vector<vector<GameObject*>> partGrid;
+
+	// Delta timing / Time
+	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, fixedTimeStep, time;
+
+	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
+	static const int partGridCellSizeX, partGridCellSizeY, partGridCellSizeZ, partGridSizeX, partGridSizeY, partGridSizeZ;
+	static float creatureStateRange;
 
 	int GameSpeed = 1;
-	bool GamePaused = false;
-	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
-	static float fixedTimeStep;
-	static float creatureStateRange;
+	bool GamePaused = false;		
 
 	// Functions
 	void Awake();
