@@ -154,7 +154,7 @@ int main()
 	Player* player = new Player(new vector3df(0, -0.8, 1.5), new vector3df(4, 4, 4), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh, 
 		GameManager::driver->getTexture("../media/armsTexture.png"));
-	player->tag = "Player";
+	player->tag = GameObject::PLAYER;
 	GameManager::gameObjects.push_back(player);
 
 	ISceneNode* newPlayer = player;
@@ -249,17 +249,7 @@ int main()
 		//check the boundaries
 		camera.updatePos();
 
-		Detect(newPlayer,
-			chest->mesh,
-			key->mesh,
-			shark->mesh,
-			rock->mesh,
-			rock1->mesh,
-			rock2->mesh,
-			rock3->mesh,
-			rock4->mesh,
-			itemPickedUp,
-			GameManager::smgr);
+		Detect(itemPickedUp);
 
 		// We finished changing the scene
 		// Now draw the scene in our actual window
