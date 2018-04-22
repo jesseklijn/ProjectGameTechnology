@@ -21,6 +21,8 @@ Player::Player(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
+	tag = GameObject::PLAYER;
+
 	irrDevice = GameManager::device;
 	smgr = mgr;
 }

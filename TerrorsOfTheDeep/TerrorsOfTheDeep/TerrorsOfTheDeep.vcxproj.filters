@@ -13,113 +13,206 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Game Objects">
+      <UniqueIdentifier>{b8800271-9be0-413f-82f4-47a85f446772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Creatures">
+      <UniqueIdentifier>{0102c020-b9be-4622-930a-389797f52209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects">
+      <UniqueIdentifier>{646958dc-ec71-469b-9520-eb15149d0e0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Creatures">
+      <UniqueIdentifier>{53d632a0-0a63-4cb5-bf6b-dd5cc14f2625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers">
+      <UniqueIdentifier>{1f8d7ba5-df37-4625-bfdd-c06c6b042ac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers\Managers">
+      <UniqueIdentifier>{3ba028f2-20da-4d42-8582-7f5c6823cb37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Players">
+      <UniqueIdentifier>{ed20ac32-d6a7-4299-a136-21504866c590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Players">
+      <UniqueIdentifier>{7980097c-dce4-4e04-b813-7346f25068ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{eb578e4a-bff6-4ff5-9a10-cc88c94f3d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers">
+      <UniqueIdentifier>{0acca059-23df-4508-b3f0-3b5ce8a35f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers\Managers">
+      <UniqueIdentifier>{26e2c9fa-a9b6-48a3-bf3e-6c0ffbc5c433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{415c9ffa-c19e-4eac-99a6-64f3e00d35a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Creatures\Critters">
+      <UniqueIdentifier>{ab17ea4d-67bb-4de6-886a-3b6b1eaa2a79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Creatures\Monsters">
+      <UniqueIdentifier>{5d929939-9f00-4337-8168-cc1c38feb5a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Creatures\Critters">
+      <UniqueIdentifier>{5bec3d3b-deaa-4bde-bd05-8b0c1959b904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Creatures\Monsters">
+      <UniqueIdentifier>{c15b567d-8abd-4484-aaae-3b68d56e10e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DetectCollision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Creature.cpp">
+      <Filter>Source Files\Game Objects\Creatures</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayingField.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lighting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shark.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GridMesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Objects\Players</Filter>
     </ClCompile>
     <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Controllers\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\Controllers\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectCollision.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="GridMesh.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayingField.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source Files\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="DynamicUpdater.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ExampleUnitTest.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Critter.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="Shark.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Monsters</Filter>
+    </ClCompile>
+    <ClCompile Include="Dolphin.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
+    </ClCompile>
+    <ClCompile Include="Goldback.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
+    </ClCompile>
+    <ClCompile Include="Bass.cpp">
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
+    </ClCompile>
+    <ClCompile Include="Fish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FlockingEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Header Files\Game Objects\Creatures</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="DetectCollision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayingField.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Lighting.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shark.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GridMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="DynamicUpdater.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="GridMesh.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayingField.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files\Controllers\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files\Controllers\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Game Objects\Players</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Critter.h">
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
+    </ClInclude>
+    <ClInclude Include="Shark.h">
+      <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
+    </ClInclude>
+    <ClInclude Include="Dolphin.h">
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
+    </ClInclude>
+    <ClInclude Include="Goldback.h">
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
+    </ClInclude>
+    <ClInclude Include="Bass.h">
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fish.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FlockingEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

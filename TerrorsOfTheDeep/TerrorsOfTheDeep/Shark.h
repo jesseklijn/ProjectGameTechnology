@@ -1,6 +1,8 @@
 #pragma once
 #include "Monster.h"
 #pragma once
+#include "GameManager.h"
+#pragma once
 #include <iostream>
 #pragma once
 #include <vector>
@@ -22,10 +24,8 @@ public:
 
 	// Functions
 	virtual void Update();
+	virtual void UpdateState();
+	virtual void ExecuteState();
 	void OnStateSwitch();
-
-private:
-	// Debug
-	std::vector<std::string> stateNames;
 };
 

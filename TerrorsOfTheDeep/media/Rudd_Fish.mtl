@@ -1,0 +1,14 @@
+# Blender MTL File: 'Rudd_Fish.blend'
+# Material Count: 1
+
+newmtl Rudd_Fish
+Ns 137.254902
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.087000 0.087000 0.087000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd G:\Users\Robert\Desktop\Blender Files\textures\Rudd-Fish_Colourmap.png
+map_Bump -bm 2.647059 G:\\Users\\Robert\\Desktop\\Blender Files\\Rudd-Fish_Normalmap.png

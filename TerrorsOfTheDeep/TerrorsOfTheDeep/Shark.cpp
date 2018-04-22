@@ -5,35 +5,17 @@
 
 // Constructor
 Shark::Shark(const irr::core::vector3df* startPosition,
-				const irr::core::vector3df* startScale,
-				const irr::core::vector3df* startRotation,
-				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-				irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-				: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	// Shark configuration
-	moveSpeed = 4;
-	chaseSpeed = moveSpeed * chaseSpeedMultiplier;
-	chaseSpeedMultiplier = 1.25f;
-
-	detectionRange = 10000.0f;
-	attackRange = 100.0f;
-	idlingRange = 2500;
-
-	seekTime = 10.0f * 1000.0f;
-	idlePositionTime = 10.0f * 1000.0f;
-
-	canSeeTarget = false;
-	canMove = true;
-
+	if (canAnimate && (relatedMesh && relatedTexture))
+	{
+		
+	}
 	mass = 80;
-
-	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
-	Not used in any other way!*/
-	stateNames.push_back("IDLE");
-	stateNames.push_back("CHASING");
-	stateNames.push_back("ATTACKING");
-	stateNames.push_back("SEEKING");
 }
 
 // Destructor
@@ -42,64 +24,51 @@ Shark::~Shark()
 
 }
 
-void Shark::OnStateSwitch()
+void Shark::UpdateState()
 {
-	std::cout << stateNames[(int)state] << std::endl;
-}
-
-/* Overridden (from GameObject - Monster)
-
-Main player chasing code for vertical slice. Since the player
-is parented to the camera, the main camera's position is used.*/
-void Shark::Update()
-{
-	// Update base
-	GameObject::Update();
-
 	/* Determine core state
 	Set defaults and gather basic shark information*/
 	statePrevious = state;
 	state = IDLE;
 	currentPosition = getPosition();
+	canSeeTarget = false;
+	targetDistance = INFINITY;
 
 	// Update our timers
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
 
-	/* Get our potential target and target information
-	TODO: Use the player as target in case camera will be seperated from the player?*/
-	target = GameManager::FindGameObjectWithTag("Player");
-	if (target)
+	// Get our potential target and target information
+	if (canAttack)
 	{
-		canSeeTarget = Monster::IsInSight(getAbsolutePosition(), target->getAbsolutePosition());
-		targetDistance = (target->getPosition() - getPosition()).getLength();
-	}
-	else
-	{
-		canSeeTarget = false;
-		targetDistance = INFINITY;
-	}
-
-	// If target can potentially be spotted
-	if (targetDistance < detectionRange)
-	{
-		if (canSeeTarget) 
+		targetAttack = Monster::GetTarget(CLOSEST, true, chaseDetectionRange, true);
+		if (targetAttack)
 		{
-			/* Switch to Chasing
-			TODO: Implement raycast obstruction checks here before going further*/
-			state = CHASING;
+			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), targetAttack->getAbsolutePosition());
 
-			// But switch to Attacking if we're close enough to attack the player
-			if (targetDistance < attackRange)
-				state = ATTACKING;
+			if (canSeeTarget)
+				targetDistance = (targetAttack->getAbsolutePosition() - getAbsolutePosition()).getLength();
 		}
-	}
-	else
-	{
-		/* Our target can't be spotted.
-		Have we seen him recently? Try and seek him out. Otherwise, idle*/
-		if (seekTimer > 0.0f)
-			state = SEEKING;
+
+		// If target can potentially be spotted
+		if (targetDistance < chaseDetectionRange)
+		{
+			if (canSeeTarget)
+			{
+				state = CHASING;
+
+				// But switch to Attacking if we're close enough to attack the player
+				if (targetDistance < attackRange)
+					state = ATTACKING;
+			}
+		}
+		else
+		{
+			/* Our target can't be spotted.
+			Have we seen him recently? Try and seek him out. Otherwise, idle*/
+			if (seekTimer > 0.0f)
+				state = SEEKING;
+		}
 	}
 
 	// State switch detector
@@ -107,18 +76,23 @@ void Shark::Update()
 	{
 		OnStateSwitch();
 		statePrevious = state;
-	}															
+	}
+}
 
+void Shark::ExecuteState()
+{
 	// Decide what to do depending on our state
 	switch (state)
 	{
 		// Idling when no target 
 		case IDLE:
 		{
+			moveSpeed = idleSpeed;
+
 			// Get a new idle position on timer trigger
 			if (idlePositionTimer <= 0.0f)
 			{
-				targetPosition = vector3df(rand() % idlingRange * 2.0f - idlingRange, 0.0f, rand() % idlingRange * 2.0f - idlingRange);
+				targetPosition = vector3df(rand() % (int)idlingRange * 2.0f - (int)idlingRange, 0.0f, rand() % (int)idlingRange * 2.0f - (int)idlingRange);
 				idlePositionTimer = idlePositionTime;
 			}
 
@@ -128,8 +102,10 @@ void Shark::Update()
 		// Chase the player/target
 		case CHASING:
 		{
+			moveSpeed = chaseSpeed;
+
 			// Set our target position on the player
-			targetPosition = target->getAbsolutePosition() + vector3df(0, -12, 0);
+			targetPosition = targetAttack->getAbsolutePosition() + vector3df(0, -12, 0);
 
 			// Max out our seek timer until we leave our state, so it ticks down when our target is lost
 			seekTimer = seekTime;
@@ -140,13 +116,17 @@ void Shark::Update()
 		// Attacking when in range
 		case ATTACKING:
 		{
+			moveSpeed = chaseSpeed;
+
 			// RawrXD
 			break;
 		}
 
 		// Seeking for a short while if lost target
 		case SEEKING:
-		{			
+		{
+			moveSpeed = chaseSpeed;
+
 			// When our seeking time runs out, switch back to IDLE
 			if (seekTimer <= 0.0f)
 			{
@@ -161,20 +141,37 @@ void Shark::Update()
 		default:
 		{
 			state = IDLE;
+			moveSpeed = idleSpeed;
 			std::cout << "[ERROR] Invalid state, defaulting to IDLE..." << std::endl;
 			break;
 		}
 	}
+}
 
-	// If we're not at our targetPosition, move the shark
-	if (canMove)
+void Shark::OnStateSwitch()
+{
+	std::cout << stateNames[(int)state] << std::endl;
+}
+
+void Shark::Update()
+{
+	// Update base
+	Monster::Update();
+
+	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
+	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	if (stateUpdateTimer <= 0.0)
 	{
-		/* Add a vector of length moveSpeed in the direction towards our target position*/
-		moveDirectionTarget = targetPosition - currentPosition;
-		if (moveDirectionTarget.getLength() >= moveSpeed)
-		{
-			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, rotationLerp).normalize();
-			Shark::Move(moveSpeed, moveDirection, true);
-		}
+		Shark::UpdateState();
+		stateUpdateTimer = stateUpdateTime;
+	}
+	Shark::ExecuteState();
+	Shark::Move();
+
+	// Animation
+	if (canAnimate && mesh)
+	{
+
 	}
 }

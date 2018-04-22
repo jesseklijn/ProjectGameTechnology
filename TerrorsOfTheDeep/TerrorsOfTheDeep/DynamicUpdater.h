@@ -12,6 +12,17 @@ public:
 	DynamicUpdater();
 	virtual ~DynamicUpdater();
 
+	enum Tag
+	{
+		NONE,
+		PLAYER,
+		MONSTER,
+		CREATURE,
+		WORLD_OBJECT,
+		KEY,
+		CHEST
+	};
+
 	/* Pure virtual functions
 
 	Pure virtual is defined by the "= 0;" and makes it an abstract class.
@@ -26,6 +37,6 @@ public:
 	to do this.*/
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
-	virtual std::string GetTag() = 0;
+	virtual Tag GetTag() = 0;
 };
 
