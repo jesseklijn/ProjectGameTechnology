@@ -34,6 +34,7 @@ public:
 	irr::video::SMaterial& getMaterial(irr::u32 i) override;
 
 	virtual void Update();
+	virtual void FixedUpdate();
 	virtual void Draw();
 	virtual Tag GetTag();
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);

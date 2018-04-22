@@ -83,17 +83,19 @@ public:
 	static std::vector<GameObject*> gameObjects;
 
 	// Delta timing
-	static float deltaTime, deltaTimeMS, time;
+	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, time;
 
 	int GameSpeed = 1;
 	bool GamePaused = false;
 	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
-	static const float creatureStateRange;
+	static float fixedTimeStep;
+	static float creatureStateRange;
 
 	// Functions
 	void Awake();
 	void Start();
 	void Update();
+	void FixedUpdate();
 	void Draw();
 
 	void GameStateTransition(GameState StateToLoad);
@@ -115,4 +117,7 @@ public:
 	static float Clamp(float value, float minValue, float maxValue);
 	static float Lerp(float value, float value2, float blend);
 	static irr::core::vector3df Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend);
+
+private:
+	float fixedTime = 0.0f, fixedCorrection;
 };

@@ -84,13 +84,26 @@ SMaterial& GameObject::getMaterial(u32 i)
 	return Material;
 }
 
-// Update
+/** Runs a default Update() loop, ran every frame.
+
+NOTE: In order to make something framerate independent, make use of delta timing.
+It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaTimeMS
+*/
 void GameObject::Update()
 {
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
 	updateAbsolutePosition();
+}
+
+/** Runs a FixedUpdate() loop, meant for physics related activities.
+
+NOTE: use of GameManager::deltaTimeFixed and GameManager::deltaTimeFixedMS is
+recommended here, which is adjusted to the fixed physics time step defined in GameManager.
+*/
+void GameObject::FixedUpdate()
+{
 }
 
 // Draw
