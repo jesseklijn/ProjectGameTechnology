@@ -1,19 +1,19 @@
-//Needs to always be included and at the top
+////Needs to always be included and at the top
 #include "stdafx.h"
-//Needs to always be included
-#include "catch.hpp"
-//specific cpp file where the unit test is
-#include "ExampleUnitTest.cpp"
-
-//unit test
-TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
-{
-	REQUIRE(UnitTestExample(0) == 0);
-	REQUIRE(UnitTestExample(1) == 2);
-	REQUIRE(UnitTestExample(2) == 4);
-	REQUIRE(UnitTestExample(4) == 6);
-	REQUIRE(UnitTestExample(10) == 20);
-}
-//to run the unit test, set this project as startup project and pres ctrl + f5
-
-//see the ExampleUnitTest.cpp file in the TerrorsOfTheDeep project for reference
+////Needs to always be included
+//#include "catch.hpp"
+////specific cpp file where the unit test is
+//#include "ExampleUnitTest.cpp"
+//
+////unit test
+//TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
+//{
+//	REQUIRE(UnitTestExample(0) == 0);
+//	REQUIRE(UnitTestExample(1) == 2);
+//	REQUIRE(UnitTestExample(2) == 4);
+//	REQUIRE(UnitTestExample(4) == 6);
+//	REQUIRE(UnitTestExample(10) == 20);
+//}
+////to run the unit test, set this project as startup project and pres ctrl + f5
+//
+////see the ExampleUnitTest.cpp file in the TerrorsOfTheDeep project for reference
