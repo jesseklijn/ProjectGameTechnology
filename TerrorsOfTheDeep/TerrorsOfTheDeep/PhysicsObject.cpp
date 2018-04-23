@@ -25,7 +25,7 @@ PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, 
 
 	parent = parentPar;
 
-	gravityConstant = -9.8;	//9.81
+	gravityConstant = -9.8;
 	buoyancyConstant = 9.8;
 }
 

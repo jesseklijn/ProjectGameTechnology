@@ -150,7 +150,6 @@ int main()
 	GameManager::gameObjects.push_back(shark);
 
 	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPS_Arms.obj");
-
 	// Player
 	Player* player = new Player(new vector3df(0, -0.8, 1.5), new vector3df(4, 4, 4), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh, 

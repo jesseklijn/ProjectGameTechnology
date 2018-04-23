@@ -104,7 +104,7 @@ void Detect(bool pickedUp[])
 									// same as world_object
 								case GameObject::WORLD_OBJECT:
 									// collision resolution
-									//Resolve(obj1, obj2);
+									Resolve(obj1, obj2);
 									break;
 								default:
 									break;
