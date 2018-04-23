@@ -89,5 +89,9 @@ SMaterial& Player::getMaterial(u32 i)
 
 void Player::UpdatePos()
 {
-	mesh->setRotation(smgr->getActiveCamera()->getRotation());
+	vector3df rot = smgr->getActiveCamera()->getRotation();
+	//rot.rotateXZBy(90, getAbsolutePosition());
+	//rot.rotateXYBy(60, getAbsolutePosition());
+	mesh->setRotation(rot);
+
 }

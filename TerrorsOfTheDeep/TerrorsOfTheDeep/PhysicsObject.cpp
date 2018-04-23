@@ -64,44 +64,34 @@ SMaterial& PhysicsObject::getMaterial(u32 i)
 
 void PhysicsObject::Update()
 {
-	updatePosition();
+	if (id_ != 9000)
+	{
+		updatePosition();
+	}
 
 	if (mesh)
 	{
 		mesh->setPosition(getAbsolutePosition());
 		mesh->setRotation(getRotation());
-		//float volume = mesh->getTransformedBoundingBox().getVolume();
-		//mass2 = volume * mass;
 	}
 }
 
 void PhysicsObject::updatePosition()
 {
-	if (id_ != 9000)
+	position_ = getPosition();
+
+	if (position_.Y < -40 && velocity_.Y < 0)
 	{
-		position_ = getPosition();
-	//} else
-	//{
-	//	position_ = parent->getPosition();
-	//}
+		velocity_.Y = 0;
+		acceleration_.Y = 0;
+	}
 
 	force_ += gravityForce() + dragForce() + buoyancyForce();
 	verlet();
 
-	//if (id_ != 9000)
-	//{
-		setPosition(position_);
-	}
-	//else
-	//{
-	//	parent->setPosition(position_);
-	//}
+	setPosition(position_);
 
 	force_ = vector3df(0);
-	if (position_.Y < -85 && velocity_.Y < 0)
-	{
-		velocity_.Y = 1;
-	}
 	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
 }
 
@@ -138,12 +128,6 @@ vector3df PhysicsObject::buoyancyForce()
 void PhysicsObject::verlet()
 {
 	float timeStep = GameManager::deltaTimeMS;
-
-	if (position_.Y < -40 && velocity_.Y < 0)
-	{
-		velocity_.Y = 0;
-		acceleration_.Y = 0;
-	}
 
 	// VELOCITY VERLET
 	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);

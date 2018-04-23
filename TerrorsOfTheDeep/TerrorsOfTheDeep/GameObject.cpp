@@ -18,7 +18,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	setRotation(*startRotation);
 
 	// If a mesh and texture were given
-	if (relatedMesh && relatedTexture)
+	if (relatedMesh)
 	{
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);

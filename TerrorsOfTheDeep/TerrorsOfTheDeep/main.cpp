@@ -149,11 +149,11 @@ int main()
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
 	GameManager::gameObjects.push_back(shark);
 
-	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPS_Arms.obj");
+	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
 	// Player
-	Player* player = new Player(new vector3df(0, -0.8, 1.5), new vector3df(4, 4, 4), new vector3df(0, 0, 0),
-		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh, 
-		GameManager::driver->getTexture("../media/armsTexture.png"));
+	Player* player = new Player(new vector3df(0, -0.8, 3), new vector3df(4, 4, 4), new vector3df(180, 0, 180),
+		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh,
+		GameManager::driver->getTexture("../media/armsText"));
 	GameManager::gameObjects.push_back(player);
 
 	ISceneNode* newPlayer = player;
