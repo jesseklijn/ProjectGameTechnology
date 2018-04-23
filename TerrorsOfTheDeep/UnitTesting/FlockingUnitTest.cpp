@@ -3,7 +3,7 @@
 //Needs to always be included
 #include "catch.hpp"
 //specific cpp file where the unit test is
-#include "C:/Program Files (x86)/Jenkins/workspace/Terrors of the Deep/TerrorsOfTheDeep/TerrorsOfTheDeep/Fish.h"
+#include "Fish.h"
 
 TEST_CASE("Example: vectors", "[CalculateDistance]")
 {
