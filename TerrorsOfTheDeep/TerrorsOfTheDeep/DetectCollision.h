@@ -2,10 +2,8 @@
 #include <irrlicht.h>
 #include "GameObject.h"
 
-using namespace irr;
-
-bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, int size);
+bool Col(GameObject* objectOne, GameObject* objectTwo, int size);
 void Detect(bool pickedUp[]);
 
 void Resolve(GameObject* obj1, GameObject* obj2);
-float Dot(core::vector3df vector1, core::vector3df vector2);
+float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2);

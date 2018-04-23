@@ -15,7 +15,7 @@
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 

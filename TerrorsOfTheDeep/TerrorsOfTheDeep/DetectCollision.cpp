@@ -6,19 +6,19 @@ bool allowCollision = false;
 int colTime = 100;
 
 
-// simple collision code. 
-bool Col(irr::scene::ISceneNode* obj1, irr::scene::ISceneNode* obj2, float size) {
-
+// simple collision code.
+bool Col(GameObject* obj1, GameObject* obj2, float size)
+{
 	//vector3df pos1 = obj1->getAbsolutePosition();
 	//vector3df pos2 = obj2->getAbsolutePosition();
 
-	//float sizeX = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
+	//float sizeX = obj1->mesh->getTransformedBoundingBox().getExtent().X + obj2->mesh->getTransformedBoundingBox().getExtent().X;
 	//if (std::abs(pos1.X - pos2.X) <  0.45 * sizeX)
 	//{
-	//	float sizeY = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
+	//	float sizeY = obj1->mesh->getTransformedBoundingBox().getExtent().Y + obj2->mesh->getTransformedBoundingBox().getExtent().Y;
 	//	if (std::abs(pos1.Y - pos2.Y) < 0.1 * sizeY)
 	//	{
-	//		float sizeZ = obj1->getTransformedBoundingBox().getExtent().Z + obj2->getTransformedBoundingBox().getExtent().Z;
+	//		float sizeZ = obj1->mesh->getTransformedBoundingBox().getExtent().Z + obj2->mesh->getTransformedBoundingBox().getExtent().Z;
 	//		if (std::abs(pos1.Z - pos2.Z) < 0.45 * sizeZ)
 	//		{
 	//			return true;
@@ -28,7 +28,7 @@ bool Col(irr::scene::ISceneNode* obj1, irr::scene::ISceneNode* obj2, float size)
 	//return false;
 
 	vector3df dif = obj1->getAbsolutePosition() - obj2->getAbsolutePosition();
-	float difSize = sqrt(dif.X * dif.X + dif.Y * dif.Y + dif.Z * dif.Z);
+	float difSize = sqrt(std::abs(dif.X * dif.X + dif.Y * dif.Y + dif.Z * dif.Z));
 	return (difSize < size);
 }
 
@@ -48,23 +48,21 @@ void Detect(bool pickedUp[])
 		for (int i = 0; i < GameManager::gameObjects.size(); i++)
 		{
 			GameObject* obj1 = GameManager::gameObjects[i];
-			if (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER || obj1->tag == GameObject::GROUND) {
-
+			if (obj1->tag == GameObject::MONSTER || obj1->tag == GameObject::PLAYER) {
+				
 				for (int j = 1; j < GameManager::gameObjects.size(); j++)
 				{
 					if (j != i)
 					{
 						GameObject* obj2 = GameManager::gameObjects[j];
-						//float temp = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
-						//float size = (temp * 0.43);
 						float size = 100;
 						if (obj2->tag == GameObject::WORLD_OBJECT)
 						{
 							size = 150;
 						}
-						if (obj1->tag == GameObject::MONSTER)
+						if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 						{
-							size = 300;
+							size = 750;
 						}
 
 						if (Col(obj1, obj2, size))
@@ -108,12 +106,6 @@ void Detect(bool pickedUp[])
 									break;
 								default:
 									break;
-								}
-								break;
-							case GameObject::GROUND:
-								if (obj2->tag != GameObject::PLAYER)
-								{
-									obj2->resolveGround();
 								}
 								break;
 							default:

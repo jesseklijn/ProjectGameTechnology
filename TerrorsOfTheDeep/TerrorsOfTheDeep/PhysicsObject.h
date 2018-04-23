@@ -13,6 +13,7 @@ public:
 	float gravityConstant;
 	float buoyancyConstant;
 	float mass;
+	float mass2;
 	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
