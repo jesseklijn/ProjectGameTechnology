@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TerrorsOfTheDeep", "TerrorsOfTheDeep\TerrorsOfTheDeep.vcxproj", "{86D0DF67-DB7C-48FA-9063-808E0F63F385}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTesting", "UnitTesting\UnitTesting.vcxproj", "{FABCD80D-7EC0-42E8-85EA-8A0B5C103951}"
+	ProjectSection(ProjectDependencies) = postProject
+		{86D0DF67-DB7C-48FA-9063-808E0F63F385} = {86D0DF67-DB7C-48FA-9063-808E0F63F385}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
