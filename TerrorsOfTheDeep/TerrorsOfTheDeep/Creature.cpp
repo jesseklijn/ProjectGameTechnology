@@ -14,6 +14,7 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::CREATURE;
 
+	idlingRange = GameManager::Min(GameManager::worldRadiusX, GameManager::worldRadiusZ);
 	moveSpeed = idleSpeed;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
@@ -77,7 +78,7 @@ void Creature::ExecuteState()
 			{
 				// If we're close enough to the world center point, idle normally in 360 degrees
 				vector3df toWorldCenter = currentPosition - vector3df(0, 0, 0);
-				if (toWorldCenter.getLength() < maxDistFromCenter)
+				if (toWorldCenter.getLength() < idlingRange)
 					targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
 				// Otherwise, generate a direction that generally points back to world center
 				else
@@ -161,8 +162,12 @@ void Creature::Update()
 
 	if (stateUpdateTimer <= 0.0)
 	{
-		Creature::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		if ((getAbsolutePosition() - GameManager::smgr->getActiveCamera()->getAbsolutePosition()).getLength() < GameManager::creatureStateRange)
+			Creature::UpdateState();
+		else
+			state = IDLE;
+
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Creature::ExecuteState();
 	Creature::Move();

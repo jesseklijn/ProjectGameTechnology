@@ -1,0 +1,17 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Pseudodiploria_strigosa-SF
+Ns 94.117647
+Ka 0.000000 0.000000 0.000000
+Kd 0.250084 0.250084 0.250084
+Ks 0.147059 0.147059 0.147059
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Files\Coral\pseudodiploria-strigosa\source\textures\Pseudodiploria_strigosa.jpg
+map_Bump -bm 5.000000 Pseudodiploria_strigosa.jpeg
+map_Ks Pseudodiploria_strigosa.jpeg
+map_Ns Pseudodiploria_strigosa.jpeg
+map_d Pseudodiploria_strigosa.jpeg

@@ -49,19 +49,29 @@ triangle3df hitTriangle;
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
+
+// Timing
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
+float GameManager::deltaTimeFixed = 0.0;
+float GameManager::deltaTimeFixedMS = 0.0;
 float GameManager::time = 0.0;
-const int GameManager::worldRadiusX = 5000.0f;
-const int GameManager::worldRadiusY = 2000.0f;
-const int GameManager::worldRadiusZ = 5000.0f;
+float GameManager::fixedTimeStep = 60.0f;
+float GameManager::creatureStateRange = 2500.0f;
+
+// World dimensions
+const int GameManager::worldRadiusX = 8000.0f;
+const int GameManager::worldRadiusY = 3500.0f;
+const int GameManager::worldRadiusZ = 8000.0f;
+
 #pragma endregion
 
 // Constructor
 GameManager::GameManager()
 {
-	GameManager::driver->setFog(SColor(0, 0, 0, 0), EFT_FOG_LINEAR, 50.0f, 3000.0f, 0.01f);
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
+	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0005f);
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 
 	GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
@@ -70,6 +80,7 @@ GameManager::GameManager()
 		0,
 		GameManager::smgr,
 		0);
+
 	Awake();
 }
 
@@ -93,11 +104,28 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	fixedTime += GameManager::deltaTime;
+
 	// Runs the Update() for all GameObjects in GameManager::gameObjects.
-	for (int i = 0; i < GameManager::gameObjects.size(); ++i)
-	{
+	for (int i = 0; i < GameManager::gameObjects.size(); i++)
 		GameManager::gameObjects[i]->Update();
+		
+	if (fixedTime >= 1.0f / GameManager::fixedTimeStep)
+	{
+		fixedCorrection = (fixedTime - 1.0f / GameManager::fixedTimeStep);
+		GameManager::FixedUpdate();
 	}
+}
+
+void GameManager::FixedUpdate()
+{
+	fixedTime = 0.0f;
+	GameManager::deltaTimeFixed = 1.0f / GameManager::fixedTimeStep + fixedCorrection;
+	GameManager::deltaTimeFixedMS = GameManager::deltaTimeFixed * 1000.0f;
+
+	// Runs the FixedUpdate() for all GameObjects in GameManager::gameObjects.
+	for (int i = 0; i < GameManager::gameObjects.size(); i++)
+		GameManager::gameObjects[i]->FixedUpdate();
 }
 
 // Runs the Draw() for all GameObjects in GameManager::gameObjects.

@@ -11,13 +11,14 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 						: ISceneNode(parent, mgr, id)
 {
-	// Set the position, scale and rotation of our GameObject
+	tag = GameObject::WORLD_OBJECT;
+
 	setPosition(*startPosition);
 	setScale(*startScale);
 	setRotation(*startRotation);
 
 	// If a mesh and texture were given
-	if (relatedMesh && relatedTexture)
+	if (relatedMesh)
 	{
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
@@ -28,7 +29,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setMaterialFlag(EMF_FOG_ENABLE, true);
 		mesh->setMD2Animation(scene::EMAT_STAND);
 		mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-		mesh->setMaterialTexture(0, relatedTexture);
+
+		if (relatedTexture)
+			mesh->setMaterialTexture(0, relatedTexture);
 
 		// Set the position, scale and rotation of our mesh
 		mesh->setPosition(*startPosition);
@@ -82,13 +85,26 @@ SMaterial& GameObject::getMaterial(u32 i)
 	return Material;
 }
 
-// Update
+/** Runs a default Update() loop, ran every frame.
+
+NOTE: In order to make something framerate independent, make use of delta timing.
+It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaTimeMS
+*/
 void GameObject::Update()
 {
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
 	updateAbsolutePosition();
+}
+
+/** Runs a FixedUpdate() loop, meant for physics related activities.
+
+NOTE: use of GameManager::deltaTimeFixed and GameManager::deltaTimeFixedMS is
+recommended here, which is adjusted to the fixed physics time step defined in GameManager.
+*/
+void GameObject::FixedUpdate()
+{
 }
 
 // Draw

@@ -11,7 +11,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	if (canAnimate && (relatedMesh && relatedTexture))
+	if (canAnimate && relatedMesh)
 	{
 		
 	}
@@ -149,7 +149,7 @@ void Shark::ExecuteState()
 
 void Shark::OnStateSwitch()
 {
-	std::cout << stateNames[(int)state] << std::endl;
+	//std::cout << stateNames[(int)state] << std::endl;
 }
 
 void Shark::Update()
@@ -163,7 +163,7 @@ void Shark::Update()
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Shark::ExecuteState();
 	Shark::Move();

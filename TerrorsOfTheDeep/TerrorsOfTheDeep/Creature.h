@@ -32,7 +32,7 @@ public:
 
 	GameObject* targetAttack = nullptr;
 	GameObject* targetFleeingFrom = nullptr;
-	float chaseDetectionRange = 10000.0f;
+	float chaseDetectionRange = 50000.0f;
 	float attackRange = 100.0f;
 	float seekTime = 10.0f * 1000.0f;
 	float seekTimer = 0.0f;
@@ -42,17 +42,16 @@ public:
 	float stateUpdateTime = 1.0f * 1000.0f;
 	float stateUpdateTimer = 0.0f;
 
-	float idleSpeed = 60.0f;
+	float idleSpeed = 85.0f;
 	float chaseSpeed, fleeSpeed;
 	float chaseSpeedMultiplier = 2.0f;
 	float fleeSpeedMultiplier = 4.5f;
 	int idlingAngle = 60;
-	float maxDistFromCenter = 400000.0f;
 
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
-	float fleeingDetectionRange = 1000.0f;
+	float fleeingDetectionRange = 2500.0f;
 	float fleeingTime = 4.0f * 1000.0f;
 	float fleeingTimer = 0.0f;
 	float fleeingPositionTime = 0.5f * 1000.0f;
