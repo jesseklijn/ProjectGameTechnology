@@ -3,7 +3,7 @@
 //Needs to always be included
 #include "catch.hpp"
 //specific cpp file where the unit test is
-#include "../TerrorsOfTheDeep/ExampleUnitTest.cpp"
+#include "C:/Program Files (x86)/Jenkins/workspace/Terrors of the Deep/TerrorsOfTheDeep/TerrorsOfTheDeep/ExampleUnitTest.cpp"
 
 //unit test
 TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
