@@ -7,11 +7,29 @@ int colTime = 100;
 
 
 // simple collision code. 
-bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
-	vector3df dif = objectOne->getAbsolutePosition() - objectTwo->getAbsolutePosition();
+bool Col(irr::scene::ISceneNode* obj1, irr::scene::ISceneNode* obj2, float size) {
+
+	//vector3df pos1 = obj1->getAbsolutePosition();
+	//vector3df pos2 = obj2->getAbsolutePosition();
+
+	//float sizeX = obj1->getTransformedBoundingBox().getExtent().X + obj2->getTransformedBoundingBox().getExtent().X;
+	//if (std::abs(pos1.X - pos2.X) <  0.45 * sizeX)
+	//{
+	//	float sizeY = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
+	//	if (std::abs(pos1.Y - pos2.Y) < 0.1 * sizeY)
+	//	{
+	//		float sizeZ = obj1->getTransformedBoundingBox().getExtent().Z + obj2->getTransformedBoundingBox().getExtent().Z;
+	//		if (std::abs(pos1.Z - pos2.Z) < 0.45 * sizeZ)
+	//		{
+	//			return true;
+	//		}
+	//	}
+	//}
+	//return false;
+
+	vector3df dif = obj1->getAbsolutePosition() - obj2->getAbsolutePosition();
 	float difSize = sqrt(dif.X * dif.X + dif.Y * dif.Y + dif.Z * dif.Z);
 	return (difSize < size);
-	//return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
 }
 
 
@@ -25,58 +43,59 @@ void Detect(bool pickedUp[])
 		}
 	}
 	
-	//shark->setPosition(shark->getPosition() + irr::core::vector3df(0, 0, -0.05));
-
 	if (allowCollision) {
 		
 		for (int i = 0; i < GameManager::gameObjects.size(); i++)
 		{
 			GameObject* obj1 = GameManager::gameObjects[i];
-			if (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER) {
+			if (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER || obj1->tag == GameObject::GROUND) {
 
 				for (int j = 1; j < GameManager::gameObjects.size(); j++)
 				{
-					GameObject* obj2 = GameManager::gameObjects[j];
-					float temp = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
-					float size = (temp * 0.43);
-					//float size = 100;
-
-					if (obj1 != obj2)
+					if (j != i)
 					{
+						GameObject* obj2 = GameManager::gameObjects[j];
+						//float temp = obj1->getTransformedBoundingBox().getExtent().Y + obj2->getTransformedBoundingBox().getExtent().Y;
+						//float size = (temp * 0.43);
+						float size = 100;
+						if (obj2->tag == GameObject::WORLD_OBJECT)
+						{
+							size = 150;
+						}
+						if (obj1->tag == GameObject::MONSTER)
+						{
+							size = 300;
+						}
+
 						if (Col(obj1, obj2, size))
 						{
-							std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
-							if (obj1->tag == GameObject::PLAYER)
-							{
+							//std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+							switch (obj1->tag) {
+							case GameObject::PLAYER:
 								switch (obj2->tag)
 								{
 								case GameObject::KEY:
 									hasKey = true;
 									pickedUp[0] = true;
-									// enable 'has key'
-									// destroy key (or make invisible or smth)
+									obj2->mesh->remove();
 									break;
 								case GameObject::CHEST:
 									pickedUp[1] = hasKey;
-									// if has key -> win
-									// else nothing (or text?)
+									// Win!
 									break;
 								case GameObject::WORLD_OBJECT:
 									// collision resolution
 									Resolve(obj1, obj2);
 									break;
-								case GameObject::GROUND:
-									// vertical collision resolution
-									break;
 								case GameObject::MONSTER:
 									pickedUp[2] = true;
+									// Die!
 									break;
 								default:
 									break;
 								}
-								//obj2->setPosition(obj2->getPosition() + vector3df(0, 300, 0));
-							} else
-							{
+								break;
+							case GameObject::MONSTER:
 								switch (obj2->tag)
 								{
 								case GameObject::KEY:
@@ -85,14 +104,20 @@ void Detect(bool pickedUp[])
 									// same as world_object
 								case GameObject::WORLD_OBJECT:
 									// collision resolution
-									Resolve(obj1, obj2);
-									break;
-								case GameObject::GROUND:
-									// vertical collision resolution
+									//Resolve(obj1, obj2);
 									break;
 								default:
 									break;
 								}
+								break;
+							case GameObject::GROUND:
+								if (obj2->tag != GameObject::PLAYER)
+								{
+									obj2->resolveGround();
+								}
+								break;
+							default:
+								break;
 							}
 						}
 					}
@@ -105,14 +130,16 @@ void Detect(bool pickedUp[])
 void Resolve(GameObject* obj1, GameObject* obj2)
 {
 	vector3df currentVelocity = obj1->getVelocity();
+	float sizeVelocity = currentVelocity.getLength();
 	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
 	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
 	if (obj1->tag == GameObject::PLAYER)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(obj1->getAbsolutePosition() + 5 * reflection);
+		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
 	} else
 	{
-		obj1->setVelocity(reflection);
+		obj1->setPosition(obj1->getAbsolutePosition() - currentVelocity);
+		obj1->setVelocity(sizeVelocity * reflection.normalize());
 	}
 }
 
@@ -120,7 +147,3 @@ float Dot(vector3df vector1, vector3df vector2)
 {
 	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
 }
-//public static Vector3 Reflect(Vector3 vector, Vector3 normal)
-//{
-//	return vector - 2 * Vector3.Dot(vector, normal) * normal;
-//}

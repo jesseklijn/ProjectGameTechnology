@@ -26,6 +26,7 @@ PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, 
 	parent = parentPar;
 
 	gravityConstant = -9.8;	//9.81
+	buoyancyConstant = 9.8;
 }
 
 
@@ -127,7 +128,7 @@ vector3df PhysicsObject::buoyancyForce()
 	// densityWater * volumeObject
 	// since denisity of human is around 1, take mass for volume
 	// multiplied to balance with gravity
-	float buoyancy = (position_.Y < -85) ? 0 : mass * 9.8;
+	float buoyancy = (position_.Y < -85) ? 0 : mass * buoyancyConstant;
 	return vector3df(0, buoyancy, 0);
 }
 
@@ -156,6 +157,19 @@ vector3df PhysicsObject::getVelocity()
 void PhysicsObject::setVelocity(vector3df velocity)
 {
 	velocity_ = velocity;
+}
+
+void PhysicsObject::resolveGround()
+{
+	if (velocity_.Y < 0)
+	{
+		velocity_.Y = 0;
+	}
+	if (force_.Y < 0)
+	{
+		force_.Y = 0;
+	}
+	buoyancyConstant = 0;
 }
 
 // TODO: better drag: get something for those constants

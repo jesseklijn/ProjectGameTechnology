@@ -14,6 +14,8 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::CREATURE;
 
+	buoyancyConstant = 9.79;
+
 	moveSpeed = idleSpeed;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;

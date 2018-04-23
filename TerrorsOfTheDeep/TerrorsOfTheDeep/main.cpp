@@ -55,8 +55,8 @@ int stamina = 0;
 bool itemPickedUp[3] = { false, false, false };
 
 // Light colours
-//irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
-irr::video::SColorf ambientColor = irr::video::SColorf(1, 1, 1, 1);	// for when you need to see stuff
+irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
+//irr::video::SColorf ambientColor = irr::video::SColorf(1, 1, 1, 1);	// for when you need to see stuff
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 const float FLASHLIGHT_RANGE = 1000.f;
@@ -147,7 +147,6 @@ int main()
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
-	shark->tag = GameObject::MONSTER;
 	GameManager::gameObjects.push_back(shark);
 
 	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPS_Arms.obj");
@@ -156,7 +155,6 @@ int main()
 	Player* player = new Player(new vector3df(0, -0.8, 1.5), new vector3df(4, 4, 4), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh, 
 		GameManager::driver->getTexture("../media/armsTexture.png"));
-	player->tag = GameObject::PLAYER;
 	GameManager::gameObjects.push_back(player);
 
 	ISceneNode* newPlayer = player;

@@ -23,6 +23,8 @@ Player::Player(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::PLAYER;
 
+	buoyancyConstant = 9.79;
+
 	irrDevice = GameManager::device;
 	smgr = mgr;
 
