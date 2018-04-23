@@ -133,10 +133,10 @@
       <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
     </ClCompile>
     <ClCompile Include="Fish.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
     </ClCompile>
     <ClCompile Include="FlockingEntity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Objects\Creatures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,10 +204,10 @@
       <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
     </ClInclude>
     <ClInclude Include="Fish.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
     </ClInclude>
     <ClInclude Include="FlockingEntity.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Objects\Creatures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -41,5 +41,8 @@
     <ClCompile Include="mainTest.cpp">
       <Filter>Source Files\don%27t touch</Filter>
     </ClCompile>
+    <ClCompile Include="FlockingUnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

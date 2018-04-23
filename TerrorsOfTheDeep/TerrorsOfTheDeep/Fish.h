@@ -1,29 +1,25 @@
-#include "GameObject.h"
-#include <vector>
-#include <iostream>
+#pragma once
+#include "Critter.h"
 
-#ifdef _MSC_VER
-#pragma comment(lib, "Irrlicht.lib")
-#endif
-using namespace std;
-
-
-class Fish :
-	public GameObject
+class Fish : public GameObject
 {
 public:
+	// Constructor and deconstructor
 	Fish(const irr::core::vector3df* startPosition,
 		const irr::core::vector3df* startScale,
 		const irr::core::vector3df* startRotation,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0);
+		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
 	~Fish();
+	int fishID = 0;
+	float movementSpeed = 2;
+	float rotationSpeed = 1;
+	float neighbourDistance = 25;
+	float avoidDistance = 10;
+	irr::core::vector3df direction;
 
-	virtual void Update();
-
-	irr::core::vector3df velocity = irr::core::vector3df(0, 0, 0);
-	int fishSize = 25;
-	int fishSizeOffset;
+	void Move();
+	void ApplyFlocking(std::vector<Fish*>, irr::core::vector3df goalPosition);
+	static float CalculateDistance(irr::core::vector3df A, irr::core::vector3df B);
 
 };
-
