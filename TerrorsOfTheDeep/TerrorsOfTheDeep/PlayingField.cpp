@@ -26,8 +26,6 @@ bool PlayingField::Generate()
 		//Grid has not been generated
 		return false;
 	};
-
-	
 }
 
 void PlayingField::AssignSize(int xSize, int ySize, int zSize)

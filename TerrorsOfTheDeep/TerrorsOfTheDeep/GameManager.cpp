@@ -61,13 +61,13 @@ GameManager::GameManager()
 	GameManager::tags.push_back("Monster");
 	GameManager::tags.push_back("World Object");
 
-	GridMesh playingMesh = GridMesh(
+	/*GridMesh playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
 		new const vector3df(1, 1, 1),
 		new const vector3df(0, 0, 0),
 		0,
 		GameManager::smgr,
-		0);
+		0);*/
 	Awake();
 }
 

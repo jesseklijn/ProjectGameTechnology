@@ -15,10 +15,24 @@ public:
 
 	void GenerateField();
 	void GenerateMesh();
+	irr::core::aabbox3d<irr::f32> Box;
 
-	vector<irr::video::S3DVertex> vertices;
-	irr::video::SMaterial Material;
-	
-	void render();
+	// Rendering function
+	virtual void Update();
+	virtual void render();
+	virtual void OnRegisterSceneNode();
+
+	// Variables
+	int xSizeGrid, ySizeGrid;
+	int maxHighMountainHeight = 600;
+	int highMountainConstantHeight = 400;
+	int maxRuinsDepth = 200;
+	int ruinsConstantDepth = 200;
+	int cellSize = 25;
+
+	// Functions
+	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
+	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
+	virtual irr::u32 getMaterialCount() const;	
 };
 
