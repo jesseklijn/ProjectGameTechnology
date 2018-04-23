@@ -111,9 +111,6 @@
     <ClCompile Include="DynamicUpdater.cpp">
       <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleUnitTest.cpp">
-      <Filter>Source Files\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="Critter.cpp">
       <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
     </ClCompile>
@@ -137,6 +134,9 @@
     </ClCompile>
     <ClCompile Include="FlockingEntity.cpp">
       <Filter>Source Files\Game Objects\Creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTests.cpp">
+      <Filter>Source Files\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

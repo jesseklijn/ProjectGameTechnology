@@ -178,7 +178,7 @@
     <ClCompile Include="DynamicUpdater.cpp" />
     <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="EventManager.cpp" />
-    <ClCompile Include="ExampleUnitTest.cpp" />
+    <ClCompile Include="UnitTests.cpp" />
     <ClCompile Include="Fish.cpp" />
     <ClCompile Include="FlockingEntity.cpp" />
     <ClCompile Include="GameManager.cpp" />
