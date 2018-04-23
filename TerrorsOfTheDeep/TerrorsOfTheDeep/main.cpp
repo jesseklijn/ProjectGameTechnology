@@ -8,6 +8,8 @@
 #pragma once
 #include "Player.h"
 #pragma once
+#include "GridMesh.h"
+#pragma once
 #include "Camera.h"
 #pragma once
 #include "DetectCollision.h"
@@ -250,7 +252,7 @@ int main()
 		GameManager::gameObjects.push_back(rock);
 	}
 
-	// SPawn massive skull
+	// Spawn massive skull
 	GameObject* skull = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
 		-100,
 		rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
@@ -303,7 +305,23 @@ int main()
 	GameManager::gameObjects.push_back(chest);
 	ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, NO_PARENT);
 
-	std::cout << GameManager::partGridSizeX << ", " << GameManager::partGridSizeY << ", " << GameManager::partGridSizeZ << std::endl;
+	//// Grid
+	//GameObject* grid = new GridMesh(new vector3df(-2000, 300, -2000), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	//	GameManager::smgr->getRootSceneNode(), GameManager::smgr,1, 0,0);
+
+	//int amountRocks = 10;
+
+	//// Spawn random rocks on grid;
+	//IMeshBuffer* planeBuffer = grid->mesh->getMesh()->getMeshBuffer(0);
+	//S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
+
+	//for (size_t i = 0; i < amountRocks; i++)
+	//{
+	//	GameObject* rock1 = new GameObject(new vector3df(mb_vertices[i].Pos.X, mb_vertices[i].Pos.Y, mb_vertices[i].Pos.Z), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	//		0, GameManager::smgr, 3,
+	//		GameManager::smgr->getMesh("../media/rock.obj"),
+	//		GameManager::driver->getTexture("../media/RockTexture.jpg"));
+	//}
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())

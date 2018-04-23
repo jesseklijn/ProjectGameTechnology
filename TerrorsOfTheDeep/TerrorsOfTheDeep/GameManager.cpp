@@ -73,14 +73,7 @@ GameManager::GameManager()
 	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0005f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 
-	GridMesh playingMesh = GridMesh(
-		new const vector3df(0, 0, 0),
-		new const vector3df(1, 1, 1),
-		new const vector3df(0, 0, 0),
-		0,
-		GameManager::smgr,
-		0);
-
+	
 	Awake();
 }
 
