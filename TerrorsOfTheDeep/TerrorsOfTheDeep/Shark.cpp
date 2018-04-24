@@ -11,10 +11,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	if (canAnimate && relatedMesh)
-	{
-		
-	}
+	
 }
 
 // Destructor
@@ -32,10 +29,6 @@ void Shark::UpdateState()
 	currentPosition = getPosition();
 	canSeeTarget = false;
 	targetDistance = INFINITY;
-
-	// Update our timers
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
 
 	// Get our potential target and target information
 	if (canAttack)
@@ -102,9 +95,7 @@ void Shark::ExecuteState()
 		case CHASING:
 		{
 			moveSpeed = chaseSpeed;
-
-			// Set our target position on the player
-			targetPosition = targetAttack->getAbsolutePosition() + vector3df(0, -12, 0);
+			targetPosition = targetAttack->getAbsolutePosition();
 
 			// Max out our seek timer until we leave our state, so it ticks down when our target is lost
 			seekTimer = seekTime;
@@ -118,8 +109,10 @@ void Shark::ExecuteState()
 			moveSpeed = chaseSpeed;
 
 			// TODO: Attack!
-			attackCooldownTimer = attackCooldownTime;
+			attackCooldownTimer = attackCooldownTimeMin + rand() % (int)(attackCooldownTimeMax - attackCooldownTimeMin);
 
+			/* Move away from the currently bitten target.
+			For now it simply picks the furthest target until the attack cooldown finishes.*/
 			targetPriority = FURTHEST;
 			Shark::UpdateState();
 			stateUpdateTimer = rand() % (int)stateUpdateTime;				
@@ -166,7 +159,7 @@ void Shark::Update()
 	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
-	attackCooldownTimer = GameManager::Clamp(attackCooldownTimer - GameManager::deltaTimeMS, 0.0f, attackCooldownTime);
+	attackCooldownTimer = GameManager::Clamp(attackCooldownTimer - GameManager::deltaTimeMS, 0.0f, attackCooldownTimeMax);
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();
@@ -174,10 +167,4 @@ void Shark::Update()
 	}
 	Shark::ExecuteState();
 	Shark::Move();
-
-	// Animation
-	if (canAnimate && mesh)
-	{
-
-	}
 }

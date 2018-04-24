@@ -34,7 +34,8 @@ public:
 	GameObject* targetFleeingFrom = nullptr;
 	double chaseDetectionRange = 1000000.0f;
 	float attackRange = 100.0f;
-	float attackCooldownTime = 20.0f * 1000.0f;
+	float attackCooldownTimeMin = 15.0f * 1000.0f;
+	float attackCooldownTimeMax = 45.0f * 1000.0f;
 	float attackCooldownTimer = 0.0f;
 	float seekTime = 3.0f * 1000.0f;
 	float seekTimer = 0.0f;
@@ -54,7 +55,7 @@ public:
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
-	float fleeingDetectionRange = 2500.0f;
+	float fleeingDetectionRange = 3000.0f;
 	float fleeingTime = 4.0f * 1000.0f;
 	float fleeingTimer = 0.0f;
 	float fleeingPositionTime = 0.5f * 1000.0f;
