@@ -149,12 +149,9 @@ float GameManager::Lerp(float value, float value2, float blend)
 
 irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend)
 {
-	//vector3df before = vector3df(value.X, value.Y, value.Z);
-	vector3df after = vector3df(value.X + (blend * (value2.X - value.X)),
+	return vector3df(value.X + (blend * (value2.X - value.X)),
 		value.Y + (blend * (value2.Y - value.Y)),
 		value.Z + (blend * (value2.Z - value.Z)));
-
-	return after;
 }
 
 // Switch to the given GameState.
@@ -247,7 +244,7 @@ std::vector<GameObject*> GameManager::FindGameObjectsWithTags(std::vector<GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, double detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
@@ -271,7 +268,7 @@ GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag list.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
@@ -295,7 +292,7 @@ GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::
 
 /* Finds the furthest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, double detectionRange, bool visibilityCheck)
 {
 	float furthestDistance = 0.0f, currentDistance;
 	GameObject* furthestObject = nullptr;
@@ -319,7 +316,7 @@ GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameO
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag list.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange, bool visibilityCheck)
 {
 	float furthestDistance = 0.0f, currentDistance;
 	GameObject* furthestObject = nullptr;

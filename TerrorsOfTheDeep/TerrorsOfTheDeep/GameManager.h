@@ -108,10 +108,10 @@ public:
 	static GameObject* FindGameObjectWithTag(GameObject::Tag tag);
 	static std::vector<GameObject*> FindGameObjectsWithTag(GameObject::Tag tag); 
 	static std::vector<GameObject*> FindGameObjectsWithTags(std::vector<GameObject::Tag> tagList);
-	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false); 
-	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
-	static GameObject* FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false);
-	static GameObject* FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange = INFINITY, bool visibilityCheck = false);
 
 	static float Min(float value, float value2);
 	static float Max(float value, float value2);

@@ -25,11 +25,14 @@ public:
 		CLOSEST,
 		FURTHEST
 	};
+	TargetPriority targetPriority = CLOSEST;
+
+	std::vector<GameObject*> attackedTargets;
 
 	// Functions
 	virtual void Update();
-	virtual GameObject* PlayerCanBeSeen(float detectionRange = INFINITY, bool visibilityCheck = false);
-	virtual GameObject* GetTarget(TargetPriority priorityMode = CLOSEST, bool playerDetectOverride = true, float detectionRange = INFINITY, bool visibilityCheck = false);
+	virtual GameObject* PlayerCanBeSeen(double detectionRange = INFINITY, bool visibilityCheck = false);
+	virtual GameObject* GetTarget(TargetPriority priorityMode = CLOSEST, bool playerDetectOverride = true, double detectionRange = INFINITY, bool visibilityCheck = false);
 	virtual bool IsInSight(irr::core::vector3df startPosition, irr::core::vector3df endPosition);
 	virtual bool IsInSight(GameObject* targetObject);
 

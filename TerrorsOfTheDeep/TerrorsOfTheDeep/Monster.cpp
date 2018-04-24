@@ -16,10 +16,11 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canAttack = true;
 	canFlee = false;
 
-	rotationLerp = 0.000015;
+	rotationLerp = 0.00002;
 	idleSpeed = 300.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
+	attackRange = chaseSpeed;
 
 	targetTags.push_back(GameObject::PLAYER);
 	targetTags.push_back(GameObject::CREATURE);
@@ -36,7 +37,7 @@ Detection range and a raycast can be enabled for specified checks.
 
 This is a shortcut instead of having to specify extra Player override functionality
 in the other GameManager::FindX(); functions, which should be for general usage. */
-GameObject* Monster::PlayerCanBeSeen(float detectionRange, bool visibilityCheck)
+GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
 	Player* player = (Player*)GameManager::FindGameObjectWithTag(PLAYER);
 	if (player)
@@ -55,7 +56,7 @@ GameObject* Monster::PlayerCanBeSeen(float detectionRange, bool visibilityCheck)
 
 /* Returns a target based on this monster's tags. Optionally a player detection override, detection range and visibility check can
 be enabled for more specific searches. Returns a nullptr if no target was found with the given specifications. */
-GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOverride, float detectionRange, bool visibilityCheck)
+GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOverride, double detectionRange, bool visibilityCheck)
 {
 	// If the player should override all other detection
 	if (playerDetectOverride)

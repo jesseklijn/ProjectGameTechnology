@@ -138,8 +138,8 @@ void Creature::Move()
 		{
 			// Calculate an agility factor that lerps the shark sharper towards the target the closer it gets to it
 			agility = 1.0;
-			if (canAttack)
-				agility += (canSeeTarget ? (-moveDirectionTarget.getLength() + chaseDetectionRange) / chaseDetectionRange * agilityFactor : 0.0);
+			if (canAttack && moveDirectionTarget.getLength() <= agilityDistance)
+				agility += canSeeTarget ? (-moveDirectionTarget.getLength() + agilityDistance) / agilityDistance * agilityFactor : 0.0;
 
 			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, (rotationLerp * agility) * GameManager::deltaTime).normalize();
 

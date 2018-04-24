@@ -40,7 +40,7 @@ void Shark::UpdateState()
 	// Get our potential target and target information
 	if (canAttack)
 	{
-		targetAttack = Monster::GetTarget(CLOSEST, true, chaseDetectionRange, true);
+		targetAttack = Monster::GetTarget(targetPriority, attackCooldownTimer <= 0.0f ? true : false, chaseDetectionRange, true);
 		if (targetAttack)
 		{
 			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), targetAttack->getAbsolutePosition());
@@ -117,7 +117,13 @@ void Shark::ExecuteState()
 		{
 			moveSpeed = chaseSpeed;
 
-			// RawrXD
+			// TODO: Attack!
+			attackCooldownTimer = attackCooldownTime;
+
+			targetPriority = FURTHEST;
+			Shark::UpdateState();
+			stateUpdateTimer = rand() % (int)stateUpdateTime;				
+
 			break;
 		}
 
@@ -160,6 +166,7 @@ void Shark::Update()
 	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	attackCooldownTimer = GameManager::Clamp(attackCooldownTimer - GameManager::deltaTimeMS, 0.0f, attackCooldownTime);
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();
