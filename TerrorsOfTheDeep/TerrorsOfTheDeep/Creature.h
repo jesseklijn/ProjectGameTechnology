@@ -36,8 +36,8 @@ public:
 	float attackRange = 100.0f;
 	float seekTime = 10.0f * 1000.0f;
 	float seekTimer = 0.0f;
-	float agilityFactor = 10.0f, agility;
-	float targetDistance;
+	float agilityFactor = 10.0f, agility{};
+	float targetDistance{};
 
 	float stateUpdateTime = 1.0f * 1000.0f;
 	float stateUpdateTimer = 0.0f;
@@ -75,9 +75,9 @@ public:
 
 
 	// Functions
-	virtual void Update();
+	void Update() override;
 	virtual void UpdateState();
 	virtual void ExecuteState();
 	virtual void Move();
-	void OnStateSwitch();
+	static void OnStateSwitch();
 };

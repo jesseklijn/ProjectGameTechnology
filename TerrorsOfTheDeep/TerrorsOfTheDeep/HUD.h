@@ -18,6 +18,12 @@ public:
 	HUD();
 	~HUD();
 
+	//Variables
+	float spacingText = 22;
+	float spacingImage = 60;
+	float hudItemCoordinateX = 800;
+	float hudItemCoordinateY = 60;
+
 	// Functions
-	void HudDraw(int stamina, bool itemPickedUpArray[], IVideoDriver* driver, IGUIEnvironment* guienv);
+	void HudDraw(int stamina, IVideoDriver* driver, IGUIEnvironment* guienv);
 };

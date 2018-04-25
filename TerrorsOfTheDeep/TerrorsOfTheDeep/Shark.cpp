@@ -7,8 +7,8 @@
 Shark::Shark(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
-	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, const irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, const bool detectCollision)
 	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	if (canAnimate && (relatedMesh && relatedTexture))
@@ -19,9 +19,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 
 // Destructor
 Shark::~Shark()
-{
-
-}
+= default;
 
 void Shark::UpdateState()
 {
@@ -34,8 +32,8 @@ void Shark::UpdateState()
 	targetDistance = INFINITY;
 
 	// Update our timers
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMs, 0.0f, idlePositionTime);
+	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMs, 0.0f, seekTime);
 
 	// Get our potential target and target information
 	if (canAttack)
@@ -91,7 +89,7 @@ void Shark::ExecuteState()
 			// Get a new idle position on timer trigger
 			if (idlePositionTimer <= 0.0f)
 			{
-				targetPosition = vector3df(rand() % (int)idlingRange * 2.0f - (int)idlingRange, 0.0f, rand() % (int)idlingRange * 2.0f - (int)idlingRange);
+				targetPosition = vector3df(rand() % static_cast<int>(idlingRange) * 2.0f - static_cast<int>(idlingRange), 0.0f, rand() % static_cast<int>(idlingRange) * 2.0f - static_cast<int>(idlingRange));
 				idlePositionTimer = idlePositionTime;
 			}
 
@@ -149,7 +147,7 @@ void Shark::ExecuteState()
 
 void Shark::OnStateSwitch()
 {
-	std::cout << stateNames[(int)state] << std::endl;
+	std::cout << stateNames[static_cast<int>(state)] << std::endl;
 }
 
 void Shark::Update()
@@ -157,9 +155,9 @@ void Shark::Update()
 	// Update base
 	Monster::Update();
 
-	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMs, 0.0f, stateUpdateTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMs, 0.0f, idlePositionTime);
+	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMs, 0.0f, seekTime);
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();

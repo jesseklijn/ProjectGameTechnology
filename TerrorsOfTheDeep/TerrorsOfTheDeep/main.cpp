@@ -52,10 +52,11 @@ using namespace gui;
 int stamina = 0;
 
 // Check if the items are picked up
-bool itemPickedUp[3] = { false, false, false };
+//0 = key, 1 = chest, 2 = death
+bool itemPickedUp[3] = { true, true, false };
 
 // Light colours
-irr::video::SColorf ambientColor = irr::video::SColorf(0.1f,0.1f,0.1f,0.1f);
+irr::video::SColorf ambientColor = irr::video::SColorf(1,1,1,1);
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 const float FLASHLIGHT_RANGE = 1000.f;
@@ -88,7 +89,7 @@ int main()
 	GameManager::device->getCursorControl()->setVisible(false);
 
 	// Set our skydome
-	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
+	auto skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 	skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
 	// Initialize our background music
@@ -105,11 +106,11 @@ int main()
 	//ISceneNode *playerNode = &player;
 
 	// Spawn critters
-	for (int dolphinIndex = 0; dolphinIndex < dolphinCount; ++dolphinIndex)
+	for (auto dolphinIndex = 0; dolphinIndex < dolphinCount; ++dolphinIndex)
 	{
-		Dolphin* dolphin = new Dolphin(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX, 
-			rand() % GameManager::worldRadiusY, 
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+		const auto dolphin = new Dolphin(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X, 
+			rand() % GameManager::WORLD_RADIUS_Y, 
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/dolphin.obj"),
@@ -118,11 +119,11 @@ int main()
 	}
 
 
-	for (int goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
+	for (auto goldbackIndex = 0; goldbackIndex < goldbackCount; ++goldbackIndex)
 	{
-		Goldback* goldbackFish = new Goldback(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
-			rand() % GameManager::worldRadiusY,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+		const auto goldbackFish = new Goldback(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
+			rand() % GameManager::WORLD_RADIUS_Y,
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/GoldenFish.obj"),
@@ -130,11 +131,11 @@ int main()
 		GameManager::gameObjects.push_back(goldbackFish);
 	}
 
-	for (int bassIndex = 0; bassIndex < bassCount; ++bassIndex)
+	for (auto bassIndex = 0; bassIndex < bassCount; ++bassIndex)
 	{
-		Bass* bassFish = new Bass(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
-			rand() % GameManager::worldRadiusY,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+		const auto bassFish = new Bass(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
+			rand() % GameManager::WORLD_RADIUS_Y,
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/Rudd_Fish.obj"),
@@ -142,7 +143,7 @@ int main()
 		GameManager::gameObjects.push_back(bassFish);
 	}
 
-	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
+	auto shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
@@ -150,18 +151,18 @@ int main()
 	GameManager::gameObjects.push_back(shark);
 
 	// Player
-	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	const auto player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
 	GameManager::gameObjects.push_back(player);
 
 	ISceneNode* newPlayer = player;
-	ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
+	auto flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
 	//ILightSceneNode* flashlight = lighting.CreatePointLight(flashlightColor, player->getAbsolutePosition(), false, player);
 	//ILightSceneNode* eyeRight = lighting.CreateDirectionalLight(sharkEyesColor, shark->getPosition(), shark->getRotation(), 200.f,false, shark);
 	//ILightSceneNode* eyeLeft = lighting.CreateDirectionalLight(sharkEyesColor, vector3df(shark->getPosition().X+50, shark->getPosition().Y+10, shark->getPosition().Z-50), shark->getRotation(), 200.f, false, shark);
 
 
-	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
+	auto flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
 		GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 	flockOfFish->tag = GameObject::CREATURE;
@@ -170,48 +171,48 @@ int main()
 	
 
 	// Rock
-	GameObject* rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
+	auto rock = new GameObject(new vector3df(-400, -50, 100), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1112,
 	 GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock);
 
-	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
+	auto rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock1->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock1);
 
-	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
+	auto rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock2->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock2);
 
-	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
+	auto rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock3->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock3);
 
-	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
+	auto rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"));
 	rock4->tag = GameObject::WORLD_OBJECT;
 	GameManager::gameObjects.push_back(rock4);
 
-	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),
+	auto groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/SandTexture.jpg"));
 
 	// Key collectible object
-	GameObject* key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
+	auto key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
@@ -220,7 +221,7 @@ int main()
 	ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.2f, 0.5f, 1.f), key->getPosition(), 200.f, key->getRotation(), false, key);
 
 	// Win Condition trigger object
-	GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
+	auto chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 5,
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
@@ -234,7 +235,7 @@ int main()
 	while (GameManager::device->run())
 	{
 		// Delta time start point
-		auto frameTimeStart = std::chrono::system_clock::now();
+		const auto frameTimeStart = std::chrono::system_clock::now();
 
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
@@ -245,7 +246,7 @@ int main()
 		gameManager.Update();
 
 		//check the boundaries
-		camera.updatePos();
+		Camera::updatePos();
 
 		Detect(newPlayer,
 			chest->mesh,
@@ -270,7 +271,7 @@ int main()
 			stamina++;
 		}
 		if (!disableHud) {
-			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
+			hud->HudDraw(stamina, GameManager::driver, GameManager::guienv);
 		}
 
 		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes
@@ -283,10 +284,10 @@ int main()
 		GameManager::driver->endScene();
 
 		// Delta time end point, calculate time passed for the next frame
-		auto frameTimeEnd = std::chrono::system_clock::now();
+		const auto frameTimeEnd = std::chrono::system_clock::now();
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
 		GameManager::deltaTime = elapsed_seconds.count();
-		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f;
+		GameManager::deltaTimeMs = GameManager::deltaTime * 1000.0f;
 		GameManager::time += elapsed_seconds.count();
 	}
 	// Game end, drop our Irrlicht device

@@ -8,8 +8,8 @@
 Creature::Creature(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
-	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, const irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, const bool detectCollision)
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	tag = GameObject::CREATURE;
@@ -20,18 +20,16 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 
 	/* [DEBUG] Add our states to a locally accessible string array for state debugging prints
 	Not used in any other way!*/
-	stateNames.push_back("NONE");
-	stateNames.push_back("IDLE");
-	stateNames.push_back("CHASING");
-	stateNames.push_back("ATTACKING");
-	stateNames.push_back("SEEKING");
-	stateNames.push_back("FLEEING");
+	stateNames.emplace_back("NONE");
+	stateNames.emplace_back("IDLE");
+	stateNames.emplace_back("CHASING");
+	stateNames.emplace_back("ATTACKING");
+	stateNames.emplace_back("SEEKING");
+	stateNames.emplace_back("FLEEING");
 }
 
 Creature::~Creature()
-{
-
-}
+= default;
 
 void Creature::OnStateSwitch()
 {
@@ -76,14 +74,14 @@ void Creature::ExecuteState()
 			if (idlePositionTimer <= 0.0f)
 			{
 				// If we're close enough to the world center point, idle normally in 360 degrees
-				vector3df toWorldCenter = currentPosition - vector3df(0, 0, 0);
+				auto toWorldCenter = currentPosition - vector3df(0, 0, 0);
 				if (toWorldCenter.getLength() < maxDistFromCenter)
-					targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
+					targetPosition = vector3df(rand() % static_cast<int>(idlingRange * 2.0f) - static_cast<int>(idlingRange), 50.0f, rand() % static_cast<int>(idlingRange * 2.0f) - (int)idlingRange);
 				// Otherwise, generate a direction that generally points back to world center
 				else
 				{
-					float newAngle = GameManager::Clamp(rand() % (idlingAngle * 2), -idlingAngle, idlingAngle);
-					vector3df newDirection = toWorldCenter;
+					const float newAngle = GameManager::Clamp(rand() % (idlingAngle * 2), -idlingAngle, idlingAngle);
+					auto newDirection = toWorldCenter;
 					newDirection.rotateXZBy(newAngle, currentPosition);
 					targetPosition = currentPosition + newDirection;
 				}
@@ -104,8 +102,8 @@ void Creature::ExecuteState()
 			{
 				if (fleeingPositionTimer <= 0.0f)
 				{
-					float newAngle = GameManager::Clamp(rand() % (fleeingAngle * 2), -fleeingAngle, fleeingAngle);
-					vector3df newDirection = GameManager::Lerp(currentPosition - targetFleeingFrom->getAbsolutePosition(),
+					const auto newAngle = GameManager::Clamp(rand() % (fleeingAngle * 2), -fleeingAngle, fleeingAngle);
+					auto newDirection = GameManager::Lerp(currentPosition - targetFleeingFrom->getAbsolutePosition(),
 																vector3df(0, 0, 0) - currentPosition, 0.0);
 
 					newDirection.rotateXZBy(newAngle, currentPosition);
@@ -117,6 +115,7 @@ void Creature::ExecuteState()
 
 			break;
 		}
+	default: ;
 	}
 
 	// State switch detector
@@ -154,10 +153,10 @@ void Creature::Update()
 	GameObject::Update();
 	
 	// Update our timers
-	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	fleeingTimer = GameManager::Clamp(fleeingTimer - GameManager::deltaTimeMS, 0.0f, fleeingTime);
-	fleeingPositionTimer = GameManager::Clamp(fleeingPositionTimer - GameManager::deltaTimeMS, 0.0f, fleeingPositionTime);
+	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMs, 0.0f, stateUpdateTime);
+	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMs, 0.0f, idlePositionTime);
+	fleeingTimer = GameManager::Clamp(fleeingTimer - GameManager::deltaTimeMs, 0.0f, fleeingTime);
+	fleeingPositionTimer = GameManager::Clamp(fleeingPositionTimer - GameManager::deltaTimeMs, 0.0f, fleeingPositionTime);
 
 	if (stateUpdateTimer <= 0.0)
 	{

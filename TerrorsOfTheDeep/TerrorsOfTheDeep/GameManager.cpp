@@ -50,34 +50,36 @@ triangle3df hitTriangle;
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
 float GameManager::deltaTime = 0.0;
-float GameManager::deltaTimeMS = 0.0;
+float GameManager::deltaTimeMs = 0.0;
 float GameManager::time = 0.0;
-const int GameManager::worldRadiusX = 5000.0f;
-const int GameManager::worldRadiusY = 2000.0f;
-const int GameManager::worldRadiusZ = 5000.0f;
+const int GameManager::WORLD_RADIUS_X = 5000.0f;
+const int GameManager::WORLD_RADIUS_Y = 2000.0f;
+const int GameManager::WORLD_RADIUS_Z = 5000.0f;
+bool GameManager::keyPickedUp = false;
+bool GameManager::escaped = false;
+bool GameManager::hasDied = false;
 #pragma endregion
 
 // Constructor
 GameManager::GameManager()
 {
 	GameManager::driver->setFog(SColor(0, 0, 0, 0), EFT_FOG_LINEAR, 50.0f, 3000.0f, 0.01f);
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());	
+	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 
-	GridMesh playingMesh = GridMesh(
+	auto playingMesh = GridMesh(
 		new const vector3df(0, 0, 0),
 		new const vector3df(1, 1, 1),
 		new const vector3df(0, 0, 0),
 		0,
 		GameManager::smgr,
 		0);
+
 	Awake();
 }
 
 // Destructor
 GameManager::~GameManager()
-{
-
-}
+= default;
 
 // Runs immediately after the constructor once
 void GameManager::Awake()
@@ -116,20 +118,20 @@ float GameManager::Max(float value, float value2)
 	return value > value2 ? value : value2;
 }
 
-float GameManager::Clamp(float value, float minValue, float maxValue)
+float GameManager::Clamp(const float value, const float minValue, const float maxValue)
 {
 	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
 }
 
-float GameManager::Lerp(float value, float value2, float blend)
+float GameManager::Lerp(const float value, const float value2, const float blend)
 {
 	return value + blend * (value2 - value);
 }
 
-irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend)
+irr::core::vector3df GameManager::Lerp(const irr::core::vector3df value, const irr::core::vector3df value2, const double blend)
 {
 	//vector3df before = vector3df(value.X, value.Y, value.Z);
-	vector3df after = vector3df(value.X + (blend * (value2.X - value.X)),
+	auto after = vector3df(value.X + (blend * (value2.X - value.X)),
 		value.Y + (blend * (value2.Y - value.Y)),
 		value.Z + (blend * (value2.Z - value.Z)));
 
@@ -138,14 +140,14 @@ irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::ve
 
 // Switch to the given GameState.
 // TODO: Functionality!
-void GameManager::GameStateTransition(GameState StateToLoad)
+void GameManager::GameStateTransition(GAME_STATE stateToLoad)
 {
 
 }
 
 // Cleans up the given state.
 // TODO: Functionality!
-void GameManager::UnloadGameState(GameState StateToCleanUp)
+void GameManager::UnloadGameState(GAME_STATE stateToCleanUp)
 {
 
 }
@@ -158,7 +160,7 @@ Example:
 	<NODE>->setTriangleSelector(selector);
 	selector->drop();
 */
-ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
+ISceneNode* GameManager::PerformRaycast(const vector3df& startPosition, const vector3df& endPosition)
 {
 	ray.start = startPosition;
 	ray.end = endPosition;
@@ -174,7 +176,7 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			ray,
 			intersection,    // This will be the position of the collision
 			hitTriangle,    // This will be the triangle hit in the collision
-			GameManager::IDFlag_IsPickable,  // This ensures that only nodes that we have set up to be pickable are considered
+			GameManager::ID_FLAG_IS_PICKABLE,  // This ensures that only nodes that we have set up to be pickable are considered
 			0);          // Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
@@ -184,9 +186,9 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 
 Used in deciding whether a GameObject is a prey for a Monster for example by giving
 the monster's tag list and the target object's tag, but can be used for anything else as well.*/
-int GameManager::FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag)
+int GameManager::FindTagInTagList(std::vector<GameObject::Tag> vectorList, const GameObject::Tag listTag)
 {
-	for (int i = 0; i < vectorList.size(); i++)
+	for (auto i = 0; i < vectorList.size(); i++)
 	{
 		if (vectorList[i] == listTag)
 			return i;
@@ -196,29 +198,29 @@ int GameManager::FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameO
 
 /* Finds the first GameObject that matches the given tag, in no particular order.
 It simply returns the first match found in the GameManager's GameObject list. */
-GameObject* GameManager::FindGameObjectWithTag(GameObject::Tag name)
+GameObject* GameManager::FindGameObjectWithTag(const GameObject::Tag name)
 {
-	for (GameObject* gameObj : GameManager::gameObjects)
+	for (auto gameObj : GameManager::gameObjects)
 		if (gameObj->GetTag() == name)
 			return gameObj;
 	return nullptr;
 }
 
 // Finds all GameObjects that satisfy the given tag.
-std::vector<GameObject*> GameManager::FindGameObjectsWithTag(GameObject::Tag name)
+std::vector<GameObject*> GameManager::FindGameObjectsWithTag(const GameObject::Tag name)
 {
 	std::vector<GameObject*> objs;
-	for (GameObject* gameObj : GameManager::gameObjects)
+	for (auto gameObj : GameManager::gameObjects)
 		if (gameObj->GetTag() == name)
 			objs.push_back(gameObj);
 	return objs;
 }
 
 // Finds all GameObjects that satisfy the given tag list.
-std::vector<GameObject*> GameManager::FindGameObjectsWithTags(std::vector<GameObject::Tag> tagList)
+std::vector<GameObject*> GameManager::FindGameObjectsWithTags(const std::vector<GameObject::Tag>& tagList)
 {
 	std::vector<GameObject*> objs;
-	for (GameObject* gameObj : GameManager::gameObjects)
+	for (auto gameObj : GameManager::gameObjects)
 		if (GameManager::FindTagInTagList(tagList, gameObj->tag) != -1)
 			objs.push_back(gameObj);
 	return objs;
@@ -226,7 +228,7 @@ std::vector<GameObject*> GameManager::FindGameObjectsWithTags(std::vector<GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, const GameObject::Tag tag, const float detectionRange, const bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
@@ -250,7 +252,7 @@ GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag list.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, const std::vector<GameObject::Tag>& tagList, const float detectionRange, const bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
@@ -274,7 +276,7 @@ GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::
 
 /* Finds the furthest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, const GameObject::Tag tag, const float detectionRange, const bool visibilityCheck)
 {
 	float furthestDistance = 0.0f, currentDistance;
 	GameObject* furthestObject = nullptr;
@@ -298,7 +300,7 @@ GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameO
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag list.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindFurthestGameObjectWithTags(GameObject* origin, const std::vector<GameObject::Tag> tagList, const float detectionRange, const bool visibilityCheck)
 {
 	float furthestDistance = 0.0f, currentDistance;
 	GameObject* furthestObject = nullptr;

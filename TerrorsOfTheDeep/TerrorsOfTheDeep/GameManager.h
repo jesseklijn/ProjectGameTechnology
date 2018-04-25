@@ -45,29 +45,29 @@ public:
 	// These flags will determine how something is selected 
 	enum
 	{
-		/* Use this ISceneNode ID to indicate a scene node that is 
-		not pickable by getSceneNodeAndCollisionPointFromRay()*/ 
-		ID_IsNotPickable = 0,
+		/* Use this ISceneNode ID to indicate a scene node that is
+		not pickable by getSceneNodeAndCollisionPointFromRay()*/
+		ID_IS_NOT_PICKABLE = 0,
 
-		/* Use this flag in ISceneNode IDs to indicate that the 
-		scene node can be picked by ray selection.*/ 
-		IDFlag_IsPickable = 1 << 0,
+		/* Use this flag in ISceneNode IDs to indicate that the
+		scene node can be picked by ray selection.*/
+		ID_FLAG_IS_PICKABLE = 1 << 0,
 
-		/* Use this flag in ISceneNode IDs to indicate that the 
-		scene node can be highlighted.*/ 
-		IDFlag_IsHighlightable = 1 << 1
+		/* Use this flag in ISceneNode IDs to indicate that the
+		scene node can be highlighted.*/
+		ID_FLAG_IS_HIGHLIGHTABLE = 1 << 1
 	};
 #pragma endregion
 
 #pragma region Game state
-	enum GameState {
+	enum GAME_STATE {
 		MAINMENU,
 		LEVELSELECTOR,
 		CREDITS,
 		SETTINGS,
 		DEMOSCENE,
 	};
-	GameState currentGamestate = DEMOSCENE;
+	GAME_STATE currentGamestate = DEMOSCENE;
 #pragma endregion
 
 	// Constructor and destructor
@@ -75,6 +75,9 @@ public:
 	~GameManager();
 
 	// Variables
+	static bool keyPickedUp;
+	static bool escaped;
+	static bool hasDied;
 
 	// Event receiver
 	static EventManager eventManager;
@@ -83,11 +86,11 @@ public:
 	static std::vector<GameObject*> gameObjects;
 
 	// Delta timing
-	static float deltaTime, deltaTimeMS, time;
+	static float deltaTime, deltaTimeMs, time;
 
-	int GameSpeed = 1;
-	bool GamePaused = false;
-	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
+	int gameSpeed = 1;
+	bool gamePaused = false;
+	static const int WORLD_RADIUS_X, WORLD_RADIUS_Y, WORLD_RADIUS_Z;
 
 	// Functions
 	void Awake();
@@ -95,17 +98,17 @@ public:
 	void Update();
 	void Draw();
 
-	void GameStateTransition(GameState StateToLoad);
-	void UnloadGameState(GameState StateToCleanUp);
+	void GameStateTransition(GAME_STATE stateToLoad);
+	void UnloadGameState(GAME_STATE stateToCleanUp);
 
-	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
+	static scene::ISceneNode* PerformRaycast(const core::vector3df& startPosition, const core::vector3df& endPosition);
 
 	static int FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag);
 	static GameObject* FindGameObjectWithTag(GameObject::Tag tag);
-	static std::vector<GameObject*> FindGameObjectsWithTag(GameObject::Tag tag); 
-	static std::vector<GameObject*> FindGameObjectsWithTags(std::vector<GameObject::Tag> tagList);
-	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false); 
-	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
+	static std::vector<GameObject*> FindGameObjectsWithTag(GameObject::Tag tag);
+	static std::vector<GameObject*> FindGameObjectsWithTags(const std::vector<GameObject::Tag>& tagList);
+	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, const std::vector<GameObject::Tag>& tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
 	static GameObject* FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, float detectionRange = INFINITY, bool visibilityCheck = false);
 	static GameObject* FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
 
