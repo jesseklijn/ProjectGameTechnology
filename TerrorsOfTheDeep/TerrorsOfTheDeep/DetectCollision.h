@@ -1,15 +1,9 @@
 #pragma once
 #include <irrlicht.h>
+#include "GameObject.h"
 
-using namespace irr;
+bool Col(GameObject* objectOne, GameObject* objectTwo, int size);
+void Detect(bool pickedUp[]);
 
-bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, int size);
-void Detect(
-	irr::scene::ISceneNode* player,
-	irr::scene::ISceneNode* win,
-	irr::scene::ISceneNode* key,
-	irr::scene::ISceneNode* shark,
-	bool pickedUp[], 
-	irr::scene::ISceneManager* smgr
-);
-
+void Resolve(GameObject* obj1, GameObject* obj2);
+float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2);

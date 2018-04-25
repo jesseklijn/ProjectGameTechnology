@@ -85,6 +85,8 @@ int ruinsCount = 25;
 int coralCount = 75;
 int plantCount = 25;
 int skullCount = 1;
+
+float rockMass = 500;
 #pragma endregion
 
 
@@ -151,9 +153,11 @@ int main()
 
 	// Spawn world objects
 
-	// Spawn player
-	Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-		GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
+	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
+	// Player
+	Player* player = new Player(new vector3df(0, -0.8, 3), new vector3df(4, 4, 4), new vector3df(180, 0, 180),
+		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh,
+		GameManager::driver->getTexture("../media/armsText"));
 	GameManager::gameObjects.push_back(player);
 
 	// Attach flashlight to player
@@ -201,7 +205,7 @@ int main()
 				0, GameManager::smgr, 4,
 				GameManager::smgr->getMesh("../media/key.obj"),
 				GameManager::driver->getTexture("../media/RustTexture.jpg"));
-			key->tag = GameObject::KEY;
+			key->setTag(GameObject::KEY);
 			GameManager::gameObjects.push_back(key);
 			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, NO_PARENT);
 			break;
@@ -220,7 +224,7 @@ int main()
 					GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 					GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 				chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-				chest->tag = GameObject::CHEST;
+				chest->setTag(GameObject::CHEST);
 				ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, NO_PARENT);
 				GameManager::gameObjects.push_back(chest);
 				break;

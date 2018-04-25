@@ -1,6 +1,4 @@
-#pragma once
 #include "GameObject.h" 
-#pragma once
 #include "GameManager.h" 
 
 // Constructor
@@ -8,8 +6,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						const irr::core::vector3df* startScale,
 						const irr::core::vector3df* startRotation, 
 						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-						: ISceneNode(parent, mgr, id)
+						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
+						float mass)
+						: PhysicsObject(parent, mgr, id, startPosition, mass)
 {
 	tag = GameObject::WORLD_OBJECT;
 
@@ -21,7 +20,11 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	if (relatedMesh)
 	{
 		// Set mesh details
-		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
+		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);
+		if (mesh)
+		{
+			PhysicsObject::mesh = mesh;
+		}
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
@@ -47,6 +50,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 			mesh->setTriangleSelector(selector);
 			selector->drop();
 		}
+
 	}
 }
 
@@ -92,6 +96,8 @@ It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaT
 */
 void GameObject::Update()
 {
+	// Inherit base class Update
+	PhysicsObject::Update();
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
@@ -115,19 +121,20 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
-	// Add a vector of length speed in the given direction
-	setPosition(getPosition() + (direction.normalize() * speed));
-	if (mesh)
-		mesh->setPosition(getPosition());
+	PhysicsObject::addForce(0.001 * moveSpeed * direction.normalize());
 	if (turnToDirection)
 	{
-		setRotation(direction.getHorizontalAngle());
-		if (mesh)
-			mesh->setRotation(direction.getHorizontalAngle());
+		PhysicsObject::turnToDirection(direction);
 	}
 }
 
 GameObject::Tag GameObject::GetTag()
 {
 	return tag;
+}
+
+void GameObject::setTag(GameObject::Tag tagPar)
+{
+	tag = tagPar;
+	PhysicsObject::tag = tag;
 }

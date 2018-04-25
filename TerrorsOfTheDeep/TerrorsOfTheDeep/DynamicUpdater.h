@@ -20,7 +20,8 @@ public:
 		CREATURE,
 		WORLD_OBJECT,
 		KEY,
-		CHEST
+		CHEST,
+		GROUND
 	};
 
 	/* Pure virtual functions
