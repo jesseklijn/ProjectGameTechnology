@@ -1,6 +1,4 @@
-#pragma once
 #include "Player.h"
-#pragma once
 #include "GameManager.h"
 
 #pragma region Namespaces
@@ -21,20 +19,13 @@ Player::Player(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
-	tag = GameObject::PLAYER;
-
+	GameObject::setTag(GameObject::PLAYER);
 	buoyancyConstant = 9.79;
 
 	irrDevice = GameManager::device;
 	smgr = mgr;
 
 	latestPos = getAbsolutePosition();
-
-	//
-
-	//Box.reset(Vertices[0].Pos);
-	//for (s32 i = 1; i<4; ++i)
-	//	Box.addInternalPoint(Vertices[i].Pos);
 }
 
 Player::~Player()
@@ -90,8 +81,5 @@ SMaterial& Player::getMaterial(u32 i)
 void Player::UpdatePos()
 {
 	vector3df rot = smgr->getActiveCamera()->getRotation();
-	//rot.rotateXZBy(90, getAbsolutePosition());
-	//rot.rotateXYBy(60, getAbsolutePosition());
 	mesh->setRotation(rot);
-
 }

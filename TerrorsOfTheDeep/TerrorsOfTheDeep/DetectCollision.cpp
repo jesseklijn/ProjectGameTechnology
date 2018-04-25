@@ -28,7 +28,7 @@ bool Col(GameObject* obj1, GameObject* obj2, float size)
 	//return false;
 
 	vector3df dif = obj1->getAbsolutePosition() - obj2->getAbsolutePosition();
-	float difSize = sqrt(std::abs(dif.X * dif.X + dif.Y * dif.Y + dif.Z * dif.Z));
+	float difSize = dif.getLength();
 	return (difSize < size);
 }
 
@@ -62,7 +62,7 @@ void Detect(bool pickedUp[])
 						}
 						if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 						{
-							size = 750;
+							size = 600;
 						}
 
 						if (Col(obj1, obj2, size))
@@ -76,6 +76,7 @@ void Detect(bool pickedUp[])
 									hasKey = true;
 									pickedUp[0] = true;
 									obj2->mesh->remove();
+									GameManager::gameObjects.erase(GameManager::gameObjects.begin() + j);
 									break;
 								case GameObject::CHEST:
 									pickedUp[1] = hasKey;
@@ -125,12 +126,17 @@ void Resolve(GameObject* obj1, GameObject* obj2)
 	float sizeVelocity = currentVelocity.getLength();
 	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
 	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+
+	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	direction.normalize();
 	if (obj1->tag == GameObject::PLAYER)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
+		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
+		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
+
 	} else
 	{
-		obj1->setPosition(obj1->getAbsolutePosition() - currentVelocity);
+		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
 		obj1->setVelocity(sizeVelocity * reflection.normalize());
 	}
 }

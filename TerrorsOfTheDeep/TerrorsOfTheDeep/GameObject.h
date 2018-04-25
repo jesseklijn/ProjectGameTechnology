@@ -1,11 +1,9 @@
 #pragma once
 #include "irrlicht.h"
-#pragma once
 #include "PhysicsObject.h"
-#pragma once
 #include "DynamicUpdater.h"
 
-class GameObject : public PhysicsObject, public DynamicUpdater
+class GameObject : public PhysicsObject
 {
 public:
 	// Constructor
@@ -39,6 +37,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual Tag GetTag();
+	virtual void setTag(GameObject::Tag tagPar);
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 
 private:

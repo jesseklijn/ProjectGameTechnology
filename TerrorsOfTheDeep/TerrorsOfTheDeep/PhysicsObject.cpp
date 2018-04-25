@@ -64,10 +64,7 @@ SMaterial& PhysicsObject::getMaterial(u32 i)
 
 void PhysicsObject::Update()
 {
-	if (id_ != 9000)
-	{
-		updatePosition();
-	}
+	if (tag != GameObject::GROUND && tag != GameObject::PLAYER) updatePosition();
 
 	if (mesh)
 	{
@@ -80,26 +77,47 @@ void PhysicsObject::updatePosition()
 {
 	position_ = getPosition();
 
-	if (position_.Y < -40 && velocity_.Y < 0)
-	{
-		velocity_.Y = 0;
-		acceleration_.Y = 0;
-	}
-
 	force_ += gravityForce() + dragForce() + buoyancyForce();
 	verlet();
+	resolveGround();
 
 	setPosition(position_);
-
+	
 	force_ = vector3df(0);
 	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
 }
 
-void PhysicsObject::turnToDirection(vector3df direction)
+void PhysicsObject::verlet()
 {
-	setRotation(direction.getHorizontalAngle());
-	if (mesh)
-		mesh->setRotation(direction.getHorizontalAngle());
+	float timeStep = GameManager::deltaTimeMS;
+
+	// VELOCITY VERLET
+	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
+	vector3df newAcceleration = force_ / mass;
+	vector3df avgAcceleration = (acceleration_ + newAcceleration) / 2;
+	velocity_ += avgAcceleration * timeStep;
+	acceleration_ = newAcceleration;
+}
+
+void PhysicsObject::resolveGround()
+{
+	float height;
+	switch (tag)
+	{
+	case GameObject::MONSTER:
+		height = 5000;
+		break;
+	case GameObject::CHEST:
+	case GameObject::KEY:
+		height = 0;
+		break;
+	default:
+		height = 50;
+		break;
+	}
+	if (position_.Y < -100 + height) {
+		position_.Y = getAbsolutePosition().Y;
+	}
 }
 
 vector3df PhysicsObject::dragForce()
@@ -110,7 +128,7 @@ vector3df PhysicsObject::dragForce()
 
 vector3df PhysicsObject::gravityForce()
 {
-	float gravity = (position_.Y < -85) ? 0 : gravityConstant * mass;
+	float gravity = gravityConstant * mass;
 	return vector3df(0, gravity, 0);
 }
 
@@ -121,20 +139,16 @@ vector3df PhysicsObject::buoyancyForce()
 	// since denisity of human is around 1, take mass for volume
 	// multiplied to balance with gravity
 	//float volume = mesh->getTransformedBoundingBox().getVolume();
-	float buoyancy = (position_.Y < -85) ? 0 : mass * buoyancyConstant;
+	float buoyancy = mass * buoyancyConstant;
 	return vector3df(0, buoyancy, 0);
 }
 
-void PhysicsObject::verlet()
-{
-	float timeStep = GameManager::deltaTimeMS;
 
-	// VELOCITY VERLET
-	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
-	vector3df new_acceleration = force_ / mass;
-	vector3df avg_acceleration = (acceleration_ + new_acceleration) / 2;
-	velocity_ += avg_acceleration * timeStep;
-	acceleration_ = new_acceleration;
+void PhysicsObject::turnToDirection(vector3df direction)
+{
+	setRotation(direction.getHorizontalAngle());
+	if (mesh)
+		mesh->setRotation(direction.getHorizontalAngle());
 }
 
 void PhysicsObject::addForce(vector3df force)

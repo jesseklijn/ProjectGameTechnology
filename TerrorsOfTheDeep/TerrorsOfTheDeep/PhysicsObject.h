@@ -1,6 +1,8 @@
 #pragma once
 #include <irrlicht.h>
-class PhysicsObject : public irr::scene::ISceneNode
+#include "DynamicUpdater.h"
+
+class PhysicsObject : public irr::scene::ISceneNode, public DynamicUpdater
 {
 	float density_;
 	irr::core::vector3df position_;
@@ -25,6 +27,7 @@ public:
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
 	irr::scene::ITriangleSelector* selector;
+	Tag tag = NONE;
 
 	// Functions
 	void render() override;

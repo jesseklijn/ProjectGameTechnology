@@ -1,33 +1,17 @@
 #pragma region Includes
-#pragma once
 #include <irrlicht.h>
-#pragma once
 #include "Lighting.h"
-#pragma once
 #include "HUD.h"
-#pragma once
 #include "Player.h"
-#pragma once
 #include "Camera.h"
-#pragma once
 #include "DetectCollision.h"
-#pragma once
 #include "Sound.h"
-#pragma once
 #include "GameManager.h"
-#pragma once
 #include "GameObject.h"
-#pragma once
 #include "Shark.h"
-#pragma once
 #include "Dolphin.h"
-#pragma once
 #include "Goldback.h"
-#pragma once
 #include "Bass.h"
-#pragma once
-#include <string>
-#pragma once
 
 #include "FlockingEntity.h"
 #pragma endregion
@@ -176,50 +160,52 @@ int main()
 		0, GameManager::smgr, -1112,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
-	rock->tag = GameObject::WORLD_OBJECT;
+	rock->setTag(GameObject::WORLD_OBJECT);
 	GameManager::gameObjects.push_back(rock);
 
 	GameObject* rock1 = new GameObject(new vector3df(-400, -40, -200), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 3,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
-	rock1->tag = GameObject::WORLD_OBJECT;
+	rock1->setTag(GameObject::WORLD_OBJECT);
 	GameManager::gameObjects.push_back(rock1);
 
 	GameObject* rock2 = new GameObject(new vector3df(-750, -40, -400), new vector3df(120, 120, 120), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1114,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
-	rock2->tag = GameObject::WORLD_OBJECT;
+	rock2->setTag(GameObject::WORLD_OBJECT);
 	GameManager::gameObjects.push_back(rock2);
 
 	GameObject* rock3 = new GameObject(new vector3df(-700, -50, 300), new vector3df(100, 100, 100), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1115,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
-	rock3->tag = GameObject::WORLD_OBJECT;
+	rock3->setTag(GameObject::WORLD_OBJECT);
 	GameManager::gameObjects.push_back(rock3);
 
 	GameObject* rock4 = new GameObject(new vector3df(-1000, -40, 205), new vector3df(150, 150, 150), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1116,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/RockTexture.jpg"), true, rockMass);
-	rock4->tag = GameObject::WORLD_OBJECT;
+	rock4->setTag(GameObject::WORLD_OBJECT);
 	GameManager::gameObjects.push_back(rock4);
 
 	GameObject* groundPlane = new GameObject(new vector3df(100, -100, 0), new vector3df(10000, 1, 10000), new vector3df(0, 0, 0),
-		0, GameManager::smgr, -1116,
+		0, GameManager::smgr, -1888,
 		GameManager::smgr->getMesh("../media/rock.obj"),
 		GameManager::driver->getTexture("../media/SandTexture.jpg"));
-	groundPlane->tag = GameObject::GROUND;
+	groundPlane->setTag(GameObject::GROUND);
 	GameManager::gameObjects.push_back(groundPlane);
+	//groundPlane->mesh->setDebugDataVisible(EDS_BBOX);
+
 
 	// Key collectible object
 	GameObject* key = new GameObject(new vector3df(-725, -70, 0), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
 		0, GameManager::smgr, 4,
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
-	key->tag = GameObject::KEY;
+	key->setTag(GameObject::KEY);
 	GameManager::gameObjects.push_back(key);
 	ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.2f, 0.5f, 1.f), key->getPosition(), 200.f, key->getRotation(), false, key);
 
@@ -229,7 +215,7 @@ int main()
 		GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 	chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-	chest->tag = GameObject::CHEST;
+	chest->setTag(GameObject::CHEST);
 	GameManager::gameObjects.push_back(chest);
 
 

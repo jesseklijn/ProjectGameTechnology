@@ -1,6 +1,4 @@
-#pragma once
 #include "GameObject.h" 
-#pragma once
 #include "GameManager.h" 
 
 // Constructor
@@ -49,6 +47,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 			mesh->setTriangleSelector(selector);
 			selector->drop();
 		}
+
 	}
 }
 
@@ -106,17 +105,6 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
-	// Add a vector of length speed in the given direction
-	//setPosition(getPosition() + (direction.normalize() * speed));
-	//if (mesh)
-	//	mesh->setPosition(getPosition());
-	//if (turnToDirection)
-	//{
-	//	setRotation(direction.getHorizontalAngle());
-	//	if (mesh)
-	//		mesh->setRotation(direction.getHorizontalAngle());
-	//}
-
 	PhysicsObject::addForce(0.001 * moveSpeed * direction.normalize());
 	if (turnToDirection)
 	{
@@ -127,4 +115,10 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 GameObject::Tag GameObject::GetTag()
 {
 	return tag;
+}
+
+void GameObject::setTag(GameObject::Tag tagPar)
+{
+	tag = tagPar;
+	PhysicsObject::tag = tag;
 }

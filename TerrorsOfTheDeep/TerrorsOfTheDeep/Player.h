@@ -1,6 +1,5 @@
 #pragma once
 #include <irrlicht.h>
-#pragma once
 #include "GameObject.h"
 
 #ifdef _MSC_VER

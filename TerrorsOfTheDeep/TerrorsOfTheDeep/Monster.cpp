@@ -11,7 +11,7 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	tag = GameObject::MONSTER;
+	GameObject::setTag(GameObject::MONSTER);
 
 	canAttack = true;
 	canFlee = false;
