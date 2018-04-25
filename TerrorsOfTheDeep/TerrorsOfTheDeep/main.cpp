@@ -12,6 +12,8 @@
 #pragma once
 #include "DetectCollision.h"
 #pragma once
+#include "OctTree.h"
+#pragma once
 #include "Sound.h"
 #pragma once
 #include "GameManager.h"
@@ -70,6 +72,7 @@ bool disableHud = false;
 int dolphinCount = 3;
 int goldbackCount = 50;
 int bassCount = 50;
+int rockCount = 0;
 #pragma endregion
 
 
@@ -86,6 +89,8 @@ int main()
 	GameManager gameManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
+	DetectCollision detectCollision;
+
 
 	// Set our skydome
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
@@ -142,11 +147,13 @@ int main()
 		GameManager::gameObjects.push_back(bassFish);
 	}
 
+
 	Shark* shark = new Shark(new vector3df(4000, 50, 0), new vector3df(50, 50, 50), new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
 		GameManager::smgr->getMesh("../media/shark.obj"),
 		GameManager::driver->getTexture("../media/Shark_Texture.jpg"), false);
 	shark->tag = GameObject::MONSTER;
+	shark->mesh->setDebugDataVisible(EDS_BBOX);
 	GameManager::gameObjects.push_back(shark);
 
 	// Player
@@ -216,6 +223,7 @@ int main()
 		GameManager::smgr->getMesh("../media/key.obj"),
 		GameManager::driver->getTexture("../media/RustTexture.jpg"));
 	key->tag = GameObject::KEY;
+	key->mesh->setDebugDataVisible(EDS_BBOX);
 	GameManager::gameObjects.push_back(key);
 	ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.2f, 0.5f, 1.f), key->getPosition(), 200.f, key->getRotation(), false, key);
 
@@ -226,6 +234,7 @@ int main()
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 	chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 	chest->tag = GameObject::CHEST;
+	chest->mesh->setDebugDataVisible(EDS_BBOX);
 	GameManager::gameObjects.push_back(chest);
 
 
@@ -247,18 +256,8 @@ int main()
 		//check the boundaries
 		camera.updatePos();
 
-		Detect(newPlayer,
-			chest->mesh,
-			key->mesh,
-			shark->mesh,
-			rock->mesh,
-			rock1->mesh,
-			rock2->mesh,
-			rock3->mesh,
-			rock4->mesh,
-			itemPickedUp,
-			GameManager::smgr);
-
+		detectCollision.Detect(itemPickedUp, GameManager::smgr);
+		
 		// We finished changing the scene
 		// Now draw the scene in our actual window
 		GameManager::smgr->drawAll();

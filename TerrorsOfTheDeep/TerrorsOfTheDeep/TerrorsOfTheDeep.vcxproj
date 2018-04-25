@@ -178,8 +178,8 @@
     <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="ExampleUnitTest.cpp" />
-	<ClCompile Include="Fish.cpp" />
-	<ClCompile Include="FlockingEntity.cpp" />
+    <ClCompile Include="Fish.cpp" />
+    <ClCompile Include="FlockingEntity.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Grid.cpp" />
@@ -187,6 +187,7 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="OctTree.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayingField.cpp" />
     <ClCompile Include="Shark.cpp" />
@@ -202,13 +203,14 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />
-	<ClInclude Include="Fish.h" />
-	<ClInclude Include="FlockingEntity.h" />
+    <ClInclude Include="Fish.h" />
+    <ClInclude Include="FlockingEntity.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="GridMesh.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="OctTree.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayingField.h" />
     <ClInclude Include="Shark.h" />

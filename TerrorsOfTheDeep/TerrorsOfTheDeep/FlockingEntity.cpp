@@ -58,7 +58,7 @@ void FlockingEntity::SpawnFish() {
 		fish->tag = GameObject::CREATURE;
 		
 		flockOfFishes.push_back(fish);
-		GameManager::gameObjects.push_back(fish);
+		//GameManager::gameObjects.push_back(fish);
 	}
 }
 
