@@ -88,7 +88,6 @@ public:
 	// Delta timing / Time
 	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, fixedTimeStep, time;
 	static const int WORLD_RADIUS_X, WORLD_RADIUS_Y, WORLD_RADIUS_Z;
-	static const int worldRadiusZ;
 	static bool keyPickedUp;
 	static bool escaped;
 	static bool hasDied;

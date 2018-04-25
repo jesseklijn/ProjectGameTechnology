@@ -19,16 +19,19 @@ public:
 
 	// Rendering function
 	virtual void Update();
-	virtual void render();
 	virtual void OnRegisterSceneNode();
 
 	// Variables
 	int xSizeGrid, ySizeGrid;
-	int maxHighMountainHeight = 600;
+	int maxHighMountainHeight = 1000; //defines the max mountain differences (landmark)
 	int highMountainConstantHeight = 400;
-	int maxRuinsDepth = 200;
-	int ruinsConstantDepth = 200;
-	int cellSize = 25;
+	int ruinsConstantDepthLevel1 = -50; //defines the 3 depth levels of the ruin part of grid (landmark)
+	int ruinsConstantDepthLevel2 = -100;
+	int ruinsConstantDepthLevel3 = -200;
+	int maxHeightNormalGround = 50;  //defines the max ground differences (no landmark)
+	int constantHeightNormalGround = 50;
+	int cellSize = 250;
+	irr::core::vector3df startpos;
 
 	// Functions
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
