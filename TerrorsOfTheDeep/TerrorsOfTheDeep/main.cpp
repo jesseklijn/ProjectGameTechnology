@@ -55,18 +55,18 @@ bool itemPickedUp[3] = { true, true, false };
 
 // Constants
 const int NO_PARENT = 0;
-const float KEYLIGHT_RADIUS = 50.f;
-const float CHESTLIGHT_RADIUS = 90.f;
+const float KEYLIGHT_RADIUS = 100.0f;
+const float CHESTLIGHT_RADIUS = 200.0f;
 
 // Light data
 
-irr::video::SColorf ambientColor = irr::video::SColorf(0.2f, 0.2f, 0.2f, 0.2f);
+irr::video::SColorf ambientColor = irr::video::SColor(255, 20, 20, 55);
 // Debug Lighting
 //irr::video::SColorf ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
-const float FLASHLIGHT_RANGE = 1500.f;
-vector3df chestLightOffset = vector3df(40,30,0);
+const float FLASHLIGHT_RANGE = 2500.f;
+vector3df chestLightOffset = vector3df(40, 30, 0);
 vector3df keyLightOffset = vector3df(0, 20, 0);
 
 
@@ -78,11 +78,11 @@ HUD* hud = new HUD;
 bool disableHud = false;
 
 // Scenery generation
-int critterCount = 300;
-int shipCount = 6;
-int rockCount = 60;
-int ruinsCount = 25;
-int coralCount = 75;
+int critterCount = 400;
+int shipCount = 4;
+int rockCount = 100;
+int ruinsCount = 8;
+int coralCount = 125;
 int plantCount = 25;
 int skullCount = 1;
 #pragma endregion

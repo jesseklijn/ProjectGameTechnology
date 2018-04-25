@@ -13,8 +13,8 @@ using namespace gui;
 // Constructor
 Camera::Camera(ISceneManager* smgr)
 {
-	const float MOVEMENT_SPEED = (float)0.25;
-	const float ROTATION_SPEED = (float)25;
+	const float MOVEMENT_SPEED = 0.275f;
+	const float ROTATION_SPEED = 90.0f;
 
 	// Keymapping for player controls
 	SKeyMap keyMap[4];

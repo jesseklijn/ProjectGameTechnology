@@ -68,7 +68,7 @@ ILightSceneNode* Lighting::CreateSpotLight(irr::video::SColorf color, irr::core:
 	irr::video::SLight lightData = light->getLightData();
 	lightData.Attenuation.X = 0.75f;
 	lightData.InnerCone = 20.f;
-	lightData.OuterCone = 60.f;
+	lightData.OuterCone = 75.f;
 	lightData.Falloff = 20.f;
 	lightData.SpecularColor = video::SColorf(0.0f, 0.0f, 0.0f, 0.f);
 	light->setLightData(lightData);
