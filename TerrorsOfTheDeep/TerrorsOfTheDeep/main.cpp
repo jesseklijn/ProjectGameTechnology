@@ -50,7 +50,8 @@ using namespace gui;
 int stamina = 0;
 
 // Check if the items are picked up
-bool itemPickedUp[3] = { false, false, false };
+// 0 = key, 1 = chest, 2 = death
+bool itemPickedUp[3] = { true, true, false };
 
 // Constants
 const int NO_PARENT = 0;
@@ -133,9 +134,9 @@ int main()
 	for (int critterIndex = 0; critterIndex < critterCount; critterIndex++)
 	{
 		int graphicsIndex = rand() % meshDirectories.size();
-		Critter* critter = new Critter(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
-			rand() % GameManager::worldRadiusY,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+		Critter* critter = new Critter(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
+			rand() % GameManager::WORLD_RADIUS_Y,
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1), 
 			new vector3df(0, 0, 0),
 			0, 
@@ -157,9 +158,9 @@ int main()
 	for (int shipIndex = 0; shipIndex < shipCount; shipIndex++)
 	{
 		int graphicsIndex = rand() % meshDirectories.size();
-		GameObject* ship = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* ship = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 			-100,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1),
 			new vector3df(rand() % 25, rand() % 10, rand() % 10),
 			0, 
@@ -182,9 +183,9 @@ int main()
 	for (int ruinsIndex = 0; ruinsIndex < ruinsCount; ruinsIndex++)
 	{
 		int typeIndex = rand() % meshDirectories.size();
-		GameObject* ruin = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* ruin = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 			-100,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
@@ -203,9 +204,9 @@ int main()
 	for (int coralIndex = 0; coralIndex < ruinsCount; coralIndex++)
 	{
 		int typeIndex = rand() % meshDirectories.size();
-		GameObject* coral = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* coral = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 			-100,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
@@ -223,9 +224,9 @@ int main()
 	for (int plantIndex = 0; plantIndex < plantCount; plantIndex++)
 	{
 		int typeIndex = rand() % meshDirectories.size();
-		GameObject* vines = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* vines = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 			-100,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
 			0, GameManager::smgr, -1111,
@@ -239,9 +240,9 @@ int main()
 	// Spawn rocks
 	for (int rockIndex = 0; rockIndex < rockCount; rockIndex++)
 	{
-		GameObject* rock = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+		GameObject* rock = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 			-100,
-			rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+			rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 			new vector3df(150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f),
 			new vector3df(rand() % 360, rand() % 360, rand() % 360),
 			0, GameManager::smgr, -1111,
@@ -253,9 +254,9 @@ int main()
 	}
 
 	// Spawn massive skull
-	GameObject* skull = new GameObject(new vector3df(rand() % (GameManager::worldRadiusX * 2) - GameManager::worldRadiusX,
+	GameObject* skull = new GameObject(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
 		-100,
-		rand() % (GameManager::worldRadiusZ * 2) - GameManager::worldRadiusZ),
+		rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
 		new vector3df(1, 1, 1),
 		new vector3df(0, 0, 0),
 		0, GameManager::smgr, -1111,
@@ -280,7 +281,7 @@ int main()
 		0, false);
 	GameManager::gameObjects.push_back(shark);
 
-	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100,-80, 100), new vector3df(5, 5, 5), new vector3df(0, 0, 0),
 		GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
 		GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 	flockOfFish->tag = GameObject::CREATURE;
@@ -358,7 +359,7 @@ int main()
 			stamina++;
 		}
 		if (!disableHud) {
-			hud->HudDraw(stamina, itemPickedUp, GameManager::driver, GameManager::guienv);
+			hud->HudDraw(stamina, GameManager::driver, GameManager::guienv);
 		}
 
 		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes

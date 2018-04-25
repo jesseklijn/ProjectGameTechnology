@@ -54,15 +54,18 @@ std::vector<GameObject*> GameManager::gameObjects;
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
 float GameManager::deltaTimeFixed = 0.0;
-float GameManager::deltaTimeFixedMS = 0.0;
+float GameManager::deltaTimeFixedMS = 0.0f;
 float GameManager::time = 0.0;
 float GameManager::fixedTimeStep = 60.0f;
 float GameManager::creatureStateRange = 2500.0f;
 
 // World dimensions
-const int GameManager::worldRadiusX = 8000.0f;
-const int GameManager::worldRadiusY = 3500.0f;
-const int GameManager::worldRadiusZ = 8000.0f;
+const int GameManager::WORLD_RADIUS_X = 8000.0f;
+const int GameManager::WORLD_RADIUS_Y = 3500.0f;
+const int GameManager::WORLD_RADIUS_Z = 8000.0f;
+bool GameManager::keyPickedUp = false;
+bool GameManager::escaped = false;
+bool GameManager::hasDied = false;
 
 #pragma endregion
 
@@ -192,7 +195,7 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			ray,
 			intersection,    // This will be the position of the collision
 			hitTriangle,    // This will be the triangle hit in the collision
-			GameManager::IDFlag_IsPickable,  // This ensures that only nodes that we have set up to be pickable are considered
+			GameManager::ID_FLAG_IS_PICKABLE,  // This ensures that only nodes that we have set up to be pickable are considered
 			0);          // Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
@@ -244,13 +247,13 @@ std::vector<GameObject*> GameManager::FindGameObjectsWithTags(std::vector<GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, double detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
 	for (GameObject* gameObj : GameManager::gameObjects)
 	{
-		if (gameObj != origin && gameObj->GetTag() == tag)
+		if (gameObj != origin && gameObj->GetTag() == name)
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance < closestDistance)
@@ -268,7 +271,7 @@ GameObject* GameManager::FindNearestGameObjectWithTag(GameObject* origin, GameOb
 
 /* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag list.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
@@ -292,13 +295,13 @@ GameObject* GameManager::FindNearestGameObjectWithTags(GameObject* origin, std::
 
 /* Finds the furthest GameObject, from another GameObject's position, that satisfies the given tag.
 Optionally a max detection range and a visibility check can be enabled for more specific searches. */
-GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag tag, double detectionRange, bool visibilityCheck)
+GameObject* GameManager::FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange, bool visibilityCheck)
 {
 	float furthestDistance = 0.0f, currentDistance;
 	GameObject* furthestObject = nullptr;
 	for (GameObject* gameObj : GameManager::gameObjects)
 	{
-		if (gameObj != origin && gameObj->GetTag() == tag)
+		if (gameObj != origin && gameObj->GetTag() == name)
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance > furthestDistance)

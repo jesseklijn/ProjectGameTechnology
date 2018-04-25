@@ -47,15 +47,15 @@ public:
 	{
 		/* Use this ISceneNode ID to indicate a scene node that is 
 		not pickable by getSceneNodeAndCollisionPointFromRay()*/ 
-		ID_IsNotPickable = 0,
+		ID_IS_NOT_PICKABLE = 0,
 
 		/* Use this flag in ISceneNode IDs to indicate that the 
 		scene node can be picked by ray selection.*/ 
-		IDFlag_IsPickable = 1 << 0,
+		ID_FLAG_IS_PICKABLE = 1 << 0,
 
 		/* Use this flag in ISceneNode IDs to indicate that the 
 		scene node can be highlighted.*/ 
-		IDFlag_IsHighlightable = 1 << 1
+		ID_FLAG_IS_HIGHLIGHTABLE = 1 << 1
 	};
 #pragma endregion
 
@@ -68,6 +68,7 @@ public:
 		DEMOSCENE,
 	};
 	GameState currentGamestate = DEMOSCENE;
+
 #pragma endregion
 
 	// Constructor and destructor
@@ -86,7 +87,11 @@ public:
 
 	// Delta timing / Time
 	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, fixedTimeStep, time;
-	static const int worldRadiusX, worldRadiusY, worldRadiusZ;
+	static const int WORLD_RADIUS_X, WORLD_RADIUS_Y, WORLD_RADIUS_Z;
+	static const int worldRadiusZ;
+	static bool keyPickedUp;
+	static bool escaped;
+	static bool hasDied;
 	static float creatureStateRange;
 
 	int GameSpeed = 1;
@@ -109,7 +114,7 @@ public:
 	static std::vector<GameObject*> FindGameObjectsWithTag(GameObject::Tag tag); 
 	static std::vector<GameObject*> FindGameObjectsWithTags(std::vector<GameObject::Tag> tagList);
 	static GameObject* FindNearestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange = INFINITY, bool visibilityCheck = false);
-	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange = INFINITY, bool visibilityCheck = false);
+	static GameObject* FindNearestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, float detectionRange = INFINITY, bool visibilityCheck = false);
 	static GameObject* FindFurthestGameObjectWithTag(GameObject* origin, GameObject::Tag name, double detectionRange = INFINITY, bool visibilityCheck = false);
 	static GameObject* FindFurthestGameObjectWithTags(GameObject* origin, std::vector<GameObject::Tag> tagList, double detectionRange = INFINITY, bool visibilityCheck = false);
 

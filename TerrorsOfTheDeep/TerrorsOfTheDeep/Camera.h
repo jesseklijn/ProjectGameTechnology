@@ -11,8 +11,8 @@
 class Camera
 {
 public:
-	Camera(irr::scene::ISceneManager* smgr);	
+	explicit Camera(irr::scene::ISceneManager* smgr);	
 	~Camera();
 
-	void updatePos();
+	static void updatePos();
 };

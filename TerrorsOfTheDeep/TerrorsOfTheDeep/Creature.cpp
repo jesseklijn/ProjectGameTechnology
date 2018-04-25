@@ -14,7 +14,7 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::CREATURE;
 
-	idlingRange = GameManager::Min(GameManager::worldRadiusX, GameManager::worldRadiusZ);
+	idlingRange = GameManager::Min(GameManager::WORLD_RADIUS_X, GameManager::WORLD_RADIUS_Z);
 	moveSpeed = idleSpeed;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
