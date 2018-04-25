@@ -61,7 +61,7 @@ float GameManager::creatureStateRange = 2500.0f;
 
 // World dimensions
 const int GameManager::worldRadiusX = 8000.0f;
-const int GameManager::worldRadiusY = 3500.0f;
+const int GameManager::worldRadiusY = 8000.0f;
 const int GameManager::worldRadiusZ = 8000.0f;
 
 #pragma endregion

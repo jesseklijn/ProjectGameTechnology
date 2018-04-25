@@ -16,7 +16,7 @@ GridMesh::GridMesh(
 	const irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) : GameObject(
-		startPosition, 
+		startPosition,  
 		startScale, 
 		startRotation,
 		parent,
@@ -25,6 +25,7 @@ GridMesh::GridMesh(
 		relatedMesh,
 		relatedTexture)
 {
+	startpos = *startPosition;
 	GenerateField();
 	GenerateMesh();
 }
@@ -35,8 +36,8 @@ GridMesh::~GridMesh()
 
 void GridMesh::GenerateField()
 {
-	AssignSize(50, 50, 0);
-	Generate();
+	// Assign the grid size for the vertices to be generated
+	AssignSize(GameManager::worldRadiusX / cellSize, GameManager::worldRadiusZ / cellSize, 0);
 }
 
 void GridMesh::OnRegisterSceneNode()
@@ -50,9 +51,11 @@ void GridMesh::OnRegisterSceneNode()
 
 void GridMesh::GenerateMesh()
 {
-	xSizeGrid = xWidth;
-	ySizeGrid = yHeight;
- 
+	xSizeGrid = xWidth * 2;
+	ySizeGrid = yHeight * 2;
+
+	//Components (buffers + meshes)
+	IMeshManipulator* meshManipulator = GameManager::smgr->getMeshManipulator();
 	SAnimatedMesh* meshGrid = new SAnimatedMesh();
 	SMesh* sMesh = new SMesh();
 	SMeshBuffer* buffer = new SMeshBuffer();
@@ -63,19 +66,21 @@ void GridMesh::GenerateMesh()
 	for (size_t y = 0; y <= ySizeGrid; y++)
 	{
 		for (size_t x = 0; x <= xSizeGrid; x++)
-		{			
-			if ((float)xSizeGrid/1.3f < x && (float)ySizeGrid/1.3f < y) {
+		{	
+			// Use a part of the grid to create a landmark
+			if ((float)xSizeGrid/1.7f < x && (float)ySizeGrid/1.7f < y) {
 				// Random landmark (high mountains)
-				if ((float)xSizeGrid / 1.1f < x && (float)ySizeGrid / 1.1f < y) 
+				if ((float)xSizeGrid / 1.3f < x && (float)ySizeGrid / 1.3f < y) 
 				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight + maxHighMountainHeight, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight + maxHighMountainHeight, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
-				else if ((float)xSizeGrid / 1.2f < x && (float)ySizeGrid / 1.2f < y)
+				else if ((float)xSizeGrid / 1.5f < x && (float)ySizeGrid / 1.5f < y)
 				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight / 2 + maxHighMountainHeight / 2, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, (rand() % highMountainConstantHeight + maxHighMountainHeight) / 2, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
-				else {
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+				else 
+				{
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
 			}
 			else if ((float)xSizeGrid / 2 > x && (float)ySizeGrid / 2 > y && (float)xSizeGrid / 6 < x && (float)ySizeGrid / 6 < y ) 
@@ -83,20 +88,20 @@ void GridMesh::GenerateMesh()
 				// Random landmark (ruins)
 				if ((float)xSizeGrid / 3 > x && (float)ySizeGrid / 3 > y && (float)xSizeGrid / 3.5 < x && (float)ySizeGrid / 3.5 < y)
 				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, -200, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel3, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
 				else if ((float)xSizeGrid / 2.5f > x && (float)ySizeGrid / 2.5f > y && (float)xSizeGrid / 4.5f < x && (float)ySizeGrid / 4.5f < y)
 				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, -100, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel2, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
 				else {
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, -50, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel1, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
 			}
 			else 
 			{
 				// Default ground
-				buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % 50, y * cellSize, 0, 0, 0, irr::video::SColor(255, 255, 255, 255), x, y));
+				buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % maxHeightNormalGround + constantHeightNormalGround, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 			}
 		}
 	}
@@ -113,27 +118,26 @@ void GridMesh::GenerateMesh()
 			buffer->Indices.push_back(xSizeGrid + ri + j + 2 + i);
 		};
 	}
+	meshManipulator->recalculateNormals(sMesh);
 
-	// Creates the bounding box of the mesh
-	Box.reset(buffer->Vertices[0].Pos);
-	for (s32 i = 1; i < buffer->Vertices.size(); ++i)
-	{
-		Box.addInternalPoint(buffer->Vertices[i].Pos);
-	}
+	// Recalculate the bounding box of the mesh
+	buffer->recalculateBoundingBox();
 
+	// Convert the SMesh into a SAnimatedMesh 
 	meshGrid->addMesh(sMesh);
-	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
-	mesh->setPosition(getAbsolutePosition());	
 
+	// Adds the SAnimatedMesh to the mesh of gameObject
+	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
+	mesh->setPosition(startpos);
+
+	// Set the material flags
 	IVideoDriver* driver = SceneManager->getVideoDriver();
-	//Material.setTexture(0, driver->getTexture("../media/SandTexture.jpg"));
 	mesh->setAutomaticCulling(EAC_OFF);
 	mesh->setMaterialFlag(EMF_BACK_FACE_CULLING, false);
 	mesh->setMaterialFlag(EMF_LIGHTING, true);
 	mesh->setMaterialFlag(EMF_NORMALIZE_NORMALS, true);
+	mesh->setMaterialFlag(EMF_FOG_ENABLE,true);
 	mesh->setMaterialTexture(0, driver->getTexture("../media/SandTexture.jpg"));
-	//mesh->setPosition();
-
 	return;
 }
 
@@ -158,11 +162,4 @@ void GridMesh::Update()
 	GameObject::Update();
 
 	//UpdatePos();
-}
-
-void GridMesh::render()
-{
-
-	IVideoDriver* driver = SceneManager->getVideoDriver();
-	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 }
