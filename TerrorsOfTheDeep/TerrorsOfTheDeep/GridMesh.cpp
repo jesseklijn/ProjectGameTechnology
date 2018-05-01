@@ -33,7 +33,8 @@ GridMesh::GridMesh(
 GridMesh::~GridMesh()
 {
 }
-
+/* Generate the x size and y size of the grid depending on the worldRadius (defined in the GameManager class) so it will be always fit the level boundaries
+*/
 void GridMesh::GenerateField()
 {
 	// Assign the grid size for the vertices to be generated
@@ -48,13 +49,16 @@ void GridMesh::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
-
+/* The grid generation makes use of a seed which makes it possible to get different vertices every time the playing mesh gets generated.
+The output is an IAnimatedMesh which is the mesh component for the GameObject class.
+*/
+//NOTE: still needs to be refactored!
 void GridMesh::GenerateMesh()
 {
-	xSizeGrid = xWidth * 2;
-	ySizeGrid = yHeight * 2;
+	xSizeGrid = xWidth * 2 + gridOffset;
+	ySizeGrid = yHeight * 2 + gridOffset;
 
-	//Components (buffers + meshes)
+	// Components (buffers + meshes)
 	IMeshManipulator* meshManipulator = GameManager::smgr->getMeshManipulator();
 	SAnimatedMesh* meshGrid = new SAnimatedMesh();
 	SMesh* sMesh = new SMesh();
@@ -83,6 +87,7 @@ void GridMesh::GenerateMesh()
 					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
 				}
 			}
+			// Use a part of the grid to create a landmark
 			else if ((float)xSizeGrid / 2 > x && (float)ySizeGrid / 2 > y && (float)xSizeGrid / 6 < x && (float)ySizeGrid / 6 < y ) 
 			{
 				// Random landmark (ruins)

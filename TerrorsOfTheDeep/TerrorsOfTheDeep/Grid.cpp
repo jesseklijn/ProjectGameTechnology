@@ -43,23 +43,4 @@ bool Grid::Generate()
 		}
 
 	}
-
-	//Iterate to assign positions to tiles of the grid
-
-	//Assign to the x position of the tiles
-//	for (size_t x = 0; x < xWidth; x++)
-//	{
-//		//For y 
-//		for (size_t y = 0; y < yHeight; y++)
-//		{
-//			
-//				
-//			
-//			}
-//		}
-//	}
-//
-//	//If everything has been assigned with success 
-//	return true;
-//
 }

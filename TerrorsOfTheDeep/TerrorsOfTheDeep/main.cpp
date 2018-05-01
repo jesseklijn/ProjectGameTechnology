@@ -173,7 +173,7 @@ int main()
 	GameManager::gameObjects.push_back(flockOfFish);
 
 	// Make a playingField (mesh out of grid)
-	GameObject* playingField = new GridMesh(new vector3df(-GameManager::worldRadiusX, -200, -GameManager::worldRadiusZ), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+	GameObject* playingField = new GridMesh(new vector3df(-GameManager::worldRadiusX - ((GridMesh::gridOffset * GridMesh::cellSize)/2), -200, -GameManager::worldRadiusZ - ((GridMesh::gridOffset * GridMesh::cellSize) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 		GameManager::smgr->getRootSceneNode(), GameManager::smgr,-100, 0,0);
 	
 	// Spawn random objects on grid;
