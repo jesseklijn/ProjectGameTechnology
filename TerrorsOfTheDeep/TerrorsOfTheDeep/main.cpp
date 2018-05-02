@@ -153,10 +153,10 @@ int main()
 
 	// Spawn world objects
 
-	IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
+	//IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
 	// Player
 	Player* player = new Player(new vector3df(0, -0.8, 3), new vector3df(4, 4, 4), new vector3df(180, 0, 180),
-		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, playerMesh,
+		GameManager::smgr->getActiveCamera(), GameManager::smgr, 9000, 0,
 		GameManager::driver->getTexture("../media/armsText"));
 	GameManager::gameObjects.push_back(player);
 

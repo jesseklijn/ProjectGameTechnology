@@ -14,7 +14,7 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::CREATURE;
 
-	buoyancyConstant = 9.79;
+	//buoyancyConstant = 9.79;
 
 	idlingRange = GameManager::Min(GameManager::WORLD_RADIUS_X, GameManager::WORLD_RADIUS_Z);
 	moveSpeed = idleSpeed;

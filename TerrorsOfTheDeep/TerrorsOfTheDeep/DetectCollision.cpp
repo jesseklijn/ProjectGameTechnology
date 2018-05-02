@@ -122,23 +122,25 @@ void Detect(bool pickedUp[])
 
 void Resolve(GameObject* obj1, GameObject* obj2)
 {
-	vector3df currentVelocity = obj1->getVelocity();
-	float sizeVelocity = currentVelocity.getLength();
-	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+	// PhysicsObject collision resolution
+	//vector3df currentVelocity = obj1->getVelocity();
+	//float sizeVelocity = currentVelocity.getLength();
+	//vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	//vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
 
-	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	direction.normalize();
-	if (obj1->tag == GameObject::PLAYER)
-	{
-		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
-		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
+	//vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	//direction.normalize();
+	//if (obj1->tag == GameObject::PLAYER)
+	//{
+	//	//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
+	//	GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
 
-	} else
-	{
-		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
-		obj1->setVelocity(sizeVelocity * reflection.normalize());
-	}
+	//} else
+	//{
+	//	obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
+	//	obj1->setVelocity(sizeVelocity * reflection.normalize());
+	//}
+	std::cout << "boop occurred between " << obj1 << " and " << obj2;
 }
 
 float Dot(vector3df vector1, vector3df vector2)
