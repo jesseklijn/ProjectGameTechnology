@@ -45,7 +45,7 @@ public:
 	const float FLASHLIGHT_RANGE = 1500.f;
 
 	// Light data
-	irr::video::SColorf ambientColor = irr::video::SColorf(0.2f, 0.2f, 0.2f, 0.2f);
+	irr::video::SColorf ambientColor = irr::video::SColor(255, 30, 30, 50);
 	//irr::video::SColorf ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 	irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 	irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);	

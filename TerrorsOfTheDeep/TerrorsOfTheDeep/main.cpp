@@ -79,8 +79,8 @@ int main()
 		// Delta time end point, calculate time passed for the next frame
 		auto frameTimeEnd = std::chrono::system_clock::now();
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
-		GameManager::deltaTime = elapsed_seconds.count();
-		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f;
+		GameManager::deltaTime = elapsed_seconds.count() * GameManager::gameSpeed;
+		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f * GameManager::gameSpeed;
 		GameManager::time += elapsed_seconds.count();
 	}
 	// Game end, drop our Irrlicht device

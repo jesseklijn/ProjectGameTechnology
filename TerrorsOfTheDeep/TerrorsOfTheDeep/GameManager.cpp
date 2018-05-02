@@ -70,6 +70,8 @@ int GameManager::ruinsCount = 25;
 int GameManager::coralCount = 75;
 int GameManager::plantCount = 25;
 int GameManager::skullCount = 1;
+
+float GameManager::gameSpeed = 1.0f;
 #pragma endregion
 
 // Constructor
@@ -118,8 +120,8 @@ void GameManager::Update()
 void GameManager::FixedUpdate()
 {
 	fixedTime = 0.0f;
-	GameManager::deltaTimeFixed = 1.0f / GameManager::fixedTimeStep + fixedCorrection;
-	GameManager::deltaTimeFixedMS = GameManager::deltaTimeFixed * 1000.0f;
+	GameManager::deltaTimeFixed = (1.0f / GameManager::fixedTimeStep + fixedCorrection) * GameManager::gameSpeed;
+	GameManager::deltaTimeFixedMS = GameManager::deltaTimeFixed * 1000.0f * GameManager::gameSpeed;
 
 	// Runs the FixedUpdate() for all GameObjects in GameManager::gameObjects.
 	for (int i = 0; i < GameManager::gameObjects.size(); i++)
@@ -157,20 +159,6 @@ irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::ve
 	return vector3df(value.X + (blend * (value2.X - value.X)),
 		value.Y + (blend * (value2.Y - value.Y)),
 		value.Z + (blend * (value2.Z - value.Z)));
-}
-
-// Switch to the given GameState.
-// TODO: Functionality!
-void GameManager::GameStateTransition(GameState StateToLoad)
-{
-
-}
-
-// Cleans up the given state.
-// TODO: Functionality!
-void GameManager::UnloadGameState(GameState StateToCleanUp)
-{
-
 }
 
 /* Cast a Raycast line between the given start and end positions and return the ISceneNode that was hit.

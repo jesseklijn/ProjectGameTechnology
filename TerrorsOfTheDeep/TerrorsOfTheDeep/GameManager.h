@@ -24,7 +24,7 @@ class GameManager
 {
 public:
 
-#pragma region Core Irrlicht Components
+	#pragma region Core Irrlicht Components
 	// Define Irrlicht device
 	static irr::IrrlichtDevice* device;
 
@@ -34,9 +34,9 @@ public:
 	static irr::gui::IGUIEnvironment* guienv;
 	static irr::scene::ISceneCollisionManager* collMan;
 	static irr::gui::IGUIFont* font;
-#pragma endregion
+	#pragma endregion
 
-#pragma region Raycasting
+	#pragma region Raycasting
 	// Define enums for raycast selections. 
 	// These flags will determine how something is selected 
 	enum
@@ -53,19 +53,7 @@ public:
 		scene node can be highlighted.*/ 
 		ID_FLAG_IS_HIGHLIGHTABLE = 1 << 1
 	};
-#pragma endregion
-
-#pragma region Game state
-	enum GameState {
-		MAINMENU,
-		LEVELSELECTOR,
-		CREDITS,
-		SETTINGS,
-		DEMOSCENE,
-	};
-	GameState currentGamestate = DEMOSCENE;
-
-#pragma endregion
+	#pragma endregion
 
 	GameManager();
 	~GameManager();
@@ -83,6 +71,7 @@ public:
 	static bool escaped;
 	static bool hasDied;
 	static float creatureStateRange;
+	static float gameSpeed;
 
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;
@@ -93,9 +82,6 @@ public:
 	void Update();
 	void FixedUpdate();
 	void Draw();
-
-	void GameStateTransition(GameState StateToLoad);
-	void UnloadGameState(GameState StateToCleanUp);
 
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
 

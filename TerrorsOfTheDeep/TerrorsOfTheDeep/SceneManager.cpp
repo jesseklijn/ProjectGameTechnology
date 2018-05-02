@@ -19,6 +19,9 @@ void SceneManager::Update()
 {
 	if (camera)
 		camera->updatePos();
+
+	if (GameManager::eventManager.IsKeyDown(KEY_ESCAPE)) 
+		SceneManager::PauseScene(!sceneIsPaused);
 }
 
 /* Updates every frame.
@@ -394,8 +397,10 @@ void SceneManager::PauseScene(bool mode)
 	if (mode == sceneIsPaused)
 		return;
 
-	// TODO: Pause game (add gameSpeed multiplier and add to delta timers!)
-	// GameManager::gameSpeed = mode ? 0.0f : 1.0f;
+	// Pause / unpause game
+	GameManager::gameSpeed = mode ? 0.0f : 1.0f;
+	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);
+	sceneIsPaused = mode;
 }
 
 /* Triggers whenever a scene switch happens.*/
