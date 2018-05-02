@@ -14,6 +14,8 @@
 #pragma once
 #include "DetectCollision.h"
 #pragma once
+#include "OctTree.h"
+#pragma once
 #include "Sound.h"
 #pragma once
 #include "GameManager.h"
@@ -101,6 +103,8 @@ int main()
 	GameManager gameManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep - Vertical Slice");
 	GameManager::device->getCursorControl()->setVisible(false);
+	DetectCollision detectCollision;
+
 
 	// Set our skydome
 	ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);

@@ -202,6 +202,9 @@
     <ClInclude Include="Monster.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
+    <ClInclude Include="OctTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Shark.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
