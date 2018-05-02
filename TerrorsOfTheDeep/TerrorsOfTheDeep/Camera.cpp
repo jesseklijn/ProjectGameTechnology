@@ -46,6 +46,9 @@ Camera::~Camera()
 //check boundaries
 void Camera::updatePos()
 {
+	if (!GameManager::smgr->getActiveCamera())
+		return;
+
 	if (GameManager::smgr->getActiveCamera()->getPosition().X > GameManager::WORLD_RADIUS_X)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::WORLD_RADIUS_X - 1, GameManager::smgr->getActiveCamera()->getPosition().Y,

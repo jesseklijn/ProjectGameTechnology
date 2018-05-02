@@ -1,6 +1,5 @@
 #pragma once
 #include "Creature.h"
-#pragma once
 #include "GameManager.h"
 
 

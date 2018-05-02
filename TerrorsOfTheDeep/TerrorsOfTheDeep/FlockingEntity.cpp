@@ -1,6 +1,5 @@
 #pragma once
 #include "FlockingEntity.h"
-#pragma once
 #include "GameManager.h"
 
 
@@ -73,7 +72,7 @@ void FlockingEntity::SpawnFish() {
 	for (size_t i = 0; i < amountOfFish; i++)
 	{
 		Fish* fish = new Fish(new vector3df(distrXPosition(eng), distrYPosition(eng), distrZPosition(eng)), new vector3df(1 + distrXScale(eng), 1 + distrYScale(eng), 1 + distrZScale(eng)), new vector3df(0, 0, 0),
-			this, GameManager::smgr, -500 + i, GameManager::smgr->getMesh("../media/Fish.obj"),
+			0, GameManager::smgr, -500 + i, GameManager::smgr->getMesh("../media/Fish.obj"),
 			GameManager::driver->getTexture("../media/RockTexture.jpg"));
 		fish->tag = GameObject::CREATURE;
 		fish->movementSpeed = 5;

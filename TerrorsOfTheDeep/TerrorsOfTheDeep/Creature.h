@@ -1,8 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#pragma once
 #include "Player.h"
-#pragma once
 #include <vector>
 
 // Defines a non-player creature-like being

@@ -111,9 +111,6 @@
     <ClCompile Include="DynamicUpdater.cpp">
       <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ExampleUnitTest.cpp">
-      <Filter>Source Files\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="Critter.cpp">
       <Filter>Source Files\Game Objects\Creatures\Critters</Filter>
     </ClCompile>
@@ -141,12 +138,17 @@
     <ClCompile Include="UnitTests.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="PhysicsObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files\Controllers\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
-
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
@@ -162,8 +164,6 @@
     <ClInclude Include="DynamicUpdater.h">
       <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
-
-
     <ClInclude Include="EventManager.h">
       <Filter>Header Files\Controllers\Managers</Filter>
     </ClInclude>
@@ -182,7 +182,6 @@
     <ClInclude Include="GridMesh.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
-
     <ClInclude Include="Lighting.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
@@ -201,15 +200,18 @@
     <ClInclude Include="Sound.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
-
     <ClInclude Include="Monster.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
     <ClInclude Include="Shark.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
-
-
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files\Controllers\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TerrorsOfTheDeep.rc">

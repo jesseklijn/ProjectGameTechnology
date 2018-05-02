@@ -22,7 +22,6 @@ public:
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
 	irr::scene::ITriangleSelector* selector;
-	Tag tag = NONE;
 
 	bool canMove = true;
 	float moveSpeed = 0.25f;

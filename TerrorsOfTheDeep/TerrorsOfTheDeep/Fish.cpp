@@ -1,6 +1,5 @@
 #pragma once
 #include "Fish.h"
-#pragma once
 #include "GameManager.h"
 
 

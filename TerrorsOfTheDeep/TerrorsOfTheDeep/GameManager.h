@@ -1,13 +1,9 @@
 #pragma region Includes
 #pragma once
 #include <vector>
-#pragma once
 #include "GameObject.h"
-#pragma once
 #include "EventManager.h"
-#pragma once
 #include <iostream>
-#pragma once
 #include "irrlicht.h"
 #pragma endregion
 
@@ -21,9 +17,9 @@ using namespace gui;
 #pragma endregion
 
 
-// Class responsible for managing the overall game.
-// Makes use of state tracking and switching.
-// Runs Update() and Draw() calls for every GameObject.
+/* Class responsible for managing the overall game.
+Makes use of state tracking and switching.
+Runs Update() and Draw() calls for every GameObject. */
 class GameManager
 {
 public:
@@ -71,19 +67,14 @@ public:
 
 #pragma endregion
 
-	// Constructor and destructor
 	GameManager();
 	~GameManager();
-
-	// Variables
 
 	// Event receiver
 	static EventManager eventManager;
 
-	// A list of all GameObjects or children of GameObjects in the scene
+	// A list of all GameObjects or derived classes of GameObject in the scene
 	static std::vector<GameObject*> gameObjects;
-
-
 
 	// Delta timing / Time
 	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, fixedTimeStep, time;
@@ -93,8 +84,8 @@ public:
 	static bool hasDied;
 	static float creatureStateRange;
 
-	int GameSpeed = 1;
-	bool GamePaused = false;		
+	// Scenery generation
+	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;
 
 	// Functions
 	void Awake();

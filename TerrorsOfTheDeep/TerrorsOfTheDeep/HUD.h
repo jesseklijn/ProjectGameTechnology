@@ -25,5 +25,5 @@ public:
 	float hudItemCoordinateY = 60;
 
 	// Functions
-	void HudDraw(int stamina, IVideoDriver* driver, IGUIEnvironment* guienv);
+	void HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv);
 };

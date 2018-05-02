@@ -21,8 +21,10 @@ public:
 		WORLD_OBJECT,
 		KEY,
 		CHEST,
-		GROUND
+		GROUND,
+		MANAGER
 	};
+	Tag tag = NONE;
 
 	/* Pure virtual functions
 

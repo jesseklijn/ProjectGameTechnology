@@ -175,6 +175,7 @@
     <ClCompile Include="DynamicUpdater.cpp" />
     <ClCompile Include="DetectCollision.cpp" />
     <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="UnitTests.cpp" />
     <ClCompile Include="Fish.cpp" />
     <ClCompile Include="FlockingEntity.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayingField.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shark.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Tile.h" />

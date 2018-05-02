@@ -1,6 +1,5 @@
 #pragma once
 #include "Monster.h"
-#pragma once
 #include "GameManager.h"
 
 // Constructor
