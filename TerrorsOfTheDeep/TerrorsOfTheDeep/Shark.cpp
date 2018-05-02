@@ -1,6 +1,5 @@
 #pragma once
 #include "Shark.h"
-#pragma once
 #include "GameManager.h"
 
 // Constructor

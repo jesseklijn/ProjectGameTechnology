@@ -13,7 +13,7 @@ HUD::~HUD()
 }
 
 //draws the HUD in the scene
-void HUD::HudDraw(int stamina, IVideoDriver* driver, IGUIEnvironment* guienv)
+void HUD::HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv)
 {
 	const irr::core::dimension2du& screenSize = driver->getScreenSize();
 	//array for hud strings
@@ -24,9 +24,7 @@ void HUD::HudDraw(int stamina, IVideoDriver* driver, IGUIEnvironment* guienv)
 	auto fps = driver->getFPS();
 	stringw str = L"HUD - Test [";
 	str += driver->getName();
-	str += "] Stamina = ";
-	str += stamina;
-	str += " frames = ";
+	str += "] frames = ";
 	str += fps;
 
 	stringw str2 = "this is string 2";

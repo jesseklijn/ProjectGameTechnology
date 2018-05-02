@@ -1,6 +1,5 @@
 #pragma once
 #include "Monster.h"
-#pragma once
 #include "GameManager.h"
 
 // Constructor
@@ -11,16 +10,15 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	tag = GameObject::MONSTER;
+	GameObject::setTag(GameObject::MONSTER);
 
 	canAttack = true;
 	canFlee = false;
 
-	rotationLerp = 0.00002;
-	idleSpeed = 300.0f;
+	rotationLerp = 0.0001;
+	idleSpeed = 35.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
-	attackRange = chaseSpeed;
 
 	targetTags.push_back(GameObject::PLAYER);
 	targetTags.push_back(GameObject::CREATURE);
@@ -56,7 +54,7 @@ GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck
 
 /* Returns a target based on this monster's tags. Optionally a player detection override, detection range and visibility check can
 be enabled for more specific searches. Returns a nullptr if no target was found with the given specifications. */
-GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOverride, double detectionRange, bool visibilityCheck)
+GameObject* Monster::GetTarget(Monster::TargetPriority priorityMode, bool playerDetectOverride, double detectionRange, bool visibilityCheck)
 {
 	// If the player should override all other detection
 	if (playerDetectOverride)

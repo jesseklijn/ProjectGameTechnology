@@ -14,7 +14,7 @@ using namespace gui;
 Camera::Camera(ISceneManager* smgr)
 {
 	const float MOVEMENT_SPEED = (float)0.25;
-	const float ROTATION_SPEED = (float)25;
+	const float ROTATION_SPEED = (float)100;
 
 	// Keymapping for player controls
 	SKeyMap keyMap[4];
@@ -33,7 +33,8 @@ Camera::Camera(ISceneManager* smgr)
 
 	// Add a camera in the scene
 	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
-	camera->setFarValue(8000.0f);
+	camera->setNearValue(0.05);
+	camera->setFarValue(5000.0f);
 }
 
 // Destructor
@@ -45,6 +46,9 @@ Camera::~Camera()
 //check boundaries
 void Camera::updatePos()
 {
+	if (!GameManager::smgr->getActiveCamera())
+		return;
+
 	if (GameManager::smgr->getActiveCamera()->getPosition().X > GameManager::WORLD_RADIUS_X)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::WORLD_RADIUS_X - 1, GameManager::smgr->getActiveCamera()->getPosition().Y,

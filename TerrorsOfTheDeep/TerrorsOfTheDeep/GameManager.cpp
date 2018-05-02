@@ -1,21 +1,16 @@
 #pragma once
 #include "GameManager.h"
-#pragma once
 #include <utility>
-#pragma once
 #include <algorithm>
-#pragma once
 #include "Camera.h"
-#pragma once
 #include "Monster.h"
-#pragma once
 #include "GridMesh.h"
 #include "EventManager.h"
 
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 
@@ -67,6 +62,14 @@ bool GameManager::keyPickedUp = false;
 bool GameManager::escaped = false;
 bool GameManager::hasDied = false;
 
+// World generation
+int GameManager::critterCount = 300;
+int GameManager::shipCount = 6;
+int GameManager::rockCount = 60;
+int GameManager::ruinsCount = 25;
+int GameManager::coralCount = 75;
+int GameManager::plantCount = 25;
+int GameManager::skullCount = 1;
 #pragma endregion
 
 // Constructor
@@ -75,7 +78,6 @@ GameManager::GameManager()
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
 	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0005f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
-
 	
 	Awake();
 }

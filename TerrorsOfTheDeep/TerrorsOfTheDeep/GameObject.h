@@ -1,27 +1,33 @@
 #pragma once
 #include "irrlicht.h"
-#pragma once
+#include "PhysicsObject.h"
 #include "DynamicUpdater.h"
 
-class GameObject : public irr::scene::ISceneNode, public DynamicUpdater
+class GameObject : public irr::scene::ISceneNode, public DynamicUpdater //public PhysicsObject
 {
 public:
 	// Constructor
 	GameObject(const irr::core::vector3df* startPosition,
+		const irr::core::vector3df* startScale,
+		const irr::core::vector3df* startRotation,
+		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
+	/* PhysicsObject version
+	 *GameObject(const irr::core::vector3df* startPosition,
 				const irr::core::vector3df* startScale,
 				const irr::core::vector3df* startRotation, 
 				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-				irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
+				irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, 
+				bool detectCollision = true, float mass = 1);*/
 
 	// Destructor
-	~GameObject();
+	virtual ~GameObject();
 
 	// Variables
 	irr::scene::IAnimatedMeshSceneNode* mesh;
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;
 	irr::scene::ITriangleSelector* selector;
-	Tag tag = NONE;
 
 	bool canMove = true;
 	float moveSpeed = 0.25f;
@@ -37,6 +43,7 @@ public:
 	virtual void FixedUpdate();
 	virtual void Draw();
 	virtual Tag GetTag();
+	virtual void setTag(GameObject::Tag tagPar);
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 
 private:

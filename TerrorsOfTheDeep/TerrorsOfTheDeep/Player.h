@@ -1,6 +1,5 @@
 #pragma once
 #include <irrlicht.h>
-#pragma once
 #include "GameObject.h"
 
 #ifdef _MSC_VER
@@ -17,13 +16,13 @@ public:
 		const irr::core::vector3df* startRotation,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0);
-	~Player();
+	virtual ~Player();
 
 	// Variables
 	irr::IrrlichtDevice* irrDevice;
 	irr::scene::ISceneManager* smgr;
 	irr::core::aabbox3d<irr::f32> Box;
-	irr::video::S3DVertex Vertices[8];
+	irr::video::S3DVertex vertices[8];
 	irr::video::SMaterial Material;
 	irr::u32 then;
 	irr::core::vector3df latestPos;

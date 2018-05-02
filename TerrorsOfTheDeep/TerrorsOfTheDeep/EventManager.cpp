@@ -1,4 +1,3 @@
-#pragma once
 #include "EventManager.h"
 
 #pragma region Namespaces

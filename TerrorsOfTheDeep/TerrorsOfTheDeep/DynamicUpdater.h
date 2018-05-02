@@ -20,8 +20,11 @@ public:
 		CREATURE,
 		WORLD_OBJECT,
 		KEY,
-		CHEST
+		CHEST,
+		GROUND,
+		MANAGER
 	};
+	Tag tag = NONE;
 
 	/* Pure virtual functions
 

@@ -1,10 +1,7 @@
 #pragma once
 #include "GameObject.h"
-#pragma once
 #include "Player.h"
-#pragma once
 #include "Creature.h"
-#pragma once
 #include <vector>
 
 // Defines a creature monster, as in a boss enemy.

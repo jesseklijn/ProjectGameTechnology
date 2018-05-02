@@ -1,6 +1,5 @@
 #pragma once
 #include "Creature.h"
-#pragma once
 #include "GameManager.h"
 
 
@@ -13,6 +12,8 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
 	tag = GameObject::CREATURE;
+
+	//buoyancyConstant = 9.79;
 
 	idlingRange = GameManager::Min(GameManager::WORLD_RADIUS_X, GameManager::WORLD_RADIUS_Z);
 	moveSpeed = idleSpeed;
