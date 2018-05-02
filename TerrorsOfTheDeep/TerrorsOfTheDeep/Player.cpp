@@ -55,7 +55,7 @@ void Player::Update()
 	UpdatePos();
 
 	vector3df currentPos = getAbsolutePosition();
-	setVelocity(currentPos - latestPos);
+	SetVelocity(currentPos - latestPos);
 	latestPos = currentPos;
 }
 

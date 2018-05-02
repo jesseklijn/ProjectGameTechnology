@@ -121,10 +121,10 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
-	PhysicsObject::addForce(0.001 * moveSpeed * direction.normalize());
+	PhysicsObject::AddForce(0.001 * moveSpeed * direction.normalize());
 	if (turnToDirection)
 	{
-		PhysicsObject::turnToDirection(direction);
+		PhysicsObject::TurnToDirection(direction);
 	}
 }
 

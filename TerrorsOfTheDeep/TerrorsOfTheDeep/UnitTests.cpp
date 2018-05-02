@@ -19,3 +19,9 @@ float CalculateDistance(irr::core::vector3df A, irr::core::vector3df B)
 	return sqrt(lengthRoot);
 
 }
+
+float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2)
+{
+	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+}
+

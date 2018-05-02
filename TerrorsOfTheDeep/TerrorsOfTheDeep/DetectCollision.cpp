@@ -120,9 +120,12 @@ void Detect(bool pickedUp[])
 	}
 }
 
+/**
+ * Resolves collision between a moving object 1 and a static object 2 by moving object 1 away
+ */
 void Resolve(GameObject* obj1, GameObject* obj2)
 {
-	vector3df currentVelocity = obj1->getVelocity();
+	vector3df currentVelocity = obj1->GetVelocity();
 	float sizeVelocity = currentVelocity.getLength();
 	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
 	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
@@ -137,7 +140,7 @@ void Resolve(GameObject* obj1, GameObject* obj2)
 	} else
 	{
 		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
-		obj1->setVelocity(sizeVelocity * reflection.normalize());
+		obj1->SetVelocity(sizeVelocity * reflection.normalize());
 	}
 }
 
