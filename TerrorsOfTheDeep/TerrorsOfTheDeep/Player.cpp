@@ -20,7 +20,7 @@ Player::Player(const irr::core::vector3df* startPosition,
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
 	GameObject::setTag(GameObject::PLAYER);
-	buoyancyConstant = 9.79;
+	//buoyancyConstant = 9.79;
 
 	irrDevice = GameManager::device;
 	smgr = mgr;
@@ -54,9 +54,9 @@ void Player::Update()
 
 	UpdatePos();
 
-	vector3df currentPos = getAbsolutePosition();
-	setVelocity(currentPos - latestPos);
-	latestPos = currentPos;
+	//vector3df currentPos = getAbsolutePosition();
+	//setVelocity(currentPos - latestPos);
+	//latestPos = currentPos;
 }
 
 void Player::render()

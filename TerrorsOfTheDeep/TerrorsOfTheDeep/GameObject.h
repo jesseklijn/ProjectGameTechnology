@@ -3,16 +3,22 @@
 #include "PhysicsObject.h"
 #include "DynamicUpdater.h"
 
-class GameObject : public PhysicsObject
+class GameObject : public irr::scene::ISceneNode, public DynamicUpdater //public PhysicsObject
 {
 public:
 	// Constructor
 	GameObject(const irr::core::vector3df* startPosition,
+		const irr::core::vector3df* startScale,
+		const irr::core::vector3df* startRotation,
+		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
+	/* PhysicsObject version
+	 *GameObject(const irr::core::vector3df* startPosition,
 				const irr::core::vector3df* startScale,
 				const irr::core::vector3df* startRotation, 
 				irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 				irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, 
-				bool detectCollision = true, float mass = 1);
+				bool detectCollision = true, float mass = 1);*/
 
 	// Destructor
 	virtual ~GameObject();
