@@ -109,20 +109,20 @@ u32 GridMesh::getMaterialCount() const
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
 void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vector3df scale,
                                            vector3df rotation,
-                                           irr::s32 id, std::vector<irr::io::path> meshDirectories,std::vector<irr::io::path> textureDirectories, IMeshBuffer* playingFieldMesh)
+                                           irr::s32 id, std::vector<irr::io::path> meshDirectories,std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer)
 {
 	// Amount of tries before it skips the current object and go to the next object
 	int currentTimeOutTries = 0;
 	int TimeOutTries = 10;
 
 	// Spawn random objects on grid;
-	IMeshBuffer* planeBuffer = playingFieldMesh;
+	IMeshBuffer* buffer = meshBuffer;
 
 	// Get the vertices of the playingField 
-	S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
+	S3DVertex* mb_vertices = (S3DVertex*)buffer->getVertices();
 
 	// Amount of objects to be spawn on the grid
-	int verticesGrid = planeBuffer->getVertexCount();
+	int verticesGrid = buffer->getVertexCount();
 
 	// Tracks what vertices has an object spawned on them 
 	vector<bool> spawnTracker(verticesGrid);
@@ -132,7 +132,7 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 		while (true) {
 			currentTimeOutTries++;
 			// Generate a random number for the selection of a vertice so an object can get spawned on it
-			int randomizer = rand() % planeBuffer->getVertexCount();
+			int randomizer = rand() % buffer->getVertexCount();
 			// Checks if the vertice is free (no object has been drawn on the vertex)
 			if (!spawnTracker[randomizer])
 			{
@@ -157,7 +157,7 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 				// Checks if the function needs to time out due to the failed attempts of the object placements
 			} else if (currentTimeOutTries == TimeOutTries)
 			{
-				return;
+				break;
 			}
 		}
 	}
