@@ -20,27 +20,5 @@ void Grid::AssignSize(int xSize, int ySize, int zSize)
 
 bool Grid::Generate()
 {
-	if (xWidth == NULL || zLength == NULL) {
-		//If dimensions have not been declared, return false
-		return false;
-	}
-
-	//Initialize the size of the tiles
-	grid.resize(xWidth);
-	for (size_t x = 0; x < grid.size(); x++)
-	{
-		grid[x].resize(yHeight);
-		for (size_t y = 0; y < grid[x].size(); y++)
-		{
-			grid[x][y].resize(zLength);
-			//For the z positions of the tiles
-			for (size_t z = 0; z < zLength; z++)
-			{
-				grid[x][y][z].xPos = x;
-				grid[x][y][z].yPos = y;
-				grid[x][y][z].zPos = z;
-			}
-		}
-
-	}
+	return false;
 }
