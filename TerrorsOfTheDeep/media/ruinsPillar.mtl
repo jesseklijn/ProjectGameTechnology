@@ -11,3 +11,4 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd Ruins\RuinPillar_01\3td_ConcreteRough_01.jpg
+map_Bump -bm 3.026316 Ruins\\RuinPillar_01\\3td_ConcreteRough_01.jpg
