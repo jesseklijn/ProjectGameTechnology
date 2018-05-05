@@ -44,6 +44,7 @@ triangle3df hitTriangle;
 
 #pragma region Variables
 std::vector<GameObject*> GameManager::gameObjects;
+std::vector<InterfaceObject*> GameManager::interfaceObjects;
 
 // Timing
 float GameManager::deltaTime = 0.0;
@@ -52,7 +53,10 @@ float GameManager::deltaTimeFixed = 0.0;
 float GameManager::deltaTimeFixedMS = 0.0f;
 float GameManager::time = 0.0;
 float GameManager::fixedTimeStep = 60.0f;
+
 float GameManager::creatureStateRange = 2500.0f;
+
+const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
 // World dimensions
 const int GameManager::WORLD_RADIUS_X = 8000.0f;
@@ -106,10 +110,15 @@ void GameManager::Update()
 {
 	fixedTime += GameManager::deltaTime;
 
-	// Runs the Update() for all GameObjects in GameManager::gameObjects.
-	for (int i = 0; i < GameManager::gameObjects.size(); i++)
-		GameManager::gameObjects[i]->Update();
+	/* Runs the Update() for all objects in GameManager.
+	Used for basic updates per frame. */
+	for (GameObject* gameObject : GameManager::gameObjects)
+		gameObject->Update();
+	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
+		interfaceObject->Update();
 		
+	/* Runs the FixedUpdate() for all objects in GameManager.
+	Used for fixed updates at specific timestep intervals, ideally for physics updates. */
 	if (fixedTime >= 1.0f / GameManager::fixedTimeStep)
 	{
 		fixedCorrection = (fixedTime - 1.0f / GameManager::fixedTimeStep);
@@ -117,6 +126,7 @@ void GameManager::Update()
 	}
 }
 
+/* Runs similar to Update();, but after a predetermined timestep. */
 void GameManager::FixedUpdate()
 {
 	fixedTime = 0.0f;
@@ -128,10 +138,19 @@ void GameManager::FixedUpdate()
 		GameManager::gameObjects[i]->FixedUpdate();
 }
 
-// Runs the Draw() for all GameObjects in GameManager::gameObjects.
 void GameManager::Draw()
 {
+	/* Runs the Draw() for all objects in GameManager.
+	Should always run after any UpdateX(); functions. */
+	for (GameObject* gameObject : GameManager::gameObjects)
+		gameObject->Draw();
+	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
+		interfaceObject->Draw();
 
+	/* Runs the DrawGUI() for all interface objects in GameManager.
+	Should always run last, so it draws over everything else. */
+	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
+		interfaceObject->DrawGUI();
 }
 
 float GameManager::Min(float value, float value2)
@@ -174,12 +193,6 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 	ray.start = startPosition;
 	ray.end = endPosition;
 
-	// This call is all you need to perform ray/triangle collision on every scene node
-	// that has a triangle selector, including the Quake level mesh.  It finds the nearest
-	// collision point/triangle, and returns the scene node containing that point.
-	// Irrlicht provides other types of selection, including ray/triangle selector,
-	// ray/box and ellipse/triangle selector, plus associated helpers.
-	// See the methods of ISceneCollisionManager
 	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,

@@ -170,6 +170,8 @@
   <ItemGroup>
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Critter.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="InterfaceObject.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicUpdater.cpp" />
@@ -196,6 +198,8 @@
   <ItemGroup>
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Critter.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="InterfaceObject.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />

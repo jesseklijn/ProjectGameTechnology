@@ -15,17 +15,7 @@ PlayingField::~PlayingField()
 
 bool PlayingField::Generate()
 {
-	//Generate grid
-	if (Grid::Generate() == true)
-	{
-		//Grid has been generated with success
-		return true;
-	}
-	else 
-	{
-		//Grid has not been generated
-		return false;
-	};
+	return Grid::Generate();
 }
 
 void PlayingField::AssignSize(int xSize, int ySize, int zSize)

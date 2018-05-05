@@ -22,7 +22,9 @@ public:
 		KEY,
 		CHEST,
 		GROUND,
-		MANAGER
+
+		MANAGER,
+		INTERFACE_ELEMENT
 	};
 	Tag tag = NONE;
 
@@ -40,6 +42,7 @@ public:
 	to do this.*/
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
+	virtual void DrawGUI() = 0;
 	virtual Tag GetTag() = 0;
 };
 

@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "GameManager.h"
 #include "GameObject.h"
+#include "Menu.h"
 #include "Critter.h"
 #include "Shark.h"
 #include <string>
@@ -62,6 +63,7 @@ public:
 	// Functions
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawGUI() {};
 	virtual Tag GetTag();
 
 	bool LoadScene(SceneType sceneToLoad);

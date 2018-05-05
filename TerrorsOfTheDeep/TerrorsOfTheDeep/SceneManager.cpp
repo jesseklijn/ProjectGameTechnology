@@ -401,6 +401,35 @@ void SceneManager::PauseScene(bool mode)
 	GameManager::gameSpeed = mode ? 0.0f : 1.0f;
 	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);
 	sceneIsPaused = mode;
+
+	// Toggle pause menu
+	if (sceneIsPaused)
+	{
+		Menu* pauseMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+		pauseMenu->elementWidth = 300.0f;
+		pauseMenu->elementHeight = 500.0f;
+		pauseMenu->windowTitle = "Pause Menu";
+		pauseMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - pauseMenu->elementWidth / 2.0f,
+			GameManager::screenDimensions.Height / 2.0f - pauseMenu->elementHeight / 2.0f, 0.0f));
+		GameManager::interfaceObjects.push_back(pauseMenu);
+	}
+	else
+	{
+		// Remove the pause menu from the interface list and delete it
+		for (int iIndex = 0; iIndex < GameManager::interfaceObjects.size(); iIndex++)
+		{
+			Menu* menu = dynamic_cast<Menu*>(GameManager::interfaceObjects[iIndex]);
+			if (menu)
+			{
+				if (menu->menuType == Menu::PAUSE_MENU)
+				{
+					GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + iIndex);
+					delete menu;
+				}
+			}
+		}
+	}
 }
 
 /* Triggers whenever a scene switch happens.*/

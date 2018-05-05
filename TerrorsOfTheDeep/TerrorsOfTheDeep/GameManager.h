@@ -2,6 +2,7 @@
 #pragma once
 #include <vector>
 #include "GameObject.h"
+#include "InterfaceObject.h"
 #include "EventManager.h"
 #include <iostream>
 #include "irrlicht.h"
@@ -61,12 +62,16 @@ public:
 	// Event receiver
 	static EventManager eventManager;
 
-	// A list of all GameObjects or derived classes of GameObject in the scene
+	// A list of all X or derived classes of X in the scene
 	static std::vector<GameObject*> gameObjects;
+	static std::vector<InterfaceObject*> interfaceObjects;
 
 	// Delta timing / Time
 	static float deltaTime, deltaTimeMS, deltaTimeFixed, deltaTimeFixedMS, fixedTimeStep, time;
 	static const int WORLD_RADIUS_X, WORLD_RADIUS_Y, WORLD_RADIUS_Z;
+
+	static const irr::core::dimension2du& screenDimensions;
+
 	static bool keyPickedUp;
 	static bool escaped;
 	static bool hasDied;

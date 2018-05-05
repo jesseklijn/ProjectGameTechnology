@@ -61,6 +61,30 @@
     <Filter Include="Header Files\Game Objects\Creatures\Critters">
       <UniqueIdentifier>{8ce28ca9-18cd-4d98-80ef-e8d44d5b2cd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Controllers\Grid">
+      <UniqueIdentifier>{fdcdaef7-ab06-488d-97b8-6b19a91d9a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers\Misc">
+      <UniqueIdentifier>{373b2b58-c117-472d-a316-c7a68b66980a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers\Grid">
+      <UniqueIdentifier>{34c4430e-26af-4495-84db-7c9b6cbb36f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controllers\Misc">
+      <UniqueIdentifier>{d69acfa2-532a-4264-b48d-07a2c3192771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface Objects">
+      <UniqueIdentifier>{e8bd3a5d-5507-40e1-9ce2-1241236e5013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interface Objects">
+      <UniqueIdentifier>{3a540037-a44f-4857-adf9-ea47d53efea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interface Objects\Menus">
+      <UniqueIdentifier>{0dea8c95-5aaf-4c91-b42e-e2d62256d623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface Objects\Menus">
+      <UniqueIdentifier>{ff5cf556-cbbc-4d3e-b3b2-987c342ff0cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,30 +101,6 @@
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files\Controllers\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="DetectCollision.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="GridMesh.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Lighting.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayingField.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound.cpp">
-      <Filter>Source Files\Controllers</Filter>
     </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files\Misc</Filter>
@@ -138,19 +138,46 @@
     <ClCompile Include="UnitTests.cpp">
       <Filter>Source Files\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Source Files\Controllers\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Source Files\Controllers\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="GridMesh.cpp">
+      <Filter>Source Files\Controllers\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayingField.cpp">
+      <Filter>Source Files\Controllers\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectCollision.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsObject.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceObject.cpp">
+      <Filter>Source Files\Interface Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Interface Objects\Menus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Creature.h">
       <Filter>Header Files\Game Objects\Creatures</Filter>
@@ -158,38 +185,14 @@
     <ClInclude Include="Critter.h">
       <Filter>Header Files\Game Objects\Creatures\Critters</Filter>
     </ClInclude>
-    <ClInclude Include="DetectCollision.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="DynamicUpdater.h">
       <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>Header Files\Controllers\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Fish.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlockingEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>Header Files\Controllers\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="GridMesh.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="Lighting.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayingField.h">
-      <Filter>Header Files\Controllers</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Game Objects\Players</Filter>
@@ -197,20 +200,53 @@
     <ClInclude Include="Tile.h">
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>Header Files\Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="Monster.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
     <ClInclude Include="Shark.h">
       <Filter>Header Files\Game Objects\Creatures\Monsters</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Header Files\Controllers\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Controllers\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="GridMesh.h">
+      <Filter>Header Files\Controllers\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayingField.h">
+      <Filter>Header Files\Controllers\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectCollision.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Fish.h">
+      <Filter>Header Files\Game Objects\Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="FlockingEntity.h">
+      <Filter>Header Files\Game Objects\Creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsObject.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceObject.h">
+      <Filter>Header Files\Interface Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Interface Objects\Menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
