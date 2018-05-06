@@ -20,8 +20,8 @@
 EventManager GameManager::eventManager;
 
 irr::IrrlichtDevice* GameManager::device =
-createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1920, 1080), 64,
-	false, true, false, &eventManager);
+	createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1920, 1080), 64,
+		false, true, false, &eventManager);
 
 // Initialize Irrlicht components
 irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDriver();
@@ -109,6 +109,7 @@ void GameManager::Start()
 void GameManager::Update()
 {
 	fixedTime += GameManager::deltaTime;
+	eventManager.Update();
 
 	/* Runs the Update() for all objects in GameManager.
 	Used for basic updates per frame. */

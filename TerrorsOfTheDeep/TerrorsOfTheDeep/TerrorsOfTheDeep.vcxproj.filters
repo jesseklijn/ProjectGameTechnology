@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Controllers">
       <UniqueIdentifier>{1f8d7ba5-df37-4625-bfdd-c06c6b042ac8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Controllers\Managers">
-      <UniqueIdentifier>{3ba028f2-20da-4d42-8582-7f5c6823cb37}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Game Objects\Players">
       <UniqueIdentifier>{ed20ac32-d6a7-4299-a136-21504866c590}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,9 @@
     </Filter>
     <Filter Include="Header Files\Interface Objects\Menus">
       <UniqueIdentifier>{ff5cf556-cbbc-4d3e-b3b2-987c342ff0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controllers\Managers">
+      <UniqueIdentifier>{3ba028f2-20da-4d42-8582-7f5c6823cb37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

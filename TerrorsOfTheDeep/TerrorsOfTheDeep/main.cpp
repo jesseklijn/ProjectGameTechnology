@@ -40,11 +40,11 @@ int main()
 	the same random numbers on every run */
 	srand(static_cast<unsigned>(time(0)));
 
-	// Create a GameManager, set window caption and hide our mouse
-	SceneManager sceneManager;
+	// Create managers
 	GameManager gameManager;
-	GameManager::device->setWindowCaption(L"Terrors of the Deep");
+	SceneManager sceneManager;
 
+	GameManager::device->setWindowCaption(L"Terrors of the Deep");
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////
@@ -62,7 +62,7 @@ int main()
 
 		// Draw the world
 		GameManager::smgr->drawAll();
-		GameManager::guienv->clear();		
+		GameManager::guienv->clear();	
 		sceneManager.Draw();	
 		gameManager.Draw();
 		GameManager::guienv->drawAll();

@@ -20,7 +20,7 @@ void SceneManager::Update()
 	if (camera)
 		camera->updatePos();
 
-	if (GameManager::eventManager.IsKeyDown(KEY_ESCAPE)) 
+	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL) 
 		SceneManager::PauseScene(!sceneIsPaused);
 }
 
