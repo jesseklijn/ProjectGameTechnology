@@ -1,9 +1,9 @@
 #pragma once
 #include "GameObject.h"
-#include "PlayingField.h"
+#include "Grid.h"
 
 class GridMesh :
-	public GameObject, public PlayingField
+	public GameObject, public Grid
 {
 public:
 	GridMesh(const irr::core::vector3df* startPosition,
@@ -15,27 +15,35 @@ public:
 
 	void GenerateField();
 	void GenerateMesh();
-	irr::core::aabbox3d<irr::f32> Box;
+	irr::core::aabbox3d<irr::f32> box;
 
 	// Rendering function
-	virtual void Update();
-	virtual void OnRegisterSceneNode();
+	void OnRegisterSceneNode();
 
 	// Variables
+	static const int GRID_OFFSET = 20; //grid part that ísn't accessible by the player (field beyond level boundaries)
+	static const int CELL_SIZE = 250; //Define the size of 1 cell (1 unit)
 	int xSizeGrid, ySizeGrid;
 	int maxHighMountainHeight = 1000; //defines the max mountain differences (landmark)
 	int highMountainConstantHeight = 400;
-	int ruinsConstantDepthLevel1 = -50; //defines the 3 depth levels of the ruin part of grid (landmark)
-	int ruinsConstantDepthLevel2 = -100;
-	int ruinsConstantDepthLevel3 = -200;
-	int maxHeightNormalGround = 50;  //defines the max ground differences (no landmark)
+	int ruinsConstantDepthLevel1 = -100; //defines the 3 depth levels of the ruin part of grid (landmark)
+	int ruinsConstantDepthLevel2 = -300;
+	int ruinsConstantDepthLevel3 = -500;
+	int maxHeightNormalGround = 100;  //defines the max ground differences (no landmark)
 	int constantHeightNormalGround = 50;
-	int cellSize = 250;
-	irr::core::vector3df startpos;
+	irr::core::vector3df startPos;
 
-	// Functions
+	// Functions 
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
 	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
-	virtual irr::u32 getMaterialCount() const;	
+	virtual irr::u32 getMaterialCount() const;
+	static void RandomObjectPlacementOnVertex(int amount, irr::core::vector3df position, irr::core::vector3df scale,
+	                                        irr::core::vector3df rotation, irr::s32 id,
+	                                        std::vector<irr::io::path> meshDirectories,
+	                                        std::vector<irr::io::path> textureDirectories, irr::scene::IMeshBuffer* playingFieldMesh);
+
+private:
+	irr::core::array<irr::video::S3DVertex> DrawVertices(int xSizeGrid, int ySizeGrid);
+	irr::core::array<unsigned short> DrawTriangles(int xSizeGrid, int ySizeGrid);
 };
 

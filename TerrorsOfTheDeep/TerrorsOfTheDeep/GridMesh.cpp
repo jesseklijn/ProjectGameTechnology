@@ -25,19 +25,23 @@ GridMesh::GridMesh(
 		relatedMesh,
 		relatedTexture)
 {
-	startpos = *startPosition;
+	startPos = *startPosition;
 	GenerateField();
-	GenerateMesh();
 }
 
 GridMesh::~GridMesh()
 {
 }
 
+/* Generate the x size and y size of the grid depending on the worldRadius (defined in the GameManager class) and the cell size so it will be always fit within the level boundaries
+*/
 void GridMesh::GenerateField()
 {
 	// Assign the grid size for the vertices to be generated
-	AssignSize(GameManager::WORLD_RADIUS_X / cellSize, GameManager::WORLD_RADIUS_Z / cellSize, 0);
+	AssignSize(GameManager::WORLD_RADIUS_X / CELL_SIZE, GameManager::WORLD_RADIUS_Z / CELL_SIZE, 0);
+
+	// Generates the vertices and triangles for the playing field mesh
+	GenerateMesh();
 }
 
 void GridMesh::OnRegisterSceneNode()
@@ -48,13 +52,16 @@ void GridMesh::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
-
+/* The grid generation makes use of a seed which makes it possible to get different vertices every time the playing mesh gets generated.
+The output (not from the function) is an IAnimatedMeshSceneNode which is the mesh component for the GameObject class. This mesh will be added to the GameObject of the playing field.
+*/
+//NOTE: still needs to be refactored!
 void GridMesh::GenerateMesh()
 {
-	xSizeGrid = xWidth * 2;
-	ySizeGrid = yHeight * 2;
+	xSizeGrid = xWidth * 2 + GRID_OFFSET;
+	ySizeGrid = yHeight * 2 + GRID_OFFSET;
 
-	//Components (buffers + meshes)
+	// Components (buffers + meshes)
 	IMeshManipulator* meshManipulator = GameManager::smgr->getMeshManipulator();
 	SAnimatedMesh* meshGrid = new SAnimatedMesh();
 	SMesh* sMesh = new SMesh();
@@ -63,61 +70,9 @@ void GridMesh::GenerateMesh()
 	sMesh->addMeshBuffer(buffer);
 	buffer->drop();
 
-	for (size_t y = 0; y <= ySizeGrid; y++)
-	{
-		for (size_t x = 0; x <= xSizeGrid; x++)
-		{	
-			// Use a part of the grid to create a landmark
-			if ((float)xSizeGrid/1.7f < x && (float)ySizeGrid/1.7f < y) {
-				// Random landmark (high mountains)
-				if ((float)xSizeGrid / 1.3f < x && (float)ySizeGrid / 1.3f < y) 
-				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight + maxHighMountainHeight, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else if ((float)xSizeGrid / 1.5f < x && (float)ySizeGrid / 1.5f < y)
-				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, (rand() % highMountainConstantHeight + maxHighMountainHeight) / 2, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else 
-				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-			}
-			else if ((float)xSizeGrid / 2 > x && (float)ySizeGrid / 2 > y && (float)xSizeGrid / 6 < x && (float)ySizeGrid / 6 < y ) 
-			{
-				// Random landmark (ruins)
-				if ((float)xSizeGrid / 3 > x && (float)ySizeGrid / 3 > y && (float)xSizeGrid / 3.5 < x && (float)ySizeGrid / 3.5 < y)
-				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel3, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else if ((float)xSizeGrid / 2.5f > x && (float)ySizeGrid / 2.5f > y && (float)xSizeGrid / 4.5f < x && (float)ySizeGrid / 4.5f < y)
-				{
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel2, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else {
-					buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, ruinsConstantDepthLevel1, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-			}
-			else 
-			{
-				// Default ground
-				buffer->Vertices.push_back(irr::video::S3DVertex(x * cellSize, rand() % maxHeightNormalGround + constantHeightNormalGround, y * cellSize, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-			}
-		}
-	}
-	// Create triangles for the mesh
-	for (int i = 0, ri = 0; i < ySizeGrid; i++, ri += xSizeGrid) {
+	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid);
+	buffer->Indices = DrawTriangles(xSizeGrid, ySizeGrid);
 
-		for (int j = 0; j < xSizeGrid; j++) {
-			buffer->Indices.push_back(j + ri + i);
-			buffer->Indices.push_back(xSizeGrid + ri + j + 1 + i);
-			buffer->Indices.push_back(j + ri + 1 + i);
-
-			buffer->Indices.push_back(j + ri + 1 + i);
-			buffer->Indices.push_back(xSizeGrid + ri + j + 1 + i);
-			buffer->Indices.push_back(xSizeGrid + ri + j + 2 + i);
-		};
-	}
 	meshManipulator->recalculateNormals(sMesh);
 
 	// Recalculate the bounding box of the mesh
@@ -128,7 +83,7 @@ void GridMesh::GenerateMesh()
 
 	// Adds the SAnimatedMesh to the mesh of gameObject
 	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
-	mesh->setPosition(startpos);
+	mesh->setPosition(startPos);
 
 	// Set the material flags
 	IVideoDriver* driver = SceneManager->getVideoDriver();
@@ -143,7 +98,7 @@ void GridMesh::GenerateMesh()
 
 const aabbox3d<f32>&  GridMesh::getBoundingBox() const
 {
-	return Box;
+	return box;
 }
 
 u32 GridMesh::getMaterialCount() const
@@ -151,15 +106,138 @@ u32 GridMesh::getMaterialCount() const
 	return 1;
 }
 
+// Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
+void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vector3df scale,
+                                           vector3df rotation,
+                                           irr::s32 id, std::vector<irr::io::path> meshDirectories,std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer)
+{
+	// Amount of tries before it skips the current object and go to the next object
+	int currentTimeOutTries = 0;
+	int TimeOutTries = 10;
+
+	// Spawn random objects on grid;
+	IMeshBuffer* buffer = meshBuffer;
+
+	// Get the vertices of the playingField 
+	S3DVertex* mb_vertices = (S3DVertex*)buffer->getVertices();
+
+	// Amount of objects to be spawn on the grid
+	int verticesGrid = buffer->getVertexCount();
+
+	// Tracks what vertices has an object spawned on them 
+	vector<bool> spawnTracker(verticesGrid);
+
+	for (int i = 0; i < amount; i++)
+	{
+		while (true) {
+			currentTimeOutTries++;
+			// Generate a random number for the selection of a vertice so an object can get spawned on it
+			int randomizer = rand() % buffer->getVertexCount();
+			// Checks if the vertice is free (no object has been drawn on the vertex)
+			if (!spawnTracker[randomizer])
+			{
+				int typeIndex = rand() % meshDirectories.size();
+				GameObject* object = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + position.X, mb_vertices[randomizer].Pos.Y + position.Y,
+					mb_vertices[randomizer].Pos.Z + position.Z),
+					new vector3df(scale.X, scale.Y, scale.Z),
+					new vector3df(rotation.X, rotation.Y, rotation.Z),
+					0, GameManager::smgr, id,
+					GameManager::smgr->getMesh(meshDirectories[typeIndex]),
+					0);
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < object->mesh->getMaterialCount(); mIndex++)
+				{
+					object->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+				// Checks if the object can use a texture if there's any in the vector
+				!textureDirectories[typeIndex].empty() ? GameManager::driver->getTexture(textureDirectories[typeIndex]) : 0;
+				GameManager::gameObjects.push_back(object);
+				spawnTracker[randomizer] = true;
+				break;
+				// Checks if the function needs to time out due to the failed attempts of the object placements
+			} else if (currentTimeOutTries == TimeOutTries)
+			{
+				break;
+			}
+		}
+	}
+	return;
+}
+
+core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid)
+{
+	SMeshBuffer* bufferMesh = new SMeshBuffer();
+
+	for (size_t y = 0; y <= ySizeGrid; y++)
+	{
+		for (size_t x = 0; x <= xSizeGrid; x++)
+		{
+			// Use a part of the grid to create a landmark
+			if ((float)xSizeGrid / 1.7f < x && (float)ySizeGrid / 1.7f < y) {
+				// Random landmark (high mountains)
+				if ((float)xSizeGrid / 1.3f < x && (float)ySizeGrid / 1.3f < y)
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % highMountainConstantHeight + maxHighMountainHeight, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+				else if ((float)xSizeGrid / 1.5f < x && (float)ySizeGrid / 1.5f < y)
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, (rand() % highMountainConstantHeight + maxHighMountainHeight) / 2, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+				else
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+			}
+			// Use a part of the grid to create a landmark
+			else if ((float)xSizeGrid / 2 > x && (float)ySizeGrid / 2 > y && (float)xSizeGrid / 6 < x && (float)ySizeGrid / 6 < y)
+			{
+				// Random landmark (ruins)
+				if ((float)xSizeGrid / 3 > x && (float)ySizeGrid / 3 > y && (float)xSizeGrid / 3.5 < x && (float)ySizeGrid / 3.5 < y)
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel3, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+				else if ((float)xSizeGrid / 2.5f > x && (float)ySizeGrid / 2.5f > y && (float)xSizeGrid / 4.5f < x && (float)ySizeGrid / 4.5f < y)
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel2, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+				else 
+				{
+					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel1, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				}
+			}
+			else
+			{
+				// Default ground
+				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % maxHeightNormalGround + constantHeightNormalGround, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+			}
+		}
+	}
+	return bufferMesh->Vertices;
+}
+
+core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
+{
+	SMeshBuffer* bufferMesh = new SMeshBuffer();
+
+	// Create triangles for the mesh
+	for (int i = 0, ri = 0; i < ySizeGrid; i++, ri += xSizeGrid) 
+	{
+		for (int j = 0; j < xSizeGrid; j++) 
+		{
+			bufferMesh->Indices.push_back(j + ri + i);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 1 + i);
+			bufferMesh->Indices.push_back(j + ri + 1 + i);
+
+			bufferMesh->Indices.push_back(j + ri + 1 + i);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 1 + i);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 2 + i);
+		};
+	}
+
+	return bufferMesh->Indices;
+}
+
 SMaterial& GridMesh::getMaterial(u32 i)
 {
 	return Material;
-}
-
-void GridMesh::Update()
-{
-	// Inherit base class Update
-	GameObject::Update();
-
-	//UpdatePos();
 }

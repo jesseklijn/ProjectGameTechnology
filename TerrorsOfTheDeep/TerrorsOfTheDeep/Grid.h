@@ -10,7 +10,7 @@ class Grid
 public:
 	// Constructor and destructor
 	Grid();
-	~Grid();
+	virtual ~Grid();
 	int xWidth, yHeight, zLength;
 	vector<vector<vector<Tile>>> grid;
 	virtual void AssignSize(int xSize, int ySize, int zSize);

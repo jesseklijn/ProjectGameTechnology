@@ -186,7 +186,6 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayingField.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shark.cpp" />
     <ClCompile Include="Sound.cpp" />

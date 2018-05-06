@@ -96,9 +96,6 @@
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="PlayingField.cpp">
-      <Filter>Source Files\Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
