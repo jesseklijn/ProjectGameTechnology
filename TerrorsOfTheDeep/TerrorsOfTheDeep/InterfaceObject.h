@@ -14,6 +14,9 @@ public:
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id);
 	~InterfaceObject();
 
+
+	InterfaceObject* creator = nullptr;
+
 	int elementSpacing = 8;
 	float elementWidth = 100.0f;
 	float elementHeight = 100.0f;
@@ -23,12 +26,10 @@ public:
 	float alphaDisabled = 0.6f;
 	irr::core::aabbox3d<irr::f32> Box;
 
-	// All interface objects linked with this
-	std::vector<InterfaceObject*> components;
 
 	virtual void Update();
 	virtual void Draw();
-	virtual void DrawGUI() = 0;
+	virtual void DrawGUI();
 	virtual void render() {};
 	const irr::core::aabbox3d<irr::f32>& getBoundingBox() const override { return Box; };
 	virtual Tag GetTag();

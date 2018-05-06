@@ -1,9 +1,34 @@
 #pragma once
 #include "SceneManager.h"
 
+static const int NO_PARENT = 0;
+static const float KEYLIGHT_RADIUS = 50.f;
+static const float CHESTLIGHT_RADIUS = 90.f;
+static const float FLASHLIGHT_RANGE = 1500.f;
+
+SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
+SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
+bool SceneManager::sceneIsPaused = false;
+
+// Light data
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColor(255, 30, 30, 50);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
+vector3df SceneManager::chestLightOffset = vector3df(40, 30, 0);
+vector3df SceneManager::keyLightOffset = vector3df(0, 20, 0);
+
+Camera* SceneManager::camera;
+HUD* SceneManager::hud = new HUD();
+bool SceneManager::disableHud = false;
+
 // Constructor
 SceneManager::SceneManager()
 {
+	scene = NONE;
+	scenePrevious = scene;
+	sceneIsPaused = false;
+
 
 }
 
@@ -417,17 +442,13 @@ void SceneManager::PauseScene(bool mode)
 	else
 	{
 		// Remove the pause menu from the interface list and delete it
-		for (int iIndex = 0; iIndex < GameManager::interfaceObjects.size(); iIndex++)
+		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
+		if (pauseMenu)
 		{
-			Menu* menu = dynamic_cast<Menu*>(GameManager::interfaceObjects[iIndex]);
-			if (menu)
-			{
-				if (menu->menuType == Menu::PAUSE_MENU)
-				{
-					GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + iIndex);
-					delete menu;
-				}
-			}
+			int mIndex = GameManager::FindIndexInList<InterfaceObject>(pauseMenu, GameManager::interfaceObjects);
+			if (mIndex != -1)
+				GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + mIndex);
+			delete pauseMenu;
 		}
 	}
 }

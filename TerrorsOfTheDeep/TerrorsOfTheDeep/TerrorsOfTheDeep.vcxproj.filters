@@ -76,14 +76,14 @@
     <Filter Include="Source Files\Interface Objects">
       <UniqueIdentifier>{3a540037-a44f-4857-adf9-ea47d53efea9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Interface Objects\Menus">
-      <UniqueIdentifier>{0dea8c95-5aaf-4c91-b42e-e2d62256d623}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Interface Objects\Menus">
-      <UniqueIdentifier>{ff5cf556-cbbc-4d3e-b3b2-987c342ff0cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Controllers\Managers">
       <UniqueIdentifier>{3ba028f2-20da-4d42-8582-7f5c6823cb37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface Objects\Components">
+      <UniqueIdentifier>{ff5cf556-cbbc-4d3e-b3b2-987c342ff0cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interface Objects\Components">
+      <UniqueIdentifier>{0dea8c95-5aaf-4c91-b42e-e2d62256d623}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +172,10 @@
       <Filter>Source Files\Interface Objects</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
-      <Filter>Source Files\Interface Objects\Menus</Filter>
+      <Filter>Source Files\Interface Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Interface Objects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +249,10 @@
       <Filter>Header Files\Interface Objects</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
-      <Filter>Header Files\Interface Objects\Menus</Filter>
+      <Filter>Header Files\Interface Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\Interface Objects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,8 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
+EventManager::SMouseState EventManager::MouseState;
+
 EventManager::EventManager()
 {
 	// Reset all key states

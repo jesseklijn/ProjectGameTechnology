@@ -17,9 +17,7 @@ InterfaceObject::InterfaceObject(irr::core::vector2df* startPosition,
 
 InterfaceObject::~InterfaceObject()
 {
-	// When this element is deleted, delete all children
-	for (InterfaceObject* component : components)
-		delete component;
+
 }
 
 void InterfaceObject::Update()
@@ -30,6 +28,10 @@ void InterfaceObject::Update()
 void InterfaceObject::Draw()
 {
 
+}
+
+void InterfaceObject::DrawGUI()
+{
 }
 
 InterfaceObject::Tag InterfaceObject::GetTag()

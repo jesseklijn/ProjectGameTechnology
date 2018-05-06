@@ -37,7 +37,7 @@ This is a shortcut instead of having to specify extra Player override functional
 in the other GameManager::FindX(); functions, which should be for general usage. */
 GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
-	Player* player = (Player*)GameManager::FindGameObjectWithTag(PLAYER);
+	Player* player = (Player*)GameManager::FindGameObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
 	if (player)
 	{
 		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();
@@ -70,14 +70,14 @@ GameObject* Monster::GetTarget(Monster::TargetPriority priorityMode, bool player
 		case CLOSEST:
 		{
 			// Finds the nearest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindNearestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			return GameManager::FindNearestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 
 		case FURTHEST:
 		{
 			// Finds the furthest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindFurthestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			return GameManager::FindFurthestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 

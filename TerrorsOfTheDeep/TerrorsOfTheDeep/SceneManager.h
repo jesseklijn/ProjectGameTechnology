@@ -36,28 +36,18 @@ public:
 		LEVEL,
 		GAME_OVER
 	};
-	SceneType scene = NONE;
-	SceneType scenePrevious = scene;
-	bool sceneIsPaused = false;
-
-	const int NO_PARENT = 0;
-	const float KEYLIGHT_RADIUS = 50.f;
-	const float CHESTLIGHT_RADIUS = 90.f;
-	const float FLASHLIGHT_RANGE = 1500.f;
+	static SceneType scene, scenePrevious;
+	static bool sceneIsPaused;
 
 	// Light data
-	irr::video::SColorf ambientColor = irr::video::SColor(255, 30, 30, 50);
-	//irr::video::SColorf ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
-	irr::video::SColorf flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
-	irr::video::SColorf sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);	
-	vector3df chestLightOffset = vector3df(40, 30, 0);
-	vector3df keyLightOffset = vector3df(0, 20, 0);
+	static irr::video::SColorf ambientColor, flashlightColor, sharkEyesColor;
+	static vector3df chestLightOffset, keyLightOffset;
 
-	Camera* camera;
-	HUD* hud = new HUD;
+	static Camera* camera;
+	static HUD* hud;
 
 	// Whether to hide or show the HUD
-	bool disableHud = false;
+	static bool disableHud;
 
 
 	// Functions
@@ -66,10 +56,10 @@ public:
 	virtual void DrawGUI() {};
 	virtual Tag GetTag();
 
-	bool LoadScene(SceneType sceneToLoad);
-	void PauseScene(bool mode);
-	void StartLoadingScreen();
-	void EndLoadingScreen();
-	void OnSceneChange();
+	static bool LoadScene(SceneType sceneToLoad);
+	static void PauseScene(bool mode);
+	static void StartLoadingScreen();
+	static void EndLoadingScreen();
+	static void OnSceneChange();
 };
 
