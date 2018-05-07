@@ -74,7 +74,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	GameManager::smgr->clear();
 	for (GameObject* gameObj : GameManager::gameObjects)
 		delete gameObj;
+	for (InterfaceObject* intObj : GameManager::interfaceObjects)
+		delete intObj;
 	GameManager::gameObjects.clear();
+	GameManager::interfaceObjects.clear();
 
 	// Load the new scene
 	scene = sceneToLoad;
@@ -153,11 +156,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				0, false);
 			GameManager::gameObjects.push_back(shark);
 
-			FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100, -80, 100), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			/*FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100, -80, 100), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
 				GameManager::driver->getTexture("../media/GoldTexture.jpg"));
 			flockOfFish->tag = GameObject::CREATURE;
-			GameManager::gameObjects.push_back(flockOfFish);
+			GameManager::gameObjects.push_back(flockOfFish);*/
 
 			// Make a playingField (mesh out of grid)
 			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),

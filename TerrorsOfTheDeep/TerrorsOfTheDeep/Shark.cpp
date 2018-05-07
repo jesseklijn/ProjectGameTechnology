@@ -27,6 +27,7 @@ void Shark::UpdateState()
 	state = IDLE;
 	currentPosition = getPosition();
 	canSeeTarget = false;
+	targetDistanceLast = targetDistance;
 	targetDistance = INFINITY;
 
 	// Get our potential target and target information
@@ -35,7 +36,7 @@ void Shark::UpdateState()
 		targetAttack = Monster::GetTarget(targetPriority, attackCooldownTimer <= 0.0f ? true : false, chaseDetectionRange, true);
 		if (targetAttack)
 		{
-			canSeeTarget = true;
+			canSeeTarget = true;			
 			targetDistance = (targetAttack->getAbsolutePosition() - getAbsolutePosition()).getLength();
 		}
 
@@ -105,14 +106,21 @@ void Shark::ExecuteState()
 		{
 			moveSpeed = chaseSpeed;
 
-			// TODO: Attack!
-			attackCooldownTimer = attackCooldownTimeMin + rand() % (int)(attackCooldownTimeMax - attackCooldownTimeMin);
+			// TODO: GAME OVER!
+			if (targetDistance < attackKillRange)
+				std::cout << "Game Over!" << std::endl;
 
-			/* Move away from the currently bitten target.
-			For now it simply picks the furthest target until the attack cooldown finishes.*/
-			targetPriority = FURTHEST;
-			Shark::UpdateState();
-			stateUpdateTimer = rand() % (int)stateUpdateTime;				
+			// When the shark at any time moves away from the target, we count this as an attack try.
+			if (targetDistanceLast < targetDistance || targetDistance <= moveSpeed)
+			{
+				attackCooldownTimer = attackCooldownTimeMin + rand() % (int)(attackCooldownTimeMax - attackCooldownTimeMin);
+
+				/* Move away from the currently bitten target.
+				For now it simply picks the furthest target until the attack cooldown finishes.*/
+				targetPriority = FURTHEST;
+				Shark::UpdateState();
+				stateUpdateTimer = rand() % (int)stateUpdateTime;
+			}
 
 			break;
 		}

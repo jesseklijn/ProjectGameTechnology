@@ -67,13 +67,13 @@ bool GameManager::escaped = false;
 bool GameManager::hasDied = false;
 
 // World generation
-int GameManager::critterCount = 300;
+int GameManager::critterCount = 200;
 int GameManager::shipCount = 6;
-int GameManager::rockCount = 60;
-int GameManager::ruinsCount = 25;
-int GameManager::coralCount = 75;
-int GameManager::plantCount = 25;
-int GameManager::skullCount = 1;
+int GameManager::rockCount = 50;
+int GameManager::ruinsCount = 20;
+int GameManager::coralCount = 50;
+int GameManager::plantCount = 75;
+int GameManager::skullCount = 3;
 
 float GameManager::gameSpeed = 1.0f;
 #pragma endregion
