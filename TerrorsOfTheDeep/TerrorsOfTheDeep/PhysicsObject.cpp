@@ -14,6 +14,11 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
+/**
+ * A PhysicsObject is an ISceneNode that is effected by physics in its movement
+ * 
+ * GameObject : PhysicsObject : ISceneNode
+ */
 PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, const vector3df* startPosition, float massPar)
 	: ISceneNode(parentPar, mgr, id)
 {
@@ -27,6 +32,9 @@ PhysicsObject::PhysicsObject(ISceneNode* parentPar, ISceneManager* mgr, s32 id, 
 
 	gravityConstant = -9.8;
 	buoyancyConstant = 9.8;
+	dragCoefficient = 1;
+	crossSectionalArea = 1;
+	volume = mass;
 }
 
 
@@ -64,8 +72,8 @@ SMaterial& PhysicsObject::getMaterial(u32 i)
 
 void PhysicsObject::Update()
 {
-	if (tag != GameObject::GROUND && tag != GameObject::PLAYER) updatePosition();
-
+	if (tag != GameObject::GROUND && tag != GameObject::PLAYER) UpdatePosition();
+	
 	if (mesh)
 	{
 		mesh->setPosition(getAbsolutePosition());
@@ -73,13 +81,16 @@ void PhysicsObject::Update()
 	}
 }
 
-void PhysicsObject::updatePosition()
+/**
+ * Updates the object's position every frame
+ */
+void PhysicsObject::UpdatePosition()
 {
 	position_ = getPosition();
 
-	force_ += gravityForce() + dragForce() + buoyancyForce();
-	verlet();
-	resolveGround();
+	force_ += GravityForce() + DragForce() + BuoyancyForce();
+	Verlet();
+	ResolveGround();
 
 	setPosition(position_);
 	
@@ -87,19 +98,33 @@ void PhysicsObject::updatePosition()
 	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
 }
 
-void PhysicsObject::verlet()
+/**
+ * Uses Velocity Verlet integration to adjust the object's position
+ * In the process calculates acceleration and updates current acceleration and velocity
+ */
+void PhysicsObject::Verlet()
 {
+	// timeStep is used to make movement framerate independant
 	float timeStep = GameManager::deltaTimeMS;
 
-	// VELOCITY VERLET
+	// Second order integration to calculate the new position
 	position_ += velocity_ * timeStep + (0.5 * acceleration_ * timeStep * timeStep);
+
+	// Newton's law to calculate acceleration 
 	vector3df newAcceleration = force_ / mass;
+
+	// Uses average of last and current acceleration to get new velosity
 	vector3df avgAcceleration = (acceleration_ + newAcceleration) / 2;
 	velocity_ += avgAcceleration * timeStep;
 	acceleration_ = newAcceleration;
 }
 
-void PhysicsObject::resolveGround()
+/**
+ * ResolveGround prevents objects from moving under the ground
+ * 
+ * TODO: do this on collision with ground instead of here
+ */
+void PhysicsObject::ResolveGround()
 {
 	float height;
 	switch (tag)
@@ -120,48 +145,68 @@ void PhysicsObject::resolveGround()
 	}
 }
 
-vector3df PhysicsObject::dragForce()
+/**
+ * Calculates the current drag force working on the object
+ * 
+ * Depends on the density of water, current velocity, drag coëfficient, and corss sectional area
+ * - because drag is always in the opposite direction from velocity
+ */
+vector3df PhysicsObject::DragForce()
 {
-	// 0.5 * densityWater * velocity^2 * dragCoefficient * crossSectionalArea
-	return -0.5 * velocity_ * velocity_;
+	return -0.5 * velocity_ * velocity_ * dragCoefficient * crossSectionalArea;
 }
 
-vector3df PhysicsObject::gravityForce()
+/**
+ * Calculates the current gravity force working on the object
+ * Depends on the gravity constant and the object's mass
+ */
+vector3df PhysicsObject::GravityForce() 
 {
 	float gravity = gravityConstant * mass;
 	return vector3df(0, gravity, 0);
 }
 
-vector3df PhysicsObject::buoyancyForce()
+//float volume = mesh->getTransformedBoundingBox().getVolume();
+
+/**
+ * Calculates the current buoyancy force working on the object
+ * Depends on the density of water and the volume of the object
+ */
+vector3df PhysicsObject::BuoyancyForce()
 {
-	// Only if not on the floor
-	// densityWater * volumeObject
-	// since denisity of human is around 1, take mass for volume
-	// multiplied to balance with gravity
-	//float volume = mesh->getTransformedBoundingBox().getVolume();
-	float buoyancy = mass * buoyancyConstant;
+	// density of water = 1
+	float buoyancy = volume * buoyancyConstant;
 	return vector3df(0, buoyancy, 0);
 }
 
-
-void PhysicsObject::turnToDirection(vector3df direction)
+/**
+ * Rotates the object in the given direction
+ * 
+ * Called from the Move method in GameObject
+ */
+void PhysicsObject::TurnToDirection(vector3df direction)
 {
 	setRotation(direction.getHorizontalAngle());
 	if (mesh)
 		mesh->setRotation(direction.getHorizontalAngle());
 }
 
-void PhysicsObject::addForce(vector3df force)
+/**
+ * Adds a vector to the current force working on the object
+ * 
+ * Called from the Move method in GameObject
+ */
+void PhysicsObject::AddForce(vector3df force)
 {
 	force_ += force;
 }
 
-vector3df PhysicsObject::getVelocity()
+vector3df PhysicsObject::GetVelocity()
 {
 	return velocity_;
 }
 
-void PhysicsObject::setVelocity(vector3df velocity)
+void PhysicsObject::SetVelocity(vector3df velocity)
 {
 	velocity_ = velocity;
 }
