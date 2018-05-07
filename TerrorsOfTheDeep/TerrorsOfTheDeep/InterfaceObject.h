@@ -15,7 +15,7 @@ public:
 	~InterfaceObject();
 
 
-	InterfaceObject* creator = nullptr;
+	InterfaceObject* creator;
 
 	int elementSpacing = 8;
 	float elementWidth = 100.0f;

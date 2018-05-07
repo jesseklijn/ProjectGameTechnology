@@ -17,7 +17,15 @@ InterfaceObject::InterfaceObject(irr::core::vector2df* startPosition,
 
 InterfaceObject::~InterfaceObject()
 {
+	// Remove GameManager tracking list entry
+	int mIndex = GameManager::FindIndexInList<InterfaceObject>(this, GameManager::interfaceObjects);
+	if (mIndex != -1)
+		GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + mIndex);
 
+	// Delete all children attached to this interface object
+	for (int i = 0; i < GameManager::interfaceObjects.size(); i++)
+		if (GameManager::interfaceObjects[i]->creator == this)
+			GameManager::interfaceObjects[i]->~InterfaceObject();
 }
 
 void InterfaceObject::Update()

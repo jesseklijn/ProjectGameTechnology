@@ -432,24 +432,36 @@ void SceneManager::PauseScene(bool mode)
 	{
 		Menu* pauseMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
-		pauseMenu->elementWidth = 300.0f;
-		pauseMenu->elementHeight = 500.0f;
+		pauseMenu->elementWidth = 200.0f;
+		pauseMenu->elementHeight = 250.0f;
 		pauseMenu->windowTitle = "Pause Menu";
 		pauseMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - pauseMenu->elementWidth / 2.0f,
 			GameManager::screenDimensions.Height / 2.0f - pauseMenu->elementHeight / 2.0f, 0.0f));
 		GameManager::interfaceObjects.push_back(pauseMenu);
+
+		int buttonCount = 2;
+		float buttonWidth = pauseMenu->elementWidth - pauseMenu->elementSpacing * 2.0f;
+		float buttonHeight = 50.0f;
+		float buttonStartX = pauseMenu->getPosition().X + pauseMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
+		float buttonStartY = pauseMenu->getPosition().Y + pauseMenu->elementHeight - 1 -
+			((buttonHeight + pauseMenu->elementSpacing) * buttonCount);
+
+		for (int bIndex = 0; bIndex < buttonCount; bIndex++)
+		{
+			Button* button = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + pauseMenu->elementSpacing) * bIndex)), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+				(Button::ButtonType)bIndex, 0, GameManager::smgr, 15000);
+			button->creator = pauseMenu;
+			button->elementWidth = buttonWidth;
+			button->elementHeight = buttonHeight;
+			GameManager::interfaceObjects.push_back(button);
+		}
 	}
 	else
 	{
-		// Remove the pause menu from the interface list and delete it
+		// Delete the pause menu
 		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
 		if (pauseMenu)
-		{
-			int mIndex = GameManager::FindIndexInList<InterfaceObject>(pauseMenu, GameManager::interfaceObjects);
-			if (mIndex != -1)
-				GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + mIndex);
-			delete pauseMenu;
-		}
+			pauseMenu->~Menu();
 	}
 }
 

@@ -8,10 +8,29 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 {
 	tag = INTERFACE_BUTTON;
 	this->buttonType = buttonType;
+
+	switch (buttonType)
+	{
+		case PM_RESUME:
+		{
+			buttonTitle = "Resume Game";
+		} break;
+
+		case PM_BACK_TO_MAIN:
+		{
+			buttonTitle = "Main Menu";
+		} break;
+
+		case PM_QUIT:
+		{
+			buttonTitle = "Quit";
+		} break;
+	}
 }
 
 Button::~Button()
 {
+	std::cout << buttonType << ", creator: " << creator << std::endl;
 }
 
 void Button::Update()

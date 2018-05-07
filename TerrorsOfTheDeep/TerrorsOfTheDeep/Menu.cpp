@@ -10,18 +10,11 @@ Menu::Menu(irr::core::vector2df * startPosition, irr::core::vector2df * startSca
 	tag = INTERFACE_MENU;
 	this->menuType = menuType;
 	positionWindowTitle = vector2df(startPosition->X + elementWidth / 2.0f, startPosition->Y + elementSpacing);
-
-	/*Button* button = new Button(new vector2df(getPosition().X, getPosition().Y), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
-		Button::PM_RESUME, this, GameManager::smgr, 15000);
-	components.push_back(button);
-	GameManager::interfaceObjects.push_back(button);*/
 }
 
 Menu::~Menu()
 {
-	// When this element is deleted, delete all children
-	//for (InterfaceObject* component : components)
-		//delete component;
+
 }
 
 void Menu::DrawGUI()

@@ -119,7 +119,10 @@ private:
 template<class T>
 inline int GameManager::FindIndexInList(T * object, std::vector<T*> targetList)
 {
-	return 0;
+	for (int i = 0; i < targetList.size(); i++)
+		if (targetList[i] == object)
+			return i;
+	return -1;
 }
 
 template<class T>
