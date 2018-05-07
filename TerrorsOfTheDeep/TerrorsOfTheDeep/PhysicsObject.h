@@ -4,18 +4,29 @@
 
 class PhysicsObject : public irr::scene::ISceneNode, public DynamicUpdater
 {
-	float density_;
+	//float density_;
 	irr::core::vector3df position_;
 	irr::core::vector3df velocity_;
 	irr::core::vector3df acceleration_;
 	irr::core::vector3df force_;
 	irr::s32 id_;
 
+	void UpdatePosition();
+
+	irr::core::vector3df DragForce();
+	irr::core::vector3df GravityForce();
+	irr::core::vector3df BuoyancyForce();
+	void Verlet();
+	void ResolveGround();
+
 public:
 	float gravityConstant;
 	float buoyancyConstant;
 	float mass;
-	float mass2;
+	float volume;
+	float dragCoefficient;
+	float crossSectionalArea;
+	//float mass2;
 	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
@@ -37,16 +48,9 @@ public:
 	irr::video::SMaterial& getMaterial(irr::u32 i) override;
 
 	virtual void Update();
-	void updatePosition();
-	void turnToDirection(irr::core::vector3df direction);
 
-	irr::core::vector3df dragForce();
-	irr::core::vector3df gravityForce();
-	irr::core::vector3df buoyancyForce();
-	void verlet();
-
-	void addForce(irr::core::vector3df force);
-	irr::core::vector3df getVelocity();
-	void setVelocity(irr::core::vector3df velocity);
-	void resolveGround();
+	void AddForce(irr::core::vector3df force);
+	void TurnToDirection(irr::core::vector3df direction);
+	irr::core::vector3df GetVelocity();
+	void SetVelocity(irr::core::vector3df velocity);
 };
