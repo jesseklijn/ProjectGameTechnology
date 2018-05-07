@@ -3,8 +3,6 @@
 #pragma once
 #include "GameManager.h"
 
-using namespace irr;
-
 class DetectCollision {
 public:
 
@@ -27,9 +25,9 @@ public:
 	void fillInitialArray();
 	void getNearestObjectsFromPosition(GameObject* object, GameObject* objectTwo);
 	bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size);
-	void Detect(
-		bool pickedUp[],
-		irr::scene::ISceneManager* smgr
-	);
+	void Detect(irr::scene::ISceneManager* smgr);
+
+	void Resolve(GameObject* obj1, GameObject* obj2);
+	float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2);
 };
 

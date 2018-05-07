@@ -1,7 +1,5 @@
 #include "DetectCollision.h"
 
-
-
 // simple collision code. 
 bool DetectCollision::Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
 	return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
@@ -33,37 +31,7 @@ void DetectCollision::getNearestObjectsFromPosition(GameObject* object, GameObje
 	}
 }
 
-float Dot(vector3df vector1, vector3df vector2)
-{
-	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
-}
-
-void Resolve(GameObject* obj1, GameObject* obj2)
-{
-	vector3df currentVelocity = obj1->GetVelocity();
-	float sizeVelocity = currentVelocity.getLength();
-	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
-
-	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	direction.normalize();
-	if (obj1->tag == GameObject::PLAYER)
-	{
-		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
-		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
-
-	}
-	else
-	{
-		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
-		obj1->SetVelocity(sizeVelocity * reflection.normalize());
-	}
-}
-
-void DetectCollision::Detect(
-	bool pickedUp[],
-	irr::scene::ISceneManager* smgr
-) {
+void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 	if (!arrayFilled)
 	{
 		fillInitialArray();
@@ -144,7 +112,7 @@ void DetectCollision::Detect(
 									// same as world_object
 								case GameObject::WORLD_OBJECT:
 									// collision resolution
-									// Resolve(obj1, obj2);
+									Resolve(obj1, obj2);
 									break;
 								default:
 									break;
@@ -161,6 +129,34 @@ void DetectCollision::Detect(
 
 	}
 }
+
+void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
+{
+	vector3df currentVelocity = obj1->GetVelocity();
+	float sizeVelocity = currentVelocity.getLength();
+	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+
+	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+	direction.normalize();
+	if (obj1->tag == GameObject::PLAYER)
+	{
+		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
+		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
+
+	}
+	else
+	{
+		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
+		obj1->SetVelocity(sizeVelocity * reflection.normalize());
+	}
+}
+
+float DetectCollision::Dot(vector3df vector1, vector3df vector2)
+{
+	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+}
+
 
 DetectCollision::DetectCollision()
 {
