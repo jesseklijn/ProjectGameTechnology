@@ -108,7 +108,7 @@ It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaT
 void GameObject::Update()
 {
 	// Inherit base class Update
-	//PhysicsObject::Update();
+	PhysicsObject::Update();
 
 	// Run the Update() of our base class
 	DynamicUpdater::Update();

@@ -54,9 +54,9 @@ void Player::Update()
 
 	UpdatePos();
 
-	//vector3df currentPos = getAbsolutePosition();
-	//setVelocity(currentPos - latestPos);
-	//latestPos = currentPos;
+	vector3df currentPos = getAbsolutePosition();
+	SetVelocity(currentPos - latestPos);
+	latestPos = currentPos;
 }
 
 void Player::render()
@@ -82,7 +82,6 @@ void Player::UpdatePos()
 {
 	if (mesh != nullptr)
 	{
-		vector3df rot = smgr->getActiveCamera()->getRotation();
-		mesh->setRotation(rot);
+		mesh->setPosition(vector3df(0, 0, 0));
 	}
 }

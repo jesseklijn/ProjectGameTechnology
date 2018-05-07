@@ -3,7 +3,7 @@
 #include "PhysicsObject.h"
 #include "DynamicUpdater.h"
 
-class GameObject : public PhysicsObject, public DynamicUpdater
+class GameObject : public PhysicsObject		//, public DynamicUpdater
 {
 public:
 	// Constructor
