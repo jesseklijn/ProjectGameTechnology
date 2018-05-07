@@ -116,6 +116,8 @@ private:
 };
 
 #pragma region Template functions
+/* Finds the index of the given object in the given list. Returns -1 if no valid
+index was found. */
 template<class T>
 inline int GameManager::FindIndexInList(T * object, std::vector<T*> targetList)
 {
@@ -125,6 +127,7 @@ inline int GameManager::FindIndexInList(T * object, std::vector<T*> targetList)
 	return -1;
 }
 
+/* Finds the first object that satisfies the given tag. */
 template<class T>
 inline T* GameManager::FindGameObjectWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList)
 {
