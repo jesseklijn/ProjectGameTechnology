@@ -35,10 +35,8 @@ void Shark::UpdateState()
 		targetAttack = Monster::GetTarget(targetPriority, attackCooldownTimer <= 0.0f ? true : false, chaseDetectionRange, true);
 		if (targetAttack)
 		{
-			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), targetAttack->getAbsolutePosition());
-
-			if (canSeeTarget)
-				targetDistance = (targetAttack->getAbsolutePosition() - getAbsolutePosition()).getLength();
+			canSeeTarget = true;
+			targetDistance = (targetAttack->getAbsolutePosition() - getAbsolutePosition()).getLength();
 		}
 
 		// If target can potentially be spotted

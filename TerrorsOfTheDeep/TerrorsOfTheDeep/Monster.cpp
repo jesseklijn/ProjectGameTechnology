@@ -41,7 +41,11 @@ GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck
 	if (player)
 	{
 		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();
-		if (currentDistance < detectionRange)
+
+		// If the monster is very far away, ignore raycasting and make it follow player regardless
+		if (currentDistance >= detectionRangeOverrideDist)
+			return player;
+		else if (currentDistance < detectionRange)
 		{
 			if (!visibilityCheck || Monster::IsInSight(getAbsolutePosition(), player->getAbsolutePosition()))
 			{
