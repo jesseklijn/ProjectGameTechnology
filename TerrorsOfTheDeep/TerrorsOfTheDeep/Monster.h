@@ -25,6 +25,8 @@ public:
 	TargetPriority targetPriority = CLOSEST;
 
 	std::vector<GameObject*> attackedTargets;
+	float detectionRangeOverrideDist = 6500.0f;
+
 
 	// Functions
 	virtual void Update();
