@@ -25,12 +25,14 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 		{
 			buttonTitle = "Quit";
 		} break;
+
+		default: break;
 	}
 }
 
 Button::~Button()
 {
-	std::cout << buttonType << ", creator: " << creator << std::endl;
+
 }
 
 void Button::Update()
@@ -39,18 +41,20 @@ void Button::Update()
 	float mouseX = EventManager::MouseState.Position.X;
 	float mouseY = EventManager::MouseState.Position.Y;
 
+	// Detect if moused over button
 	if (mouseX >= getPosition().X && mouseX < getPosition().X + elementWidth - 1)
 	{
 		if (mouseY >= getPosition().Y && mouseY < getPosition().Y + elementHeight - 1)
 		{
 			buttonMousedOver = true;
+
+			// Trigger if mouse button is then pressed
 			if (EventManager::MouseState.LeftButtonDown)
-			{
 				ButtonPressed();
-			}
 		}
 	}
 
+	// Detect mouse enter/leave changes
 	if (buttonMousedOver != buttonMousedOverPrevious)
 	{
 		if (buttonMousedOver)
@@ -67,44 +71,53 @@ void Button::DrawGUI()
 	if (elementHidden)
 		return;
 
-	// Draw window
+	// Draw button body
 	GameManager::driver->draw2DRectangle(buttonColor, rect<s32>(getPosition().X, getPosition().Y,
 		getPosition().X + elementWidth, getPosition().Y + elementHeight));
 
+	// Draw button text
 	IGUIStaticText* title = GameManager::guienv->addStaticText(buttonTitle.c_str(),
 		rect<s32>(getPosition().X, getPosition().Y + elementSpacing, getPosition().X + elementWidth - 1, getPosition().Y + elementHeight - 1));
 	title->setTextAlignment(EGUIA_CENTER, EGUIA_UPPERLEFT);
 	title->setOverrideColor(buttonTitleColor);
 }
 
+/* Triggers when the mouse enters the bounding box of the button. */
 void Button::ButtonMouseEnter()
 {
-
+	buttonColor = buttonHighlightedColor;
+	buttonTitleColor = buttonTitleHighlightedColor;
 }
 
+/* Triggers when the mouse leaves the bounding box of the button. */
 void Button::ButtonMouseLeave()
 {
-
+	buttonColor = buttonDefaultColor;
+	buttonTitleColor = buttonTitleDefaultColor;
 }
 
+/* Triggers when the button was pressed and determines what to do
+depending on the button's type. */
 void Button::ButtonPressed()
 {
 	switch (buttonType)
 	{
 		case PM_RESUME:
 		{
-			if (creator)
-				delete creator;
+			SceneManager::PauseScene(false);
 		} break;
 
 		case PM_BACK_TO_MAIN:
 		{
-			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
+			SceneManager::PauseScene(false);
+			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);			
 		} break;
 
 		case PM_QUIT:
 		{
 			GameManager::device->closeDevice();
 		} break;
+
+		default: break;
 	}
 }

@@ -21,11 +21,18 @@ InterfaceObject::~InterfaceObject()
 	int mIndex = GameManager::FindIndexInList<InterfaceObject>(this, GameManager::interfaceObjects);
 	if (mIndex != -1)
 		GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + mIndex);
+	else
+		std::cout << "Lol";
 
 	// Delete all children attached to this interface object
 	for (int i = 0; i < GameManager::interfaceObjects.size(); i++)
+	{
 		if (GameManager::interfaceObjects[i]->creator == this)
+		{
 			GameManager::interfaceObjects[i]->~InterfaceObject();
+			i--;
+		}
+	}
 }
 
 void InterfaceObject::Update()

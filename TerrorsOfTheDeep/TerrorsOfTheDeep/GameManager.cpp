@@ -113,10 +113,10 @@ void GameManager::Update()
 
 	/* Runs the Update() for all objects in GameManager.
 	Used for basic updates per frame. */
-	for (GameObject* gameObject : GameManager::gameObjects)
-		gameObject->Update();
-	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
-		interfaceObject->Update();
+	for (int gIndex = 0; gIndex < GameManager::gameObjects.size(); gIndex++)
+		GameManager::gameObjects[gIndex]->Update();
+	for (int iIndex = 0; iIndex < GameManager::interfaceObjects.size(); iIndex++)
+		GameManager::interfaceObjects[iIndex]->Update();
 		
 	/* Runs the FixedUpdate() for all objects in GameManager.
 	Used for fixed updates at specific timestep intervals, ideally for physics updates. */

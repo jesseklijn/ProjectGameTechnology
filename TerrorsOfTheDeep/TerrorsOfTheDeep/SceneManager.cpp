@@ -312,6 +312,7 @@ void SceneManager::PauseScene(bool mode)
 	// Pause / unpause game
 	GameManager::gameSpeed = mode ? 0.0f : 1.0f;
 	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);
+	GameManager::device->getCursorControl()->setVisible(mode);
 	sceneIsPaused = mode;
 
 	// Toggle pause menu
@@ -326,7 +327,7 @@ void SceneManager::PauseScene(bool mode)
 			GameManager::screenDimensions.Height / 2.0f - pauseMenu->elementHeight / 2.0f, 0.0f));
 		GameManager::interfaceObjects.push_back(pauseMenu);
 
-		int buttonCount = 2;
+		int buttonCount = 3;
 		float buttonWidth = pauseMenu->elementWidth - pauseMenu->elementSpacing * 2.0f;
 		float buttonHeight = 50.0f;
 		float buttonStartX = pauseMenu->getPosition().X + pauseMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
@@ -345,6 +346,11 @@ void SceneManager::PauseScene(bool mode)
 	}
 	else
 	{
+		for (InterfaceObject* iObj : GameManager::interfaceObjects)
+			std::cout << iObj->tag << ": " << iObj->creator << std::endl;
+
+
+
 		// Delete the pause menu
 		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
 		if (pauseMenu)

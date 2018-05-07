@@ -9,6 +9,7 @@ class Button : public InterfaceObject
 public:
 	enum ButtonType
 	{
+		// Pause Menu
 		PM_RESUME,
 		PM_BACK_TO_MAIN,
 		PM_QUIT
@@ -21,11 +22,17 @@ public:
 		ButtonType buttonType,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id);
 	~Button();
+	
+	// Define default and highlighted color when moused over
+	irr::video::SColor buttonDefaultColor = irr::video::SColor(255.0f * alpha, 100.0f, 100.0f, 100.0f);
+	irr::video::SColor buttonHighlightedColor = irr::video::SColor(255.0f * alpha, 140.0f, 140.0f, 140.0f);
+	irr::video::SColor buttonTitleDefaultColor = irr::video::SColor(255.0f * alpha, 240.0f, 240.0f, 240.0f);
+	irr::video::SColor buttonTitleHighlightedColor = irr::video::SColor(255.0f * alpha, 255.0f, 255.0f, 255.0f);
 
-	irr::video::SColor buttonColor = irr::video::SColor(255.0f * alpha, 100.0f, 100.0f, 100.0f);
-	irr::video::SColor buttonTitleColor = irr::video::SColor(255.0f * alpha, 255.0f, 255.0f, 255.0f);
+	irr::video::SColor buttonColor = buttonDefaultColor;
+	irr::video::SColor buttonTitleColor = buttonTitleDefaultColor;
+
 	irr::core::stringw buttonTitle = "<BUTTON>";
-	irr::core::vector2df positionWindowTitle;
 
 	void Update();
 	void DrawGUI();
