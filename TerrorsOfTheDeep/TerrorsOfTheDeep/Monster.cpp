@@ -1,6 +1,5 @@
 #pragma once
 #include "Monster.h"
-#pragma once
 #include "GameManager.h"
 
 // Constructor
@@ -11,13 +10,13 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	tag = GameObject::MONSTER;
+	GameObject::setTag(GameObject::MONSTER);
 
 	canAttack = true;
 	canFlee = false;
 
-	rotationLerp = 0.0001;
-	idleSpeed = 90.0f;
+	rotationLerp = 0.00002;
+	idleSpeed = 250.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 
@@ -36,9 +35,9 @@ Detection range and a raycast can be enabled for specified checks.
 
 This is a shortcut instead of having to specify extra Player override functionality
 in the other GameManager::FindX(); functions, which should be for general usage. */
-GameObject* Monster::PlayerCanBeSeen(float detectionRange, bool visibilityCheck)
+GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
-	Player* player = (Player*)GameManager::FindGameObjectWithTag(PLAYER);
+	Player* player = (Player*)GameManager::FindGameObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
 	if (player)
 	{
 		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();
@@ -55,7 +54,7 @@ GameObject* Monster::PlayerCanBeSeen(float detectionRange, bool visibilityCheck)
 
 /* Returns a target based on this monster's tags. Optionally a player detection override, detection range and visibility check can
 be enabled for more specific searches. Returns a nullptr if no target was found with the given specifications. */
-GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOverride, float detectionRange, bool visibilityCheck)
+GameObject* Monster::GetTarget(Monster::TargetPriority priorityMode, bool playerDetectOverride, double detectionRange, bool visibilityCheck)
 {
 	// If the player should override all other detection
 	if (playerDetectOverride)
@@ -71,14 +70,14 @@ GameObject* Monster::GetTarget(TargetPriority priorityMode, bool playerDetectOve
 		case CLOSEST:
 		{
 			// Finds the nearest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindNearestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			return GameManager::FindNearestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 
 		case FURTHEST:
 		{
 			// Finds the furthest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindFurthestGameObjectWithTags(this, targetTags, detectionRange, visibilityCheck);
+			return GameManager::FindFurthestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 

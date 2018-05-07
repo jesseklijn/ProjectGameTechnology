@@ -14,7 +14,7 @@ using namespace gui;
 Camera::Camera(ISceneManager* smgr)
 {
 	const float MOVEMENT_SPEED = (float)0.25;
-	const float ROTATION_SPEED = (float)25;
+	const float ROTATION_SPEED = (float)100;
 
 	// Keymapping for player controls
 	SKeyMap keyMap[4];
@@ -45,19 +45,22 @@ Camera::~Camera()
 //check boundaries
 void Camera::updatePos()
 {
-	if (GameManager::smgr->getActiveCamera()->getPosition().X > GameManager::worldRadiusX)
+	if (!GameManager::smgr->getActiveCamera())
+		return;
+
+	if (GameManager::smgr->getActiveCamera()->getPosition().X > GameManager::WORLD_RADIUS_X)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::worldRadiusX - 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::WORLD_RADIUS_X - 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().X < -GameManager::worldRadiusX)
+	if (GameManager::smgr->getActiveCamera()->getPosition().X < -GameManager::WORLD_RADIUS_X)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-GameManager::worldRadiusX + 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(-GameManager::WORLD_RADIUS_X + 1, GameManager::smgr->getActiveCamera()->getPosition().Y,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Y > GameManager::worldRadiusY)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Y > GameManager::WORLD_RADIUS_Y)
 	{
-		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::worldRadiusY - 1,
+		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::WORLD_RADIUS_Y - 1,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
 	if (GameManager::smgr->getActiveCamera()->getPosition().Y < -50)
@@ -65,15 +68,15 @@ void Camera::updatePos()
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, -49,
 			GameManager::smgr->getActiveCamera()->getPosition().Z));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z > GameManager::worldRadiusZ)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z > GameManager::WORLD_RADIUS_Z)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			GameManager::worldRadiusZ - 1));
+			GameManager::WORLD_RADIUS_Z - 1));
 	}
-	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -GameManager::worldRadiusZ)
+	if (GameManager::smgr->getActiveCamera()->getPosition().Z < -GameManager::WORLD_RADIUS_Z)
 	{
 		GameManager::smgr->getActiveCamera()->setPosition(vector3df(GameManager::smgr->getActiveCamera()->getPosition().X, GameManager::smgr->getActiveCamera()->getPosition().Y,
-			-GameManager::worldRadiusZ + 1));
+			-GameManager::WORLD_RADIUS_Z + 1));
 	}
 }
 

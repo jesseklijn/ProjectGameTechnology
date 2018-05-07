@@ -1,6 +1,5 @@
 #pragma once
 #include "Shark.h"
-#pragma once
 #include "GameManager.h"
 
 // Constructor
@@ -11,10 +10,7 @@ Shark::Shark(const irr::core::vector3df* startPosition,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
 	: Monster(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
 {
-	if (canAnimate && (relatedMesh && relatedTexture))
-	{
-		
-	}
+	
 }
 
 // Destructor
@@ -33,14 +29,10 @@ void Shark::UpdateState()
 	canSeeTarget = false;
 	targetDistance = INFINITY;
 
-	// Update our timers
-	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
-	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
-
 	// Get our potential target and target information
 	if (canAttack)
 	{
-		targetAttack = Monster::GetTarget(CLOSEST, true, chaseDetectionRange, true);
+		targetAttack = Monster::GetTarget(targetPriority, attackCooldownTimer <= 0.0f ? true : false, chaseDetectionRange, true);
 		if (targetAttack)
 		{
 			canSeeTarget = Monster::IsInSight(getAbsolutePosition(), targetAttack->getAbsolutePosition());
@@ -102,9 +94,7 @@ void Shark::ExecuteState()
 		case CHASING:
 		{
 			moveSpeed = chaseSpeed;
-
-			// Set our target position on the player
-			targetPosition = targetAttack->getAbsolutePosition() + vector3df(0, -12, 0);
+			targetPosition = targetAttack->getAbsolutePosition();
 
 			// Max out our seek timer until we leave our state, so it ticks down when our target is lost
 			seekTimer = seekTime;
@@ -117,7 +107,15 @@ void Shark::ExecuteState()
 		{
 			moveSpeed = chaseSpeed;
 
-			// RawrXD
+			// TODO: Attack!
+			attackCooldownTimer = attackCooldownTimeMin + rand() % (int)(attackCooldownTimeMax - attackCooldownTimeMin);
+
+			/* Move away from the currently bitten target.
+			For now it simply picks the furthest target until the attack cooldown finishes.*/
+			targetPriority = FURTHEST;
+			Shark::UpdateState();
+			stateUpdateTimer = rand() % (int)stateUpdateTime;				
+
 			break;
 		}
 
@@ -149,7 +147,7 @@ void Shark::ExecuteState()
 
 void Shark::OnStateSwitch()
 {
-	std::cout << stateNames[(int)state] << std::endl;
+	//std::cout << stateNames[(int)state] << std::endl;
 }
 
 void Shark::Update()
@@ -160,17 +158,12 @@ void Shark::Update()
 	stateUpdateTimer = GameManager::Clamp(stateUpdateTimer - GameManager::deltaTimeMS, 0.0f, stateUpdateTime);
 	idlePositionTimer = GameManager::Clamp(idlePositionTimer - GameManager::deltaTimeMS, 0.0f, idlePositionTime);
 	seekTimer = GameManager::Clamp(seekTimer - GameManager::deltaTimeMS, 0.0f, seekTime);
+	attackCooldownTimer = GameManager::Clamp(attackCooldownTimer - GameManager::deltaTimeMS, 0.0f, attackCooldownTimeMax);
 	if (stateUpdateTimer <= 0.0)
 	{
 		Shark::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Shark::ExecuteState();
 	Shark::Move();
-
-	// Animation
-	if (canAnimate && mesh)
-	{
-
-	}
 }

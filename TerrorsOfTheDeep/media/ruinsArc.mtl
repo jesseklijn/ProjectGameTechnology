@@ -1,0 +1,49 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl pilar1
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.520784 0.483137 0.432941
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\pilar1.png
+
+newmtl sucio1
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.272941 0.222745 0.175686
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\sucio1.png
+map_Bump textures\\difuse3_NRM.png
+
+newmtl sucio2
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.420392 0.354510 0.288627
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\sucio2.png
+map_Bump textures\\sucio2_NRM.png
+
+newmtl texturew
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.483137 0.407843 0.329412
+Ks 0.164706 0.164706 0.164706
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\texturew.png
+map_Bump textures\\texturewall_NRM.png

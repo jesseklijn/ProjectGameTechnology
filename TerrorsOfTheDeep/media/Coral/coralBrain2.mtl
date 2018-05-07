@@ -1,0 +1,18 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Porites_furcata-SF
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Porites_furcata.jpeg				Files\Coral\porites-furcata\source\textures\Porites_furcata.jpg
+map_Bump Porites_furcata.jpeg
+map_Ks Porites_furcata.jpeg
+map_Ns Porites_furcata.jpeg
+map_Tr Porites_furcata.jpeg
+map_d Porites_furcata.jpeg

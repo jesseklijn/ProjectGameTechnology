@@ -1,20 +1,35 @@
 #pragma once
 #include <irrlicht.h>
+#pragma once
+#include "GameManager.h"
 
 using namespace irr;
 
-bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, int size);
-void Detect(
-	irr::scene::ISceneNode* player,
-	irr::scene::ISceneNode* win,
-	irr::scene::ISceneNode* key,
-	irr::scene::ISceneNode* shark,
-	irr::scene::ISceneNode* rock,
-	irr::scene::ISceneNode* rock1,
-	irr::scene::ISceneNode* rock2,
-	irr::scene::ISceneNode* rock3,
-	irr::scene::ISceneNode* rock4,
-	bool pickedUp[], 
-	irr::scene::ISceneManager* smgr
-);
+class DetectCollision {
+public:
+
+	DetectCollision();
+	~DetectCollision();
+
+	bool lol = false;
+
+	bool hasKey = false;
+	bool allowCollision = false;
+	int colTime = 100;
+	bool arrayFilled = false;
+	std::vector<GameObject*> oList;
+	std::vector<GameObject*> nearestObjects;
+
+	float findNearestObjectsTime = 5.0f * 1000.0f;
+	float findNearestObjectsTimer = 0.0f;
+
+
+	void fillInitialArray();
+	void getNearestObjectsFromPosition(GameObject* object, GameObject* objectTwo);
+	bool Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size);
+	void Detect(
+		bool pickedUp[],
+		irr::scene::ISceneManager* smgr
+	);
+};
 

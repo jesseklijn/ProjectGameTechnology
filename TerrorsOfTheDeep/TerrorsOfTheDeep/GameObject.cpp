@@ -1,26 +1,41 @@
-#pragma once
 #include "GameObject.h" 
-#pragma once
 #include "GameManager.h" 
 
 // Constructor
+
+// PhysicsObject version
+//GameObject::GameObject(const irr::core::vector3df* startPosition,
+//						const irr::core::vector3df* startScale,
+//						const irr::core::vector3df* startRotation, 
+//						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
+//						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
+//						float mass)
+//						: PhysicsObject(parent, mgr, id, startPosition, mass)
+
 GameObject::GameObject(const irr::core::vector3df* startPosition,
-						const irr::core::vector3df* startScale,
-						const irr::core::vector3df* startRotation, 
-						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-						: ISceneNode(parent, mgr, id)
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	: ISceneNode(parent, mgr, id)
+
 {
-	// Set the position, scale and rotation of our GameObject
+	tag = GameObject::WORLD_OBJECT;
+
 	setPosition(*startPosition);
 	setScale(*startScale);
 	setRotation(*startRotation);
 
 	// If a mesh and texture were given
-	if (relatedMesh && relatedTexture)
+	if (relatedMesh)
 	{
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
+		//mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);
+		//if (mesh)
+		//{
+		//	PhysicsObject::mesh = mesh;
+		//}
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
@@ -28,7 +43,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setMaterialFlag(EMF_FOG_ENABLE, true);
 		mesh->setMD2Animation(scene::EMAT_STAND);
 		mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-		mesh->setMaterialTexture(0, relatedTexture);
+
+		if (relatedTexture)
+			mesh->setMaterialTexture(0, relatedTexture);
 
 		// Set the position, scale and rotation of our mesh
 		mesh->setPosition(*startPosition);
@@ -44,6 +61,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 			mesh->setTriangleSelector(selector);
 			selector->drop();
 		}
+
 	}
 }
 
@@ -82,13 +100,29 @@ SMaterial& GameObject::getMaterial(u32 i)
 	return Material;
 }
 
-// Update
+/** Runs a default Update() loop, ran every frame.
+
+NOTE: In order to make something framerate independent, make use of delta timing.
+It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaTimeMS
+*/
 void GameObject::Update()
 {
+	// Inherit base class Update
+	//PhysicsObject::Update();
+
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
 	updateAbsolutePosition();
+}
+
+/** Runs a FixedUpdate() loop, meant for physics related activities.
+
+NOTE: use of GameManager::deltaTimeFixed and GameManager::deltaTimeFixedMS is
+recommended here, which is adjusted to the fixed physics time step defined in GameManager.
+*/
+void GameObject::FixedUpdate()
+{
 }
 
 // Draw
@@ -99,6 +133,12 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
+	/*PhysicsObject::addForce(0.0001 * moveSpeed * direction.normalize());
+	if (turnToDirection)
+	{
+		PhysicsObject::turnToDirection(direction);
+	}*/
+
 	// Add a vector of length speed in the given direction
 	setPosition(getPosition() + (direction.normalize() * speed));
 	if (mesh)
@@ -114,4 +154,11 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 GameObject::Tag GameObject::GetTag()
 {
 	return tag;
+}
+
+void GameObject::setTag(GameObject::Tag tagPar)
+{
+	tag = tagPar;
+	//PhysicsObject::tag = tag;
+	GameObject::tag = tag;
 }

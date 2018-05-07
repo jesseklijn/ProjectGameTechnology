@@ -20,8 +20,15 @@ public:
 		CREATURE,
 		WORLD_OBJECT,
 		KEY,
-		CHEST
+		CHEST,
+		GROUND,
+
+		MANAGER,
+		INTERFACE_ELEMENT,
+		INTERFACE_MENU,
+		INTERFACE_BUTTON
 	};
+	Tag tag = NONE;
 
 	/* Pure virtual functions
 
@@ -37,6 +44,7 @@ public:
 	to do this.*/
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
+	virtual void DrawGUI() = 0;
 	virtual Tag GetTag() = 0;
 };
 

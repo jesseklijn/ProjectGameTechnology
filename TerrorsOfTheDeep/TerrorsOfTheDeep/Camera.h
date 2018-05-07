@@ -1,6 +1,5 @@
 #pragma once
 #include <irrlicht.h>
-#pragma once
 #include "GameManager.h"
 
 #ifdef _MSC_VER
@@ -11,8 +10,8 @@
 class Camera
 {
 public:
-	Camera(irr::scene::ISceneManager* smgr);	
+	explicit Camera(irr::scene::ISceneManager* smgr);	
 	~Camera();
 
-	void updatePos();
+	static void updatePos();
 };

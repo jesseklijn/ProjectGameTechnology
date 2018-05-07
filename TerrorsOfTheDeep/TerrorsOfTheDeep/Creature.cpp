@@ -1,6 +1,5 @@
 #pragma once
 #include "Creature.h"
-#pragma once
 #include "GameManager.h"
 
 
@@ -14,6 +13,9 @@ Creature::Creature(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::CREATURE;
 
+	//buoyancyConstant = 9.79;
+
+	idlingRange = GameManager::Min(GameManager::WORLD_RADIUS_X, GameManager::WORLD_RADIUS_Z);
 	moveSpeed = idleSpeed;
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
 	fleeSpeed = idleSpeed * fleeSpeedMultiplier;
@@ -52,7 +54,7 @@ void Creature::UpdateState()
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
-		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER, INFINITY, true);
+		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag<GameObject>(this, GameObject::MONSTER, GameManager::gameObjects, INFINITY, true);
 		if (targetFleeingFrom)
 		{
 			if ((targetFleeingFrom->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)
@@ -77,7 +79,7 @@ void Creature::ExecuteState()
 			{
 				// If we're close enough to the world center point, idle normally in 360 degrees
 				vector3df toWorldCenter = currentPosition - vector3df(0, 0, 0);
-				if (toWorldCenter.getLength() < maxDistFromCenter)
+				if (toWorldCenter.getLength() < idlingRange)
 					targetPosition = vector3df(rand() % (int)(idlingRange * 2.0f) - (int)idlingRange, 50.0f, rand() % (int)(idlingRange * 2.0f) - (int)idlingRange);
 				// Otherwise, generate a direction that generally points back to world center
 				else
@@ -137,8 +139,8 @@ void Creature::Move()
 		{
 			// Calculate an agility factor that lerps the shark sharper towards the target the closer it gets to it
 			agility = 1.0;
-			if (canAttack)
-				agility += (canSeeTarget ? (-moveDirectionTarget.getLength() + chaseDetectionRange) / chaseDetectionRange * agilityFactor : 0.0);
+			if (canAttack && moveDirectionTarget.getLength() <= agilityDistance)
+				agility += canSeeTarget ? (-moveDirectionTarget.getLength() + agilityDistance) / agilityDistance * agilityFactor : 0.0;
 
 			moveDirection = GameManager::Lerp(moveDirection, moveDirectionTarget, (rotationLerp * agility) * GameManager::deltaTime).normalize();
 
@@ -161,8 +163,12 @@ void Creature::Update()
 
 	if (stateUpdateTimer <= 0.0)
 	{
-		Creature::UpdateState();
-		stateUpdateTimer = stateUpdateTime;
+		if ((getAbsolutePosition() - GameManager::smgr->getActiveCamera()->getAbsolutePosition()).getLength() < GameManager::creatureStateRange)
+			Creature::UpdateState();
+		else
+			state = IDLE;
+
+		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
 	Creature::ExecuteState();
 	Creature::Move();

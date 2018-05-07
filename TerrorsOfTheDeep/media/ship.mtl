@@ -1,0 +1,35 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl wood.001_WoodPlanksBa
+Ns 47.058824
+Ka 1.000000 1.000000 1.000000
+Kd 0.409600 0.409600 0.409600
+Ks 0.034014 0.034014 0.034014
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood_planks1.jpg
+
+newmtl wood_details.002_wood
+Ns 86.274510
+Ka 1.000000 1.000000 1.000000
+Kd 0.016699 0.016947 0.016016
+Ks 0.104242 0.104242 0.104242
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood_planks1.jpg
+
+newmtl wood_details_wood_pla
+Ns 86.274510
+Ka 1.000000 1.000000 1.000000
+Kd 0.003214 0.003262 0.003082
+Ks 0.104242 0.104242 0.104242
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd wood_planks1.jpg

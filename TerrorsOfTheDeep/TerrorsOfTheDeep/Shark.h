@@ -1,10 +1,7 @@
 #pragma once
 #include "Monster.h"
-#pragma once
 #include "GameManager.h"
-#pragma once
 #include <iostream>
-#pragma once
 #include <vector>
 
 /* Our first Monster: the Shark!

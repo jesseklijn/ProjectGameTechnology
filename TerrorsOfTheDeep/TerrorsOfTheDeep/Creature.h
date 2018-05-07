@@ -1,8 +1,6 @@
 #pragma once
 #include "GameObject.h"
-#pragma once
 #include "Player.h"
-#pragma once
 #include <vector>
 
 // Defines a non-player creature-like being
@@ -32,27 +30,30 @@ public:
 
 	GameObject* targetAttack = nullptr;
 	GameObject* targetFleeingFrom = nullptr;
-	float chaseDetectionRange = 10000.0f;
+	double chaseDetectionRange = 1000000.0f;
 	float attackRange = 100.0f;
-	float seekTime = 10.0f * 1000.0f;
+	float attackCooldownTimeMin = 15.0f * 1000.0f;
+	float attackCooldownTimeMax = 45.0f * 1000.0f;
+	float attackCooldownTimer = 0.0f;
+	float seekTime = 3.0f * 1000.0f;
 	float seekTimer = 0.0f;
-	float agilityFactor = 10.0f, agility;
+	float agilityFactor = 25.0f;
+	float agilityDistance = 5000.0f, agility;
 	float targetDistance;
 
 	float stateUpdateTime = 1.0f * 1000.0f;
 	float stateUpdateTimer = 0.0f;
 
-	float idleSpeed = 60.0f;
+	float idleSpeed = 85.0f;
 	float chaseSpeed, fleeSpeed;
 	float chaseSpeedMultiplier = 2.0f;
 	float fleeSpeedMultiplier = 4.5f;
 	int idlingAngle = 60;
-	float maxDistFromCenter = 400000.0f;
 
 	std::vector<GameObject::Tag> targetTags;
 	irr::core::vector3df currentPosition, targetPosition, moveDirection, moveDirectionTarget;
 
-	float fleeingDetectionRange = 1000.0f;
+	float fleeingDetectionRange = 3000.0f;
 	float fleeingTime = 4.0f * 1000.0f;
 	float fleeingTimer = 0.0f;
 	float fleeingPositionTime = 0.5f * 1000.0f;
