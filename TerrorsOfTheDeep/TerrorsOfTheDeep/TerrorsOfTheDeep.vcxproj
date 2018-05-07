@@ -168,8 +168,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Critter.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="InterfaceObject.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DynamicUpdater.cpp" />
@@ -193,8 +196,11 @@
     <ClCompile Include="UnitTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Critter.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="InterfaceObject.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DetectCollision.h" />

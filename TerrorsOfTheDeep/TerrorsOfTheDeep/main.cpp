@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "GameManager.h"
 #include "GameObject.h"
+#include "InterfaceObject.h"
 #include "Critter.h"
 #include "Shark.h"
 #include <string>
@@ -39,11 +40,11 @@ int main()
 	the same random numbers on every run */
 	srand(static_cast<unsigned>(time(0)));
 
-	// Create a GameManager, set window caption and hide our mouse
-	SceneManager sceneManager;
+	// Create managers
 	GameManager gameManager;
+	SceneManager sceneManager;
+
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
-	
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////
@@ -55,22 +56,15 @@ int main()
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 
-		// Update our managers
-		gameManager.Update();
+		// Update the world
 		sceneManager.Update();
+		gameManager.Update();		
 
-		// We finished changing the scene
-		// Now draw the scene in our actual window
+		// Draw the world
 		GameManager::smgr->drawAll();
-
-		// Clear the HUD, update HUD values and prepare the updated HUD
-		GameManager::guienv->clear();
-
-		// Run the Draw() of the GameManager, which in turn also runs the Draw() for all GameObjects and their linked scene nodes
+		GameManager::guienv->clear();	
+		sceneManager.Draw();	
 		gameManager.Draw();
-		sceneManager.Draw();
-
-		// Finally, draw our HUD on the screen		
 		GameManager::guienv->drawAll();
 
 		// Our frame is finished
@@ -79,8 +73,8 @@ int main()
 		// Delta time end point, calculate time passed for the next frame
 		auto frameTimeEnd = std::chrono::system_clock::now();
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
-		GameManager::deltaTime = elapsed_seconds.count();
-		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f;
+		GameManager::deltaTime = elapsed_seconds.count() * GameManager::gameSpeed;
+		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f * GameManager::gameSpeed;
 		GameManager::time += elapsed_seconds.count();
 	}
 	// Game end, drop our Irrlicht device

@@ -42,6 +42,7 @@ public:
 	virtual void Update();
 	virtual void FixedUpdate();
 	virtual void Draw();
+	virtual void DrawGUI() {};
 	virtual Tag GetTag();
 	virtual void setTag(GameObject::Tag tagPar);
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);

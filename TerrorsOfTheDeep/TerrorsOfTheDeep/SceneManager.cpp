@@ -2,9 +2,34 @@
 #pragma once
 #include "SceneManager.h"
 
+static const int NO_PARENT = 0;
+static const float KEYLIGHT_RADIUS = 50.f;
+static const float CHESTLIGHT_RADIUS = 90.f;
+static const float FLASHLIGHT_RANGE = 1500.f;
+
+SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
+SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
+bool SceneManager::sceneIsPaused = false;
+
+// Light data
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
+vector3df SceneManager::chestLightOffset = vector3df(40, 30, 0);
+vector3df SceneManager::keyLightOffset = vector3df(0, 20, 0);
+
+Camera* SceneManager::camera;
+HUD* SceneManager::hud = new HUD();
+bool SceneManager::disableHud = false;
+
 // Constructor
 SceneManager::SceneManager()
 {
+	scene = NONE;
+	scenePrevious = scene;
+	sceneIsPaused = false;
+
 
 }
 
@@ -20,6 +45,9 @@ void SceneManager::Update()
 {
 	if (camera)
 		camera->updatePos();
+
+	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL) 
+		SceneManager::PauseScene(!sceneIsPaused);
 }
 
 /* Updates every frame.
@@ -132,7 +160,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::gameObjects.push_back(flockOfFish);
 
 			// Make a playingField (mesh out of grid)
-			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X, -200, -GameManager::WORLD_RADIUS_Z), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
 
 			// Spawn random objects on grid;
@@ -185,37 +213,19 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				}
 			}
 
+
 			// Spawn rocks
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Rock.obj"); meshTextures.push_back("");
-			for (int i = 0; i < GameManager::rockCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer])
-					{
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* rock = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f),
-							new vector3df(rand() % 360, rand() % 360, rand() % 360),
-							0, GameManager::smgr, -1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							0);
-						for (int mIndex = 0; mIndex < rock->mesh->getMaterialCount(); mIndex++)
-						{
-							rock->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-						}
-						GameManager::gameObjects.push_back(rock);
-						spawnTracker[randomizer] = true;
-						break;
-					}
-				}
-			}
 
+
+			// Adds objects on the vertices of the playingfield mesh 
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::rockCount, playingField->getPosition(),
+				vector3df(150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f,
+					150 + (rand() % 150) * 0.25f),
+				vector3df(rand() % 360, rand() % 360, rand() % 360), -1111,
+				meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
 			//// Spawn ruins
 			meshDirectories.clear();
 			meshTextures.clear();
@@ -225,28 +235,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/ruinsPillar.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/ruinsTempleRuin1.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/ruinsTempleRuin2.obj"); meshTextures.push_back("");
-			for (size_t i = 0; i < GameManager::ruinsCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer])
-					{
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* ruin = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(1, 1, 1),
-							new vector3df(0, 0, 0),
-							0, GameManager::smgr, -1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							0);
-						GameManager::gameObjects.push_back(ruin);
-						spawnTracker[randomizer] == true;
-						break;
-					}
-				}
-			}
+
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::ruinsCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
+				-1111
+				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+
 			// Spawn corals
 			meshDirectories.clear();
 			meshTextures.clear();
@@ -255,29 +248,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Coral/coralBrain3.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Coral/coralPillar.obj"); meshTextures.push_back("");
 
-			for (size_t i = 0; i < GameManager::coralCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer]) {
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* coral = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(1, 1, 1),
-							new vector3df(0, 0, 0),
-							0, GameManager::smgr, -1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							0);
-						for (int mIndex = 0; mIndex < coral->mesh->getMaterialCount(); mIndex++)
-							coral->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-						GameManager::gameObjects.push_back(coral);
-						spawnTracker[randomizer] == true;
-						break;
-					}
-				}
-			}
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::coralCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
+				-1111
+				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
 
 
 			// Spawn vines
@@ -285,57 +258,18 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Plants/tiny_weed_03_01.obj"); meshTextures.push_back("");
 
-			for (size_t i = 0; i < GameManager::plantCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer]) {
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* vines = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(1, 1, 1),
-							new vector3df(0, 0, 0),
-							0, GameManager::smgr, -1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							0);
-						for (int mIndex = 0; mIndex < vines->mesh->getMaterialCount(); mIndex++)
-							vines->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-						GameManager::gameObjects.push_back(vines);
-						spawnTracker[randomizer] == true;
-						break;
-					}
-				}
-			}
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::plantCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
+				-1111
+				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
 
 			// Spawn skulls
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Bones/skullBig.obj"); meshTextures.push_back("");
 
-			for (size_t i = 0; i < GameManager::skullCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer]) {
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* skull = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(1, 1, 1),
-							new vector3df(0, 0, 0),
-							0, GameManager::smgr, -1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							0);
-						skull->mesh->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-						GameManager::gameObjects.push_back(skull);
-						spawnTracker[randomizer] == true;
-						break;
-					}
-				}
-			}
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::skullCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
+				-1111
+				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
 
 			// Spawn ship
 			meshDirectories.clear();
@@ -345,31 +279,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Boat.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/BoatWSail.obj"); meshTextures.push_back("");
 
-			for (size_t i = 0; i < GameManager::shipCount; i++)
-			{
-				while (true) {
-					// Generate a random number for the selection of a vertice so an object can get spawned on it
-					int randomizer = rand() % planeBuffer->getVertexCount();
-					// Checks if the vertice is free (no object has been drawn on the vertice)
-					if (!spawnTracker[randomizer]) {
-						int typeIndex = rand() % meshDirectories.size();
-						GameObject* ship = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y,
-							mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z),
-							new vector3df(1, 1, 1),
-							new vector3df(rand() % 25, rand() % 10, rand() % 10),
-							0,
-							GameManager::smgr,
-							-1111,
-							GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-							meshTextures[typeIndex] != "" ? GameManager::driver->getTexture(meshTextures[typeIndex]) : 0);
-						for (int mIndex = 0; mIndex < ship->mesh->getMaterialCount(); mIndex++)
-							ship->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-						GameManager::gameObjects.push_back(ship);
-						spawnTracker[randomizer] == true;
-						break;
-					}
-				}
-			}
+			GridMesh::RandomObjectPlacementOnVertex(GameManager::shipCount, playingField->getPosition(), {},
+				vector3df(rand() % 25, rand() % 10, rand() % 10), -1111, meshDirectories,
+				meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+
+			
 		#pragma endregion
 		} break;
 
@@ -395,8 +309,47 @@ void SceneManager::PauseScene(bool mode)
 	if (mode == sceneIsPaused)
 		return;
 
-	// TODO: Pause game (add gameSpeed multiplier and add to delta timers!)
-	// GameManager::gameSpeed = mode ? 0.0f : 1.0f;
+	// Pause / unpause game
+	GameManager::gameSpeed = mode ? 0.0f : 1.0f;
+	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);
+	sceneIsPaused = mode;
+
+	// Toggle pause menu
+	if (sceneIsPaused)
+	{
+		Menu* pauseMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+		pauseMenu->elementWidth = 200.0f;
+		pauseMenu->elementHeight = 250.0f;
+		pauseMenu->windowTitle = "Pause Menu";
+		pauseMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - pauseMenu->elementWidth / 2.0f,
+			GameManager::screenDimensions.Height / 2.0f - pauseMenu->elementHeight / 2.0f, 0.0f));
+		GameManager::interfaceObjects.push_back(pauseMenu);
+
+		int buttonCount = 2;
+		float buttonWidth = pauseMenu->elementWidth - pauseMenu->elementSpacing * 2.0f;
+		float buttonHeight = 50.0f;
+		float buttonStartX = pauseMenu->getPosition().X + pauseMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
+		float buttonStartY = pauseMenu->getPosition().Y + pauseMenu->elementHeight - 1 -
+			((buttonHeight + pauseMenu->elementSpacing) * buttonCount);
+
+		for (int bIndex = 0; bIndex < buttonCount; bIndex++)
+		{
+			Button* button = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + pauseMenu->elementSpacing) * bIndex)), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+				(Button::ButtonType)bIndex, 0, GameManager::smgr, 15000);
+			button->creator = pauseMenu;
+			button->elementWidth = buttonWidth;
+			button->elementHeight = buttonHeight;
+			GameManager::interfaceObjects.push_back(button);
+		}
+	}
+	else
+	{
+		// Delete the pause menu
+		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
+		if (pauseMenu)
+			pauseMenu->~Menu();
+	}
 }
 
 /* Triggers whenever a scene switch happens.*/

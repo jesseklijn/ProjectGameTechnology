@@ -36,7 +36,7 @@ void DetectCollision::getNearestObjectsFromPosition(GameObject* object, GameObje
 void DetectCollision::Detect(
 	bool pickedUp[],
 	irr::scene::ISceneManager* smgr
-){
+) {
 	if (!arrayFilled)
 	{
 		fillInitialArray();
@@ -49,7 +49,7 @@ void DetectCollision::Detect(
 
 		for (int i = 0; i < oList.size(); i++)
 		{
-			getNearestObjectsFromPosition(GameManager::FindGameObjectWithTag(GameObject::PLAYER), oList[i]);
+			getNearestObjectsFromPosition(GameManager::FindGameObjectWithTag<GameObject>(GameObject::PLAYER, GameManager::gameObjects), oList[i]);
 		}
 		//std::cout << nearestObjects.size() << std::endl;
 		findNearestObjectsTimer = findNearestObjectsTime;
@@ -62,8 +62,8 @@ void DetectCollision::Detect(
 			allowCollision = true;
 		}
 	}
-	
-	if (allowCollision) {		
+
+	if (allowCollision) {
 		for (int i = 0; i < nearestObjects.size(); i++)
 		{
 			GameObject* obj1 = nearestObjects[i];
@@ -83,20 +83,97 @@ void DetectCollision::Detect(
 					{
 						if (Col(obj1, obj2, size))
 						{
-							std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+							//std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+							switch (obj1->tag) {
+							case GameObject::PLAYER:
+								switch (obj2->tag)
+								{
+								case GameObject::KEY:
+									GameManager::keyPickedUp = true;
+									obj2->mesh->remove();
+									GameManager::gameObjects.erase(GameManager::gameObjects.begin() + j);
+									break;
+								case GameObject::CHEST:
+									if (GameManager::keyPickedUp)
+										GameManager::escaped = true;
+									// Win!
+
+									break;
+								case GameObject::WORLD_OBJECT:
+									// collision resolution
+									// Resolve(obj1, obj2);
+									break;
+								case GameObject::MONSTER:
+									GameManager::hasDied = true;
+									// Die!
+									break;
+								default:
+									break;
+								}
+								break;
+							case GameObject::MONSTER:
+								switch (obj2->tag)
+								{
+								case GameObject::KEY:
+									// same as world_object
+								case GameObject::CHEST:
+									// same as world_object
+								case GameObject::WORLD_OBJECT:
+									// collision resolution
+									// Resolve(obj1, obj2);
+									break;
+								default:
+									break;
+								}
+								break;
+							default:
+								break;
+							}
 						}
 					}
 				}
 			}
 		}
+	
 	}
+
 }
 
-DetectCollision::DetectCollision()
-{
-}
 
-DetectCollision::~DetectCollision()
-{
-}
+//void Resolve(GameObject* obj1, GameObject* obj2)
+//{
+//	vector3df currentVelocity = obj1->getVelocity();
+//	float sizeVelocity = currentVelocity.getLength();
+//	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+//	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+//
+//	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+//	direction.normalize();
+//	if (obj1->tag == GameObject::PLAYER)
+//	{
+//		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
+//		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
+//
+//	}
+//	else
+//	{
+//		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
+//		obj1->setVelocity(sizeVelocity * reflection.normalize());
+//	}
+//}
+//
+//float Dot(vector3df vector1, vector3df vector2)
+//{
+//	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+//}
+
+
+	DetectCollision::DetectCollision()
+	{
+
+	}
+
+	DetectCollision::~DetectCollision()
+	{
+	}
 

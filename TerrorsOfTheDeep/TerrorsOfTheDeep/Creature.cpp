@@ -54,7 +54,7 @@ void Creature::UpdateState()
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
-		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag(this, GameObject::MONSTER, INFINITY, true);
+		targetFleeingFrom = GameManager::FindNearestGameObjectWithTag<GameObject>(this, GameObject::MONSTER, GameManager::gameObjects, INFINITY, true);
 		if (targetFleeingFrom)
 		{
 			if ((targetFleeingFrom->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)
