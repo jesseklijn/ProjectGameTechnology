@@ -81,7 +81,7 @@ int main()
 	GameManager::device->drop();
 
 	// Stop sound
-	sound_shutdown();
+	Sound::SoundShutdown();
 
 	return 0;
 }

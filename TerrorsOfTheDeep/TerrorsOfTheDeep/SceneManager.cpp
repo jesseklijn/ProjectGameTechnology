@@ -95,8 +95,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
 			// Initialize our background music
-			sound_init();
-			background_music("../media/AmbientUnderwaterMaddnes.ogg");
+			Sound::BackGroundMusic("../media/AmbientUnderwaterMaddnes.ogg", 0.5);
 
 			// Adds the camera and binds the keys to the camera's movement
 			camera = new Camera(GameManager::smgr);

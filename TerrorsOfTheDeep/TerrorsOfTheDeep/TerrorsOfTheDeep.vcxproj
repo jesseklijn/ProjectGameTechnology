@@ -192,6 +192,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shark.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="UnitTests.cpp" />
   </ItemGroup>
@@ -218,6 +219,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shark.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundEngine.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="DynamicUpdater.h" />
     <ClInclude Include="EventManager.h" />
