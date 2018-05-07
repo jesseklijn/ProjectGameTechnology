@@ -26,7 +26,6 @@ public:
 	float volume;
 	float dragCoefficient;
 	float crossSectionalArea;
-	//float mass2;
 	irr::scene::ISceneNode* parent;
 
 	PhysicsObject(irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,

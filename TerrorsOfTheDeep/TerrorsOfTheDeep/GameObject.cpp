@@ -2,8 +2,6 @@
 #include "GameManager.h" 
 
 // Constructor
-
-// PhysicsObject version
 GameObject::GameObject(const irr::core::vector3df* startPosition,
 						const irr::core::vector3df* startScale,
 						const irr::core::vector3df* startRotation, 
@@ -11,14 +9,6 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
 						float mass)
 						: PhysicsObject(parent, mgr, id, startPosition, mass)
-
-//GameObject::GameObject(const irr::core::vector3df* startPosition,
-//	const irr::core::vector3df* startScale,
-//	const irr::core::vector3df* startRotation,
-//	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-//	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-//	: ISceneNode(parent, mgr, id)
-
 {
 	setTag(GameObject::WORLD_OBJECT);
 
