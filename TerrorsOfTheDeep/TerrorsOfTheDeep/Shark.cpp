@@ -23,6 +23,7 @@ void Shark::UpdateState()
 {
 	/* Determine core state
 	Set defaults and gather basic shark information*/
+	stateUpdateTime = stateUpdateTimeDefault;
 	statePrevious = state;
 	state = IDLE;
 	currentPosition = getPosition();
@@ -105,21 +106,19 @@ void Shark::ExecuteState()
 		case ATTACKING:
 		{
 			moveSpeed = chaseSpeed;
+			stateUpdateTime = GameManager::deltaTimeMS;
 
-			// TODO: GAME OVER!
-			if (targetDistance < attackKillRange)
-				std::cout << "Game Over!" << std::endl;
+			if ((Player*)targetAttack && targetDistance < attackKillRange)
+				GameManager::gameOver = true;
 
 			// When the shark at any time moves away from the target, we count this as an attack try.
-			if (targetDistanceLast < targetDistance || targetDistance <= moveSpeed)
+			if (targetDistanceLast < targetDistance || targetDistance <= GameManager::Max(attackKillRange, moveSpeed))
 			{
 				attackCooldownTimer = attackCooldownTimeMin + rand() % (int)(attackCooldownTimeMax - attackCooldownTimeMin);
 
 				/* Move away from the currently bitten target.
 				For now it simply picks the furthest target until the attack cooldown finishes.*/
 				targetPriority = FURTHEST;
-				Shark::UpdateState();
-				stateUpdateTimer = rand() % (int)stateUpdateTime;
 			}
 
 			break;

@@ -1,0 +1,26 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl BrickFloor1
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 1.042105 1.042105 1.042105
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TempleRuin_02\3td_BrickFloorOld_01.jpg
+map_Bump TempleRuin_02\\3td_BrickFloorOld_01.jpg
+
+newmtl ConcreteStain1
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.947368 0.947368 0.947368
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TempleRuin_02\3td_ConcreteStain_01.jpg
+map_Bump TempleRuin_02\\3td_ConcreteStain_01.jpg

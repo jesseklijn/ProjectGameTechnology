@@ -43,8 +43,8 @@ int main()
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
-
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
+
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////

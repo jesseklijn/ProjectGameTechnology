@@ -78,6 +78,11 @@ public:
 	static float creatureStateRange;
 	static float gameSpeed;
 
+	static bool gameOver;
+
+	static GameObject* levelMonster;
+	static GameObject* levelPlayer;
+
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;
 

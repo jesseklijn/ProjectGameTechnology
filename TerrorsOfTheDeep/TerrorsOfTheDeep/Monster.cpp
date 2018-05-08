@@ -15,10 +15,12 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	canAttack = true;
 	canFlee = false;
 
-	rotationLerp = 0.00002;
+	rotationLerp = 0.000025;
 	idleSpeed = 250.0f;
 	moveSpeed = idleSpeed;	
 	chaseSpeed = idleSpeed * chaseSpeedMultiplier;
+	attackRange = 1250.0f;
+	attackKillRange = chaseSpeed;
 
 	targetTags.push_back(GameObject::PLAYER);
 	targetTags.push_back(GameObject::CREATURE);
@@ -74,14 +76,14 @@ GameObject* Monster::GetTarget(Monster::TargetPriority priorityMode, bool player
 		case CLOSEST:
 		{
 			// Finds the nearest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindNearestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
+			return GameManager::gameObjects[rand() % (GameManager::gameObjects.size() - 1)];//GameManager::FindNearestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 
 		case FURTHEST:
 		{
 			// Finds the furthest GameObject that satisfies this Monster's prey tag list, regardless of class.
-			return GameManager::FindFurthestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
+			return GameManager::gameObjects[rand() % (GameManager::gameObjects.size() - 1)]; //GameManager::FindFurthestGameObjectWithTags<GameObject>(this, targetTags, GameManager::gameObjects, detectionRange, visibilityCheck);
 			break;
 		}
 

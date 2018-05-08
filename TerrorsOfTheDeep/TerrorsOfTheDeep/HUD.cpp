@@ -44,17 +44,17 @@ void HUD::HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv)
 	if (GameManager::keyPickedUp)
 	{
 		//Key
-		driver->draw2DImage(driver->getTexture("../media/Key.png"), core::position2d<s32>(GameManager::screenDimensions.Width-135,0), rect<s32>(0, 0,125,125));
+		driver->draw2DImage(driver->getTexture("../media/WinLose/Key.png"), core::position2d<s32>(GameManager::screenDimensions.Width-135,0), rect<s32>(0, 0,125,125));
 	}
 	if (GameManager::escaped) {
 		//Escape
-		driver->draw2DImage(driver->getTexture("../media/Background.png"), core::position2d<s32>(0, 0), rect<s32>(0, 0, 1920, 1080));
-		driver->draw2DImage(driver->getTexture("../media/Youwin.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 550) / 2, (GameManager::screenDimensions.Height - 314) / 2), rect<s32>(0, 0, 550, 314));
+		driver->draw2DImage(driver->getTexture("../media/UI/Background.png"), core::position2d<s32>(0, 0), rect<s32>(0, 0, 1920, 1080));
+		driver->draw2DImage(driver->getTexture("../media/UI/Youwin.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 550) / 2, (GameManager::screenDimensions.Height - 314) / 2), rect<s32>(0, 0, 550, 314));
 
 	}
 	if (GameManager::hasDied) {
 		//Death
-		driver->draw2DImage(driver->getTexture("../media/Background.png"), core::position2d<s32>(0, 0), rect<s32>(0, 0, 1920, 1080));
-		driver->draw2DImage(driver->getTexture("../media/Overlay.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 275) / 2, (GameManager::screenDimensions.Height - 183) / 2), rect<s32>(0, 0, 275, 183));
+		driver->draw2DImage(driver->getTexture("../media/UI/Background.png"), core::position2d<s32>(0, 0), rect<s32>(0, 0, 1920, 1080));
+		driver->draw2DImage(driver->getTexture("../media/UI/Overlay.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 275) / 2, (GameManager::screenDimensions.Height - 183) / 2), rect<s32>(0, 0, 275, 183));
 	}
 }

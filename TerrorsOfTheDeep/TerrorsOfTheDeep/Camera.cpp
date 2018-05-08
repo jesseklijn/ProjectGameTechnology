@@ -13,8 +13,8 @@ using namespace gui;
 // Constructor
 Camera::Camera(ISceneManager* smgr)
 {
-	const float MOVEMENT_SPEED = (float)0.25;
-	const float ROTATION_SPEED = (float)100;
+	const float MOVEMENT_SPEED = 0.35f;
+	const float ROTATION_SPEED = 100.0f;
 
 	// Keymapping for player controls
 	SKeyMap keyMap[4];
@@ -33,7 +33,7 @@ Camera::Camera(ISceneManager* smgr)
 
 	// Add a camera in the scene
 	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
-	camera->setFarValue(7500.0f);
+	camera->setFarValue(10000.0f);
 }
 
 // Destructor

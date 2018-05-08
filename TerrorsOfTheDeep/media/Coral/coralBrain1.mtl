@@ -25,7 +25,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd Files\Coral\orbicella-annularis\source\textures\Orbicella_annularis_rock.jpg
+map_Kd Orbicella_annularis_rock.jpeg
 map_Bump -bm 5.000000 Orbicella_annularis_rock.jpeg
 map_Ks Orbicella_annularis_rock.jpeg
 map_Ns Orbicella_annularis_rock.jpeg
