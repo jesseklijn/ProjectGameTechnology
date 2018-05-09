@@ -21,15 +21,15 @@ public:
 	void OnRegisterSceneNode();
 
 	// Variables
-	static const int GRID_OFFSET = 20; //grid part that ísn't accessible by the player (field beyond level boundaries)
-	static const int CELL_SIZE = 250; //Define the size of 1 cell (1 unit)
+	static const int GRID_OFFSET = 30; //grid part that ísn't accessible by the player (field beyond level boundaries)
+	static const int CELL_SIZE = 500; //Define the size of 1 cell (1 unit)
 	int xSizeGrid, ySizeGrid;
 	int maxHighMountainHeight = 1000; //defines the max mountain differences (landmark)
 	int highMountainConstantHeight = 400;
 	int ruinsConstantDepthLevel1 = -100; //defines the 3 depth levels of the ruin part of grid (landmark)
 	int ruinsConstantDepthLevel2 = -300;
 	int ruinsConstantDepthLevel3 = -500;
-	int maxHeightNormalGround = 250;  //defines the max ground differences (no landmark)
+	int maxHeightNormalGround = 200;  //defines the max ground differences (no landmark)
 	int constantHeightNormalGround = 50;
 	irr::core::vector3df startPos;
 

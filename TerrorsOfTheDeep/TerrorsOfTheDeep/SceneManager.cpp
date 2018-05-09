@@ -5,14 +5,14 @@
 static const int NO_PARENT = 0;
 static const float KEYLIGHT_RADIUS = 1000.0f;
 static const float CHESTLIGHT_RADIUS = 1000.0f;
-static const float FLASHLIGHT_RANGE = 2500.0f;
+static const float FLASHLIGHT_RANGE = 4000.0f;
 
 SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
 SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
 //irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
@@ -263,13 +263,13 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Coral/coralFingers.obj"); meshTextures.push_back("");
 			GridMesh::RandomObjectPlacementOnVertex(GameManager::coralCount, 
 				playingField->getPosition(), 
-				vector3df(1.0f, 1.0f, 1.0f),
+				vector3df(3.0f, 3.0f, 3.0f),
 				vector3df(0.0f, 0.0f, 0.0f),
 				-1111, 
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
-				0.35f, 0.35f, 0.35f,
+				0.5f, 0.5f, 0.5f,
 				10.0f, 360.0f, 10.0f);
 
 			// Spawn vines

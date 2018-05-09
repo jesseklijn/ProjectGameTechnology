@@ -18,11 +18,5 @@ public:
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
 	~Shark();
-
-	// Functions
-	virtual void Update();
-	virtual void UpdateState();
-	virtual void ExecuteState();
-	void OnStateSwitch();
 };
 

@@ -124,7 +124,7 @@ void Creature::ExecuteState()
 	// State switch detector
 	if (statePrevious != state)
 	{
-		Creature::OnStateSwitch();
+		OnStateSwitch();
 		statePrevious = state;
 	}
 }
@@ -164,12 +164,12 @@ void Creature::Update()
 	if (stateUpdateTimer <= 0.0)
 	{
 		if ((getAbsolutePosition() - GameManager::smgr->getActiveCamera()->getAbsolutePosition()).getLength() < GameManager::creatureStateRange)
-			Creature::UpdateState();
+			UpdateState();
 		else
 			state = IDLE;
 
 		stateUpdateTimer = rand() % (int)stateUpdateTime;
 	}
-	Creature::ExecuteState();
-	Creature::Move();
+	ExecuteState();
+	Move();
 }

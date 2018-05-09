@@ -38,7 +38,7 @@ public:
 	float seekTime = 3.0f * 1000.0f;
 	float seekTimer = 0.0f;
 	float agilityFactor = 10.0f;
-	float agilityDistance = 6000.0f, agility;
+	float agilityDistance = 7500.0f, agility;
 	float targetDistance, targetDistanceLast;
 
 	float stateUpdateTimeDefault = 1.0f * 1000.0f;

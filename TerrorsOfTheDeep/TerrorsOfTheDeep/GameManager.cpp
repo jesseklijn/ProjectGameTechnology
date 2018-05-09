@@ -64,21 +64,21 @@ bool GameManager::gameOver = false;
 const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
 // World dimensions
-const int GameManager::WORLD_RADIUS_X = 15000.0f;
-const int GameManager::WORLD_RADIUS_Y = 10000.0f;
-const int GameManager::WORLD_RADIUS_Z = 15000.0f;
+const int GameManager::WORLD_RADIUS_X = 12500.0f;
+const int GameManager::WORLD_RADIUS_Y = 9000.0f;
+const int GameManager::WORLD_RADIUS_Z = 12500.0f;
 bool GameManager::keyPickedUp = false;
 bool GameManager::escaped = false;
 bool GameManager::hasDied = false;
 
 // World generation
-int GameManager::critterCount = 200;
-int GameManager::shipCount = 12;
-int GameManager::rockCount = 150;
+int GameManager::critterCount = 250;
+int GameManager::shipCount = 6;
+int GameManager::rockCount = 100;
 int GameManager::ruinsCount = 24;
-int GameManager::coralCount = 150;
+int GameManager::coralCount = 175;
 int GameManager::plantCount = 40;
-int GameManager::skullCount = 3;
+int GameManager::skullCount = 2;
 
 float GameManager::gameSpeed = 1.0f;
 #pragma endregion
@@ -87,7 +87,7 @@ float GameManager::gameSpeed = 1.0f;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.00035f);
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.00015f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 	
 	Awake();
