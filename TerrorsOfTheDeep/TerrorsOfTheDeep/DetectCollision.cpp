@@ -68,9 +68,20 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 				for (int j = 0; j < nearestObjects.size(); j++)
 				{
 					GameObject* obj2 = nearestObjects[j];
-					float size = ((obj1->getTransformedBoundingBox().getExtent().X +
-						(obj2->getTransformedBoundingBox().getExtent().X)) * 0.5f
-						);
+					//float size = ((obj1->getTransformedBoundingBox().getExtent().X +
+					//	(obj2->getTransformedBoundingBox().getExtent().X)) * 0.5f
+					//	);
+
+					// Temporary fix to be replaced by mesh collision
+					float size = 50;
+					if (obj2->tag == GameObject::WORLD_OBJECT)
+					{
+						size = 200;
+					}
+					if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
+					{
+						size = 500;
+					}
 
 					//std::cout << "obj1: " << obj1->tag << " obj2: " << obj2->tag << " size: " << size << std::endl;
 
@@ -143,7 +154,6 @@ void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
 	{
 		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
 		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
-
 	}
 	else
 	{
