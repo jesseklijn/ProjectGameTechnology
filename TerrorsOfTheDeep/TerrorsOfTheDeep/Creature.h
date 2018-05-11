@@ -45,7 +45,7 @@ public:
 	float stateUpdateTime = stateUpdateTimeDefault;
 	float stateUpdateTimer = 0.0f;
 
-	float idleSpeed = 125.0f;
+	float idleSpeed = 155.0f;
 	float chaseSpeed, fleeSpeed;
 	float chaseSpeedMultiplier = 2.0f;
 	float fleeSpeedMultiplier = 4.5f;

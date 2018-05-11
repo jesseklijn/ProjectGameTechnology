@@ -1,0 +1,15 @@
+# Blender MTL File: 'fish.blend'
+# Material Count: 1
+
+newmtl Material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd G:\Users\Robert\Documents\Gitkraken projects\Project Game Technology\ProjectGameTechnology\TerrorsOfTheDeep\media\784px-Akv_ryba.jpg
+map_Bump Akvarijni_ryba.jpg
+map_Ks Akvarijni_ryba.jpg

@@ -94,16 +94,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		case LEVEL:
 		{
-			#pragma region Setup
+			#pragma region Begin setup
 			GameManager::device->getCursorControl()->setVisible(false);
 
 			// Set our skydome
 			ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 			skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
-
-			// Initialize our background music
-			sound_init();
-			background_music("../media/Sound/AmbientUnderwaterMaddnes.ogg");
 
 			// Adds the camera and binds the keys to the camera's movement
 			camera = new Camera(GameManager::smgr);
@@ -115,45 +111,32 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			std::vector<io::path> meshDirectories;
 			std::vector<io::path> meshTextures;
 
-			// Spawn critters
-			meshDirectories.push_back("../media/Fish/Fish1.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Fish/Fish2.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Fish/MantaRay.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Fish/GoldenFish.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Fish/Rudd_Fish.obj"); meshTextures.push_back("");
-			for (int critterIndex = 0; critterIndex < GameManager::critterCount; critterIndex++)
-			{
-				int graphicsIndex = rand() % meshDirectories.size();
-				Critter* critter = new Critter(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
-					rand() % GameManager::WORLD_RADIUS_Y,
-					rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
-					new vector3df(1, 1, 1),
-					new vector3df(0, 0, 0),
-					0,
-					GameManager::smgr,
-					-1111,
-					GameManager::smgr->getMesh(meshDirectories[graphicsIndex]),
-					meshTextures[graphicsIndex] != "" ? GameManager::driver->getTexture(meshTextures[graphicsIndex]) : 0,
-					false);
-				GameManager::gameObjects.push_back(critter);
-			}
-
-			// Spawn world objects
-			IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/Player/FPSArms.obj");
-
-
-			// Spawn player
-			Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-				GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111);
+			// Spawn player in cage
+			Player* player = new Player(new vector3df(0, 0, 0), 
+				new vector3df(1, 1, 1), 
+				new vector3df(0, 0, 0),
+				GameManager::smgr->getActiveCamera(), 
+				GameManager::smgr, 
+				-1337,
+				GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
 			GameManager::gameObjects.push_back(player);
 			GameManager::levelPlayer = player;
+
+			GameObject* cage = new GameObject(new vector3df(player->getPosition().X, player->getPosition().Y - 100.0f, player->getPosition().Z),
+				new vector3df(1, 1, 1),
+				new vector3df(0, 0, 0),
+				0,
+				GameManager::smgr,
+				-1111,
+				GameManager::smgr->getMesh("../media/Ruins/SharkCage.obj"));
+			GameManager::gameObjects.push_back(cage);
 
 			// Attach flashlight to player
 			ISceneNode* newPlayer = player;
 			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
 
 			// Spawn shark
-			Shark* shark = new Shark(new vector3df(4000, 500, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			Shark* shark = new Shark(new vector3df(40000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				0, GameManager::smgr, -1111,
 				GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
 				0, false);
@@ -164,13 +147,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -300, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
 
-			// Spawn random objects on grid;
-			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
-
-			// Get the vertices of the playingField 
+			// Spawn random objects on grid
+			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0); 
 			S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
-
-			// Amount of objects to be spawn on the grid
 			int verticesGrid = planeBuffer->getVertexCount();
 
 			// Keeps track what vertex has an object spawned on it
@@ -202,7 +181,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				int randomizer = rand() % planeBuffer->getVertexCount();
 				// Checks if the vertice is free (no object has been drawn on the vertice)
 				if (!spawnTracker[randomizer]) {
-					GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
+					GameObject* chest = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
+						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 						0, GameManager::smgr, 5,
 						GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"),
 						0);
@@ -212,8 +192,36 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 					GameManager::gameObjects.push_back(chest);
 					break;
 				}
-			}
+			}	
 
+			// Spawn critters
+			meshDirectories.push_back("../media/Fish/Fish1.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish2.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish3.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish4.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish5.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish6.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish7.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Fish8.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/MantaRay.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/GoldenFish.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish/Rudd_Fish.obj"); meshTextures.push_back("");
+			for (int critterIndex = 0; critterIndex < GameManager::critterCount; critterIndex++)
+			{
+				int graphicsIndex = rand() % meshDirectories.size();
+				Critter* critter = new Critter(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
+					rand() % GameManager::WORLD_RADIUS_Y,
+					rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
+					new vector3df(1, 1, 1),
+					new vector3df(0, 0, 0),
+					0,
+					GameManager::smgr,
+					-1111,
+					GameManager::smgr->getMesh(meshDirectories[graphicsIndex]),
+					meshTextures[graphicsIndex] != "" ? GameManager::driver->getTexture(meshTextures[graphicsIndex]) : 0,
+					false);
+				GameManager::gameObjects.push_back(critter);
+			}
 
 			// Spawn rocks
 			meshDirectories.clear();
@@ -230,8 +238,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
-				0.4f, 0.4f, 0.4f,
-				5.0f, 360.0f, 5.0f);
+				0.6f, 0.6f, 0.6f,
+				45.0f, 360.0f, 45.0f);
+
 
 			//// Spawn ruins
 			meshDirectories.clear();
@@ -320,6 +329,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				0.5f, 0.5f, 0.5f,
 				25.0f, 360.0f, 25.0f);
 		#pragma endregion
+
+			#pragma region End setup
+			// Initialize our background music
+			sound_init();
+			background_music("../media/Sound/AmbientUnderwaterMaddnes.ogg");
+			#pragma endregion
 		} break;
 
 		case GAME_OVER:
