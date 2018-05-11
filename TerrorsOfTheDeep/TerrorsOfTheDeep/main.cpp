@@ -43,8 +43,8 @@ int main()
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
-
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
+
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////
@@ -81,7 +81,7 @@ int main()
 	GameManager::device->drop();
 
 	// Stop sound
-	Sound::SoundShutdown();
-
+	//Sound::SoundShutdown();
+	sound_shutdown();
 	return 0;
 }

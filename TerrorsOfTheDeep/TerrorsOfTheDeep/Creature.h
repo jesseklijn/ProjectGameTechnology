@@ -30,21 +30,22 @@ public:
 
 	GameObject* targetAttack = nullptr;
 	GameObject* targetFleeingFrom = nullptr;
-	double chaseDetectionRange = 1000000.0f;
-	float attackRange = 100.0f;
-	float attackCooldownTimeMin = 15.0f * 1000.0f;
-	float attackCooldownTimeMax = 45.0f * 1000.0f;
+	double chaseDetectionRange = INFINITY;
+	float attackRange = 500.0f;
+	float attackCooldownTimeMin = 5.0f * 1000.0f;
+	float attackCooldownTimeMax = 15.0f * 1000.0f;
 	float attackCooldownTimer = 0.0f;
 	float seekTime = 3.0f * 1000.0f;
 	float seekTimer = 0.0f;
-	float agilityFactor = 25.0f;
-	float agilityDistance = 5000.0f, agility;
-	float targetDistance;
+	float agilityFactor = 10.0f;
+	float agilityDistance = 7500.0f, agility;
+	float targetDistance, targetDistanceLast;
 
-	float stateUpdateTime = 1.0f * 1000.0f;
+	float stateUpdateTimeDefault = 1.0f * 1000.0f;
+	float stateUpdateTime = stateUpdateTimeDefault;
 	float stateUpdateTimer = 0.0f;
 
-	float idleSpeed = 85.0f;
+	float idleSpeed = 155.0f;
 	float chaseSpeed, fleeSpeed;
 	float chaseSpeedMultiplier = 2.0f;
 	float fleeSpeedMultiplier = 4.5f;

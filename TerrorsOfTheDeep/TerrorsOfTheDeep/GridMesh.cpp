@@ -92,7 +92,7 @@ void GridMesh::GenerateMesh()
 	mesh->setMaterialFlag(EMF_LIGHTING, true);
 	mesh->setMaterialFlag(EMF_NORMALIZE_NORMALS, true);
 	mesh->setMaterialFlag(EMF_FOG_ENABLE,true);
-	mesh->setMaterialTexture(0, driver->getTexture("../media/SandTexture.jpg"));
+	mesh->setMaterialTexture(0, driver->getTexture("../media/WorldDetail/SandTexture.jpg"));
 	return;
 }
 
@@ -107,9 +107,19 @@ u32 GridMesh::getMaterialCount() const
 }
 
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
-void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vector3df scale,
-                                           vector3df rotation,
-                                           irr::s32 id, std::vector<irr::io::path> meshDirectories,std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer)
+void GridMesh::RandomObjectPlacementOnVertex(int amount, 
+	vector3df position, vector3df scale, 
+	vector3df rotation,
+	irr::s32 id, 
+	std::vector<irr::io::path> meshDirectories,
+	std::vector<irr::io::path> textureDirectories, 
+	IMeshBuffer* meshBuffer,
+	float scaleVariationX, 
+	float scaleVariationY, 
+	float scaleVariationZ,
+	float rotationVariationX, 
+	float rotationVariationY, 
+	float rotationVariationZ)
 {
 	// Amount of tries before it skips the current object and go to the next object
 	int currentTimeOutTries = 0;
@@ -137,10 +147,16 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 			if (!spawnTracker[randomizer])
 			{
 				int typeIndex = rand() % meshDirectories.size();
+				float scaleAdditionX = ((rand() % 100) * scaleVariationX) / 100.0f - scaleVariationX / 2.0f;
+				float scaleAdditionY = ((rand() % 100) * scaleVariationY) / 100.0f - scaleVariationY / 2.0f;
+				float scaleAdditionZ = ((rand() % 100) * scaleVariationZ) / 100.0f - scaleVariationZ / 2.0f;
+				float rotationAdditionX = ((rand() % 100) * rotationVariationX) / 100.0f - rotationVariationX / 2.0f;
+				float rotationAdditionY = ((rand() % 100) * rotationVariationY) / 100.0f - rotationVariationY / 2.0f;
+				float rotationAdditionZ = ((rand() % 100) * rotationVariationZ) / 100.0f - rotationVariationZ / 2.0f;
 				GameObject* object = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + position.X, mb_vertices[randomizer].Pos.Y + position.Y,
 					mb_vertices[randomizer].Pos.Z + position.Z),
-					new vector3df(scale.X, scale.Y, scale.Z),
-					new vector3df(rotation.X, rotation.Y, rotation.Z),
+					new vector3df(scale.X + scaleAdditionX, scale.Y + scaleAdditionY, scale.Z + scaleAdditionZ),
+					new vector3df(rotation.X + rotationAdditionX, rotation.Y + rotationAdditionY, rotation.Z + rotationAdditionZ),
 					0, GameManager::smgr, id,
 					GameManager::smgr->getMesh(meshDirectories[typeIndex]),
 					0);
