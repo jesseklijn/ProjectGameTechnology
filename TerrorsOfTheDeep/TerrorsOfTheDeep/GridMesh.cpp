@@ -108,12 +108,15 @@ u32 GridMesh::getMaterialCount() const
 
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
 void GridMesh::RandomObjectPlacementOnVertex(int amount, 
-	vector3df position, vector3df scale, 
+	vector3df position, 
+	vector3df scale,
 	vector3df rotation,
 	irr::s32 id, 
 	std::vector<irr::io::path> meshDirectories,
 	std::vector<irr::io::path> textureDirectories, 
 	IMeshBuffer* meshBuffer,
+	bool detectCollision,
+	bool castsShadows,
 	float scaleVariationX, 
 	float scaleVariationY, 
 	float scaleVariationZ,
@@ -159,7 +162,8 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount,
 					new vector3df(rotation.X + rotationAdditionX, rotation.Y + rotationAdditionY, rotation.Z + rotationAdditionZ),
 					0, GameManager::smgr, id,
 					GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-					0);
+					0, detectCollision, castsShadows);
+				object->mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 				// Needs to be included to prevent textures being half transparent
 				for (int mIndex = 0; mIndex < object->mesh->getMaterialCount(); mIndex++)
 				{

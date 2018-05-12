@@ -16,7 +16,8 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture,
+	bool detectCollision, bool castsShadows)
 	: ISceneNode(parent, mgr, id)
 
 {
@@ -51,6 +52,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setPosition(*startPosition);
 		mesh->setScale(*startScale);
 		mesh->setRotation(*startRotation);
+
+		if (castsShadows)
+			mesh->addShadowVolumeSceneNode();
 
 		/* Create selection functionality so raycasts will detect it
 		Initialize a base selector, used for assigning selection to scene nodes

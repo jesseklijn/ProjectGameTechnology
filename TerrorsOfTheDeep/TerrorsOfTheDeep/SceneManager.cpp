@@ -238,6 +238,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.6f, 0.6f, 0.6f,
 				45.0f, 360.0f, 45.0f);
 
@@ -259,6 +261,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.0f, 0.0f, 0.0f,
 				5.0f, 360.0f, 5.0f);
 
@@ -278,6 +282,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.5f, 0.5f, 0.5f,
 				10.0f, 360.0f, 10.0f);
 
@@ -293,6 +299,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.25f, 0.5f, 0.25f,
 				10.0f, 360.0f, 10.0f);
 
@@ -308,6 +316,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories, 
 				meshTextures, 
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.0f, 0.0f, 0.0f,
 				15.0f, 360.0f, 15.0f);
 
@@ -326,9 +336,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				meshDirectories,
 				meshTextures,
 				playingField->mesh->getMesh()->getMeshBuffer(0),
+				true,
+				false,
 				0.5f, 0.5f, 0.5f,
 				25.0f, 360.0f, 25.0f);
-		#pragma endregion
+			#pragma endregion
 
 			#pragma region End setup
 			// Initialize our background music

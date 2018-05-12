@@ -13,12 +13,9 @@
 //#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
-
+EventManager GameManager::eventManager;
 #pragma region Core Irrlicht Components
 // Initialize Irrlicht device
-
-EventManager GameManager::eventManager;
-
 irr::IrrlichtDevice* GameManager::device =
 	createDevice(video::EDT_DIRECT3D9, dimension2d<u32>(1920, 1080), 64,
 		false, true, false, &eventManager);
@@ -32,13 +29,8 @@ irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
 #pragma endregion
 
 #pragma region Raycasting
-// Initialize a re-usable ray 
 line3d<f32> ray;
-
-// Tracks the current intersection point with the level or a mesh 
 vector3df intersection;
-
-// Used to show which triangle has been hit 
 triangle3df hitTriangle;
 #pragma endregion
 
@@ -56,11 +48,10 @@ float GameManager::deltaTimeFixed = 0.0;
 float GameManager::deltaTimeFixedMS = 0.0f;
 float GameManager::time = 0.0;
 float GameManager::fixedTimeStep = 60.0f;
+float GameManager::gameSpeed = 1.0f;
 
-float GameManager::creatureStateRange = 25000.0f;
-
+float GameManager::creatureStateRange = 5000.0f;
 bool GameManager::gameOver = false;
-
 const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
 // World dimensions
@@ -79,8 +70,6 @@ int GameManager::ruinsCount = 24;
 int GameManager::coralCount = 135;
 int GameManager::plantCount = 40;
 int GameManager::skullCount = 2;
-
-float GameManager::gameSpeed = 1.0f;
 #pragma endregion
 
 // Constructor
@@ -89,6 +78,7 @@ GameManager::GameManager()
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
 	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0002f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+	GameManager::smgr->setShadowColor(SColor(100, 0, 0, 0));
 	
 	Awake();
 }
@@ -159,26 +149,31 @@ void GameManager::Draw()
 		interfaceObject->DrawGUI();
 }
 
+// Returns the smallest of the two values.
 float GameManager::Min(float value, float value2)
 {
 	return value <= value2 ? value : value2;
 }
 
+// Returns the largest of the two values
 float GameManager::Max(float value, float value2)
 {
 	return value > value2 ? value : value2;
 }
 
+// Limits the given value between a min and max value.
 float GameManager::Clamp(float value, float minValue, float maxValue)
 {
 	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
 }
 
+// Interpolates between the first and second value with a given blending factor.
 float GameManager::Lerp(float value, float value2, float blend)
 {
 	return value + blend * (value2 - value);
 }
 
+// Interpolates between the first and second vector with a given blending factor.
 irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend)
 {
 	return vector3df(value.X + (blend * (value2.X - value.X)),
