@@ -80,7 +80,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 					}
 					if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 					{
-						size = 500;
+						size = 1000;
 					}
 
 					//std::cout << "obj1: " << obj1->tag << " obj2: " << obj2->tag << " size: " << size << std::endl;
