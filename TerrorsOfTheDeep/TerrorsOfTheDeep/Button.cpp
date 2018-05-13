@@ -16,7 +16,7 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 			buttonTitle = "Resume Game";
 		} break;
 
-		case PM_BACK_TO_MAIN:
+		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 		{
 			buttonTitle = "Main Menu";
 		} break;
@@ -24,6 +24,11 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 		case PM_QUIT:
 		{
 			buttonTitle = "Quit";
+		} break;
+
+		case GO_RETRY:
+		{
+			buttonTitle = "Retry";
 		} break;
 
 		default: break;
@@ -107,7 +112,7 @@ void Button::ButtonPressed()
 			SceneManager::PauseScene(false);
 		} break;
 
-		case PM_BACK_TO_MAIN:
+		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 		{
 			SceneManager::PauseScene(false);
 			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);			
@@ -116,6 +121,11 @@ void Button::ButtonPressed()
 		case PM_QUIT:
 		{
 			GameManager::device->closeDevice();
+		} break;
+
+		case GO_RETRY:
+		{
+			SceneManager::LoadScene(SceneManager::LEVEL);
 		} break;
 
 		default: break;

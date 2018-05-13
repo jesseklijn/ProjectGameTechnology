@@ -45,7 +45,7 @@ int main()
 	SceneManager sceneManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
 
-	sceneManager.LoadScene(SceneManager::LEVEL);
+	sceneManager.LoadScene(SceneManager::GAME_OVER);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -58,7 +58,7 @@ int main()
 
 		// Update the world
 		sceneManager.Update();
-		gameManager.Update();		
+		gameManager.Update();
 
 		// Draw the world
 		GameManager::smgr->drawAll();

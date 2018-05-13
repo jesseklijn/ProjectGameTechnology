@@ -27,6 +27,8 @@ public:
 
 	bool hasWindow = true;
 	bool hasWindowTitle = true;
+	bool hasBackground = false;
+	irr::video::ITexture* background;
 	irr::core::stringw windowTitle = "<MENU>";
 	irr::video::SColor windowColor = irr::video::SColor(255.0f * alpha, 0.0f, 0.0f, 0.0f);
 	irr::video::SColor windowTitleColor = irr::video::SColor(255.0f * alpha, 255.0f, 255.0f, 255.0f);

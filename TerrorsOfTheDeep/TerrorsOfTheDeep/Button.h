@@ -12,7 +12,9 @@ public:
 		// Pause Menu
 		PM_RESUME,
 		PM_BACK_TO_MAIN,
-		PM_QUIT
+		PM_QUIT,
+		GO_RETRY,
+		GO_BACK_TO_MAIN
 	};
 	ButtonType buttonType;
 

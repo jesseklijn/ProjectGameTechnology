@@ -10,11 +10,12 @@ Menu::Menu(irr::core::vector2df * startPosition, irr::core::vector2df * startSca
 	tag = INTERFACE_MENU;
 	this->menuType = menuType;
 	positionWindowTitle = vector2df(startPosition->X + elementWidth / 2.0f, startPosition->Y + elementSpacing);
+	GameManager::device->getCursorControl()->setVisible(true);
 }
 
 Menu::~Menu()
 {
-
+	GameManager::device->getCursorControl()->setVisible(false);
 }
 
 void Menu::DrawGUI()
@@ -22,6 +23,12 @@ void Menu::DrawGUI()
 	if (elementHidden)
 		return;
 
+	if (hasBackground && background != nullptr)
+	{
+		GameManager::driver->draw2DImage(background, 
+			rect<s32>(0, 0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height),
+			rect<s32>(0, 0, background->getOriginalSize().Width, background->getOriginalSize().Height));
+	}
 	// Draw window
 	if (hasWindow)
 	{

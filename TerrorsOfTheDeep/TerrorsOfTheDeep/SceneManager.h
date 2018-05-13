@@ -45,10 +45,7 @@ public:
 
 	static Camera* camera;
 	static HUD* hud;
-
-	// Whether to hide or show the HUD
 	static bool disableHud;
-
 
 	// Functions
 	virtual void Update();

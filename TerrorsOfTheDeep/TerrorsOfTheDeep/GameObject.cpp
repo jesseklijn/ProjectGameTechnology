@@ -73,7 +73,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 // Destructor
 GameObject::~GameObject()
 {
-
+	// Clear GameManager tracking list entry
+	int oIndex = GameManager::FindIndexInList<GameObject>(this, GameManager::gameObjects);
+	if (oIndex != -1)
+		GameManager::gameObjects[oIndex] = nullptr;
 }
 
 void GameObject::OnRegisterSceneNode()

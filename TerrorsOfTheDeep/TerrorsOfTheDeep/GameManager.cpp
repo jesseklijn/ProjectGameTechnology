@@ -109,9 +109,11 @@ void GameManager::Update()
 	/* Runs the Update() for all objects in GameManager.
 	Used for basic updates per frame. */
 	for (int gIndex = 0; gIndex < GameManager::gameObjects.size(); gIndex++)
-		GameManager::gameObjects[gIndex]->Update();
+		if (GameManager::gameObjects[gIndex] != nullptr)
+			GameManager::gameObjects[gIndex]->Update();
 	for (int iIndex = 0; iIndex < GameManager::interfaceObjects.size(); iIndex++)
-		GameManager::interfaceObjects[iIndex]->Update();
+		if (GameManager::interfaceObjects[iIndex] != nullptr)
+			GameManager::interfaceObjects[iIndex]->Update();
 		
 	/* Runs the FixedUpdate() for all objects in GameManager.
 	Used for fixed updates at specific timestep intervals, ideally for physics updates. */
@@ -139,14 +141,17 @@ void GameManager::Draw()
 	/* Runs the Draw() for all objects in GameManager.
 	Should always run after any UpdateX(); functions. */
 	for (GameObject* gameObject : GameManager::gameObjects)
-		gameObject->Draw();
+		if (gameObject != nullptr)
+			gameObject->Draw();
 	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
-		interfaceObject->Draw();
+		if (interfaceObject != nullptr)
+			interfaceObject->Draw();
 
 	/* Runs the DrawGUI() for all interface objects in GameManager.
 	Should always run last, so it draws over everything else. */
 	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
-		interfaceObject->DrawGUI();
+		if (interfaceObject != nullptr)
+			interfaceObject->DrawGUI();
 }
 
 // Returns the smallest of the two values.

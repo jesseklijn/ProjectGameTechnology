@@ -44,7 +44,7 @@ Happens before any drawing.*/
 void SceneManager::Update()
 {
 	if (GameManager::gameOver)
-		SceneManager::LoadScene(TITLE_SCREEN);
+		SceneManager::LoadScene(GAME_OVER);
 
 	if (camera)
 		camera->updatePos();
@@ -70,16 +70,18 @@ SceneManager::Tag SceneManager::GetTag()
 bool SceneManager::LoadScene(SceneType sceneToLoad)
 {
 	// Cancel if the scene we're trying to load is the same as the current scene
-	if (sceneToLoad == scene)
+	if (sceneToLoad == scene || sceneToLoad == NONE)
 		return false;
 
 	// Unload current scene
 	GameManager::gameOver = false;
 	GameManager::smgr->clear();
 	for (GameObject* gameObj : GameManager::gameObjects)
-		delete gameObj;
+		if (gameObj != nullptr)
+			delete gameObj;
 	for (InterfaceObject* intObj : GameManager::interfaceObjects)
-		delete intObj;
+		if (intObj != nullptr)
+			delete intObj;
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
 
@@ -351,7 +353,33 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		case GAME_OVER:
 		{
+			Menu* gameOverMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+				Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+			gameOverMenu->elementWidth = 200.0f;
+			gameOverMenu->elementHeight = 124.0f;
+			gameOverMenu->hasWindowTitle = false;
+			gameOverMenu->hasBackground = true;
+			gameOverMenu->background = GameManager::driver->getTexture("../media/UI/YouLose.png");
+			gameOverMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - gameOverMenu->elementWidth / 2.0f,
+				GameManager::screenDimensions.Height / 2.0f - gameOverMenu->elementHeight / 2.0f, 0.0f));
+			GameManager::interfaceObjects.push_back(gameOverMenu);
 
+			int buttonCount = 2;
+			float buttonWidth = gameOverMenu->elementWidth - gameOverMenu->elementSpacing * 2.0f;
+			float buttonHeight = 50.0f;
+			float buttonStartX = gameOverMenu->getPosition().X + gameOverMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
+			float buttonStartY = gameOverMenu->getPosition().Y + gameOverMenu->elementHeight - 1 -
+				((buttonHeight + gameOverMenu->elementSpacing) * buttonCount);
+
+			for (int bIndex = 0; bIndex < buttonCount; bIndex++)
+			{
+				Button* button = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + gameOverMenu->elementSpacing) * bIndex)), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+					(Button::ButtonType)((int)Button::GO_RETRY + bIndex), 0, GameManager::smgr, 15000);
+				button->creator = gameOverMenu;
+				button->elementWidth = buttonWidth;
+				button->elementHeight = buttonHeight;
+				GameManager::interfaceObjects.push_back(button);
+			}
 		} break;
 
 		default: 
@@ -373,8 +401,7 @@ void SceneManager::PauseScene(bool mode)
 
 	// Pause / unpause game
 	GameManager::gameSpeed = mode ? 0.0f : 1.0f;
-	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);
-	GameManager::device->getCursorControl()->setVisible(mode);
+	GameManager::smgr->getActiveCamera()->setInputReceiverEnabled(!mode);	
 	sceneIsPaused = mode;
 
 	// Toggle pause menu
@@ -408,15 +435,16 @@ void SceneManager::PauseScene(bool mode)
 	}
 	else
 	{
-		for (InterfaceObject* iObj : GameManager::interfaceObjects)
-			std::cout << iObj->tag << ": " << iObj->creator << std::endl;
-
-
-
 		// Delete the pause menu
 		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
 		if (pauseMenu)
+		{
+			// Clear GameManager tracking list entry
+			int mIndex = GameManager::FindIndexInList<InterfaceObject>(pauseMenu, GameManager::interfaceObjects);
+			if (mIndex != -1)
+				GameManager::interfaceObjects[mIndex] = nullptr;
 			pauseMenu->~Menu();
+		}
 	}
 }
 

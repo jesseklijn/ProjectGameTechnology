@@ -126,8 +126,11 @@ index was found. */
 template<class T>
 inline int GameManager::FindIndexInList(T * object, std::vector<T*> targetList)
 {
+	if (object == nullptr)
+		return -1;
+
 	for (int i = 0; i < targetList.size(); i++)
-		if (targetList[i] == object)
+		if (targetList[i] != nullptr && targetList[i] == object)
 			return i;
 	return -1;
 }
@@ -137,7 +140,7 @@ template<class T>
 inline T* GameManager::FindGameObjectWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList)
 {
 	for (T* gameObj : objectList)
-		if (gameObj->GetTag() == tag)
+		if (gameObj != nullptr && gameObj->GetTag() == tag)
 			return gameObj;
 	return nullptr;
 }
@@ -148,7 +151,7 @@ inline std::vector<T*> GameManager::FindGameObjectsWithTag(DynamicUpdater::Tag t
 {
 	std::vector<T*> objs;
 	for (T* gameObj : objectList)
-		if (gameObj->GetTag() == tag)
+		if (gameObj != nullptr && gameObj->GetTag() == tag)
 			objs.push_back(gameObj);
 	return objs;
 }
@@ -159,7 +162,7 @@ inline std::vector<T*> GameManager::FindGameObjectsWithTags(std::vector<DynamicU
 {
 	std::vector<GameObject*> objs;
 	for (GameObject* gameObj : objectList)
-		if (GameManager::FindTagInTagList(tagList, gameObj->tag) != -1)
+		if (gameObj != nullptr && GameManager::FindTagInTagList(tagList, gameObj->tag) != -1)
 			objs.push_back(gameObj);
 	return objs;
 }
@@ -173,7 +176,7 @@ inline T * GameManager::FindNearestGameObjectWithTag(T * origin, DynamicUpdater:
 	GameObject* closestObject = nullptr;
 	for (GameObject* gameObj : objectList)
 	{
-		if (gameObj != origin && gameObj->GetTag() == name)
+		if (gameObj != nullptr && gameObj != origin && gameObj->GetTag() == name)
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance < closestDistance)
@@ -198,7 +201,7 @@ inline T * GameManager::FindNearestGameObjectWithTags(T * origin, std::vector<Dy
 	GameObject* closestObject = nullptr;
 	for (GameObject* gameObj : objectList)
 	{
-		if (gameObj != origin && GameManager::FindTagInTagList(tagList, gameObj->GetTag()))
+		if (gameObj != nullptr && gameObj != origin && GameManager::FindTagInTagList(tagList, gameObj->GetTag()))
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance < closestDistance)
@@ -223,7 +226,7 @@ inline T * GameManager::FindFurthestGameObjectWithTag(T * origin, DynamicUpdater
 	GameObject* furthestObject = nullptr;
 	for (GameObject* gameObj : objectList)
 	{
-		if (gameObj != origin && gameObj->GetTag() == name)
+		if (gameObj != nullptr && gameObj != origin && gameObj->GetTag() == name)
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance > furthestDistance)
@@ -248,7 +251,7 @@ inline T * GameManager::FindFurthestGameObjectWithTags(T * origin, std::vector<D
 	GameObject* furthestObject = nullptr;
 	for (GameObject* gameObj : objectList)
 	{
-		if (gameObj != origin && GameManager::FindTagInTagList(tagList, gameObj->GetTag()))
+		if (gameObj != nullptr && gameObj != origin && GameManager::FindTagInTagList(tagList, gameObj->GetTag()))
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance > furthestDistance)
