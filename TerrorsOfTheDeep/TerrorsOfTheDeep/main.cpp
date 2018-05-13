@@ -43,7 +43,7 @@ int main()
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
-	GameManager::device->setWindowCaption(L"Terrors of the Deep");
+	DetectCollision detectCollision;
 
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
@@ -59,6 +59,7 @@ int main()
 		// Update the world
 		sceneManager.Update();
 		gameManager.Update();		
+		detectCollision.Detect(GameManager::smgr);
 
 		// Draw the world
 		GameManager::smgr->drawAll();

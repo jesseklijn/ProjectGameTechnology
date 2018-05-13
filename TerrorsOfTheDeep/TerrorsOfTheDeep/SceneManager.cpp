@@ -111,15 +111,15 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			std::vector<io::path> meshDirectories;
 			std::vector<io::path> meshTextures;
 
+			// Spawn world objects
+			IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
+
+
 			// Spawn player in cage
-			Player* player = new Player(new vector3df(0, 0, 0), 
-				new vector3df(1, 1, 1), 
-				new vector3df(0, 0, 0),
-				GameManager::smgr->getActiveCamera(), 
-				GameManager::smgr, 
-				-1337,
-				GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
+			Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, playerMesh, GameManager::driver->getTexture("../media/armsText.jpg"));
 			GameManager::gameObjects.push_back(player);
+
 			GameManager::levelPlayer = player;
 
 			GameObject* cage = new GameObject(new vector3df(player->getPosition().X, player->getPosition().Y - 100.0f, player->getPosition().Z),

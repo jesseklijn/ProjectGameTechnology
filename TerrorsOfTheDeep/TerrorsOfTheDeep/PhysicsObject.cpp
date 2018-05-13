@@ -90,7 +90,10 @@ void PhysicsObject::UpdatePosition()
 
 	force_ += GravityForce() + DragForce() + BuoyancyForce();
 	Verlet();
-	ResolveGround();
+
+	// ResolveGround gets the monster stuck in the ground with mayor fps drop
+	if (tag != GameObject::MONSTER)
+		ResolveGround();
 
 	setPosition(position_);
 	

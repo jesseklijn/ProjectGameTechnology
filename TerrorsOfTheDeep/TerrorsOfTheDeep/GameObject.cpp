@@ -2,25 +2,15 @@
 #include "GameManager.h" 
 
 // Constructor
-
-// PhysicsObject version
-//GameObject::GameObject(const irr::core::vector3df* startPosition,
-//						const irr::core::vector3df* startScale,
-//						const irr::core::vector3df* startRotation, 
-//						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-//						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
-//						float mass)
-//						: PhysicsObject(parent, mgr, id, startPosition, mass)
-
 GameObject::GameObject(const irr::core::vector3df* startPosition,
-	const irr::core::vector3df* startScale,
-	const irr::core::vector3df* startRotation,
-	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-	: ISceneNode(parent, mgr, id)
-
+						const irr::core::vector3df* startScale,
+						const irr::core::vector3df* startRotation, 
+						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
+						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
+						float mass)
+						: PhysicsObject(parent, mgr, id, startPosition, mass)
 {
-	tag = GameObject::WORLD_OBJECT;
+	setTag(GameObject::WORLD_OBJECT);
 
 	setPosition(*startPosition);
 	setScale(*startScale);
@@ -32,10 +22,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		// Set mesh details
 		mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, parent);
 		//mesh = GameManager::smgr->addAnimatedMeshSceneNode(relatedMesh, 0);
-		//if (mesh)
-		//{
-		//	PhysicsObject::mesh = mesh;
-		//}
+		if (mesh)
+		{
+			PhysicsObject::mesh = mesh;
+		}
 
 		/* Set some default visual values for the node
 		TODO: Add to constructor?*/
@@ -108,7 +98,7 @@ It's accessible in GameManager as GameManager::deltaTime and GameManager::deltaT
 void GameObject::Update()
 {
 	// Inherit base class Update
-	//PhysicsObject::Update();
+	PhysicsObject::Update();
 
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
@@ -133,22 +123,22 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
-	/*PhysicsObject::addForce(0.0001 * moveSpeed * direction.normalize());
+	PhysicsObject::AddForce(0.0001 * moveSpeed * direction.normalize());
 	if (turnToDirection)
 	{
-		PhysicsObject::turnToDirection(direction);
-	}*/
+		PhysicsObject::TurnToDirection(direction);
+	}
 
 	// Add a vector of length speed in the given direction
-	setPosition(getPosition() + (direction.normalize() * speed));
-	if (mesh)
-		mesh->setPosition(getPosition());
-	if (turnToDirection)
-	{
-		setRotation(direction.getHorizontalAngle());
-		if (mesh)
-			mesh->setRotation(direction.getHorizontalAngle());
-	}
+	//setPosition(getPosition() + (direction.normalize() * speed));
+	//if (mesh)
+	//	mesh->setPosition(getPosition());
+	//if (turnToDirection)
+	//{
+	//	setRotation(direction.getHorizontalAngle());
+	//	if (mesh)
+	//		mesh->setRotation(direction.getHorizontalAngle());
+	//}
 }
 
 GameObject::Tag GameObject::GetTag()
@@ -159,6 +149,5 @@ GameObject::Tag GameObject::GetTag()
 void GameObject::setTag(GameObject::Tag tagPar)
 {
 	tag = tagPar;
-	//PhysicsObject::tag = tag;
-	GameObject::tag = tag;
+	PhysicsObject::tag = tag;
 }
