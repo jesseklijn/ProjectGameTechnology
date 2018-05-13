@@ -20,6 +20,9 @@
 #include <chrono>
 #pragma endregion
 
+// Forward declaration
+class Menu;
+
 /* Class responsible for managing different scenes in the game.
 This includes scenes like a title screen, loading screen etcetera. */
 class SceneManager : public DynamicUpdater
@@ -43,9 +46,21 @@ public:
 	static irr::video::SColorf ambientColor, flashlightColor, sharkEyesColor;
 	static vector3df chestLightOffset, keyLightOffset;
 
+	// Components for every scene
 	static Camera* camera;
 	static HUD* hud;
 	static bool disableHud;
+
+	// Intro
+	static bool introIsActive, showControls, showMouseOverlay, showKeyOverlay;
+	static float introMouseOverlayTime, introMouseOverlayTimer;
+	static float introMouseOverlayDisplayTime, introMouseOverlayDisplayTimer;
+	static float introKeyOverlayTime, introKeyOverlayTimer;
+	static float introKeyOverlayDisplayTime, introKeyOverlayDisplayTimer;
+
+	static Menu* mouseOverlay;
+	static Menu* keyOverlay;
+
 
 	// Functions
 	virtual void Update();
@@ -55,6 +70,10 @@ public:
 
 	static bool LoadScene(SceneType sceneToLoad);
 	static void PauseScene(bool mode);
+	static void ShowMouseControlsOverlay();
+	static void ShowKeyControlsOverlay();
+	static void HideMouseControlsOverlay();
+	static void HideKeyControlsOverlay();
 	static void StartLoadingScreen();
 	static void EndLoadingScreen();
 	static void OnSceneChange();

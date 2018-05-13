@@ -1,6 +1,7 @@
 
 #pragma once
 #include "SceneManager.h"
+#include <Windows.h>
 
 static const int NO_PARENT = 0;
 static const float KEYLIGHT_RADIUS = 1000.0f;
@@ -23,14 +24,28 @@ Camera* SceneManager::camera;
 HUD* SceneManager::hud = new HUD();
 bool SceneManager::disableHud = false;
 
+// Intro / Controls overlay
+Menu* SceneManager::mouseOverlay = nullptr;
+Menu* SceneManager::keyOverlay = nullptr;
+bool SceneManager::introIsActive = false;
+bool SceneManager::showControls = false;
+bool SceneManager::showMouseOverlay = false;
+bool SceneManager::showKeyOverlay = false;
+float SceneManager::introMouseOverlayTime = 3.0f * 1000.0f;
+float SceneManager::introMouseOverlayTimer = -1.0f;
+float SceneManager::introMouseOverlayDisplayTime = 10.0f * 1000.0f;
+float SceneManager::introMouseOverlayDisplayTimer = -1.0f;
+float SceneManager::introKeyOverlayTime = SceneManager::introMouseOverlayTime + SceneManager::introMouseOverlayDisplayTime + 2.0f * 1000.0f;
+float SceneManager::introKeyOverlayTimer = -1.0f;
+float SceneManager::introKeyOverlayDisplayTime = 10.0f * 1000.0f;
+float SceneManager::introKeyOverlayDisplayTimer = -1.0f;
+
 // Constructor
 SceneManager::SceneManager()
 {
 	scene = NONE;
 	scenePrevious = scene;
 	sceneIsPaused = false;
-
-
 }
 
 // Destructor
@@ -46,11 +61,133 @@ void SceneManager::Update()
 	if (GameManager::gameOver)
 		SceneManager::LoadScene(GAME_OVER);
 
+	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL)
+		SceneManager::PauseScene(!sceneIsPaused);
+
+	if (introIsActive || showControls)
+	{
+		#pragma region Timer for the mouse controls overlay to show
+		SceneManager::introMouseOverlayTimer = (SceneManager::introMouseOverlayTimer > 0.0f) 
+			? GameManager::Clamp(SceneManager::introMouseOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayTime) 
+			: -1.0f;
+		if (SceneManager::introMouseOverlayTimer == 0.0f)
+		{
+			SceneManager::ShowMouseControlsOverlay();
+
+			// Starts the display timer for this overlay.
+			SceneManager::introMouseOverlayDisplayTimer = SceneManager::introMouseOverlayDisplayTime;
+
+			// Disable this timer, since it's only timed once
+			SceneManager::introMouseOverlayTimer = -1.0f;
+		}
+		#pragma endregion
+
+		#pragma region The display timer for mouse overlay
+		SceneManager::introMouseOverlayDisplayTimer = (SceneManager::introMouseOverlayDisplayTimer > 0.0f)
+			? GameManager::Clamp(SceneManager::introMouseOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayDisplayTime)
+			: -1.0f;
+		if (SceneManager::introMouseOverlayDisplayTimer == 0.0f)
+		{
+			SceneManager::HideMouseControlsOverlay();
+
+			// Disable this timer, since it's only timed once
+			SceneManager::introMouseOverlayDisplayTimer = -1.0f;
+		}
+		#pragma endregion
+
+		#pragma region Timer for the key controls overlay to show
+		SceneManager::introKeyOverlayTimer = (SceneManager::introKeyOverlayTimer > 0.0f)
+			? GameManager::Clamp(SceneManager::introKeyOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayTime)
+			: -1.0f;
+		if (SceneManager::introKeyOverlayTimer == 0.0f)
+		{
+			SceneManager::ShowKeyControlsOverlay();
+
+			// Starts the display timer for this overlay.
+			SceneManager::introKeyOverlayDisplayTimer = SceneManager::introKeyOverlayDisplayTime;
+
+			// Disable this timer, since it's only timed once
+			SceneManager::introKeyOverlayTimer = -1.0f;
+		}
+		#pragma endregion
+
+		#pragma region The display timer for key overlay
+		SceneManager::introKeyOverlayDisplayTimer = (SceneManager::introKeyOverlayDisplayTimer > 0.0f)
+			? GameManager::Clamp(SceneManager::introKeyOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayDisplayTime)
+			: -1.0f;
+		if (SceneManager::introKeyOverlayDisplayTimer == 0.0f)
+		{
+			// Timer trigger, done with all overlays
+			SceneManager::HideKeyControlsOverlay();
+			SceneManager::introIsActive = false;
+			SceneManager::showControls = false;
+
+			// Disable this timer, since it's only timed once
+			SceneManager::introKeyOverlayDisplayTimer = -1.0f;
+		}
+		#pragma endregion
+	}
+
 	if (camera)
 		camera->updatePos();
+}
 
-	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL) 
-		SceneManager::PauseScene(!sceneIsPaused);
+void SceneManager::ShowMouseControlsOverlay()
+{
+	if (mouseOverlay != nullptr)
+		SceneManager::HideMouseControlsOverlay();
+
+	mouseOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
+	mouseOverlay->elementWidth = 300.0f;
+	mouseOverlay->elementHeight = 48.0f;
+	mouseOverlay->hasWindowTitle = true;
+	mouseOverlay->windowTitle = "Move the [MOUSE] to look around\n\nFind the key and open the treasure chest somewhere in this level to win";
+	mouseOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - mouseOverlay->elementWidth / 2.0f,
+		GameManager::screenDimensions.Height - mouseOverlay->elementHeight - mouseOverlay->elementSpacing, 0.0f));
+	GameManager::interfaceObjects.push_back(mouseOverlay);
+}
+
+void SceneManager::ShowKeyControlsOverlay()
+{
+	if (keyOverlay != nullptr)
+		SceneManager::HideKeyControlsOverlay();
+
+	keyOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
+	keyOverlay->elementWidth = 300.0f;
+	keyOverlay->elementHeight = 48.0f;
+	keyOverlay->hasWindowTitle = true;
+	keyOverlay->windowTitle = "Press [W], [A], [S], [D] to move around\n\nYou might want to watch out for terrors lurking in the deep darkness...";
+	keyOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - keyOverlay->elementWidth / 2.0f,
+		GameManager::screenDimensions.Height - keyOverlay->elementHeight - keyOverlay->elementSpacing, 0.0f));
+	GameManager::interfaceObjects.push_back(keyOverlay);
+}
+
+void SceneManager::HideMouseControlsOverlay()
+{
+	if (mouseOverlay != nullptr)
+	{
+		// Clear GameManager tracking list entry
+		int mIndex = GameManager::FindIndexInList<InterfaceObject>(mouseOverlay, GameManager::interfaceObjects);
+		if (mIndex != -1)
+			GameManager::interfaceObjects[mIndex] = nullptr;
+		mouseOverlay->~Menu();
+		mouseOverlay = nullptr;
+	}
+}
+
+void SceneManager::HideKeyControlsOverlay()
+{
+	if (keyOverlay != nullptr)
+	{
+		// Clear GameManager tracking list entry
+		int mIndex = GameManager::FindIndexInList<InterfaceObject>(keyOverlay, GameManager::interfaceObjects);
+		if (mIndex != -1)
+			GameManager::interfaceObjects[mIndex] = nullptr;
+		keyOverlay->~Menu();
+		keyOverlay = nullptr;
+	}
 }
 
 /* Updates every frame.
@@ -74,7 +211,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		return false;
 
 	// Unload current scene
-	GameManager::gameOver = false;
+	if (sceneToLoad != GAME_OVER)
+		GameManager::gameOver = false;
 	GameManager::smgr->clear();
 	for (GameObject* gameObj : GameManager::gameObjects)
 		if (gameObj != nullptr)
@@ -97,6 +235,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		case LEVEL:
 		{
 			#pragma region Begin setup
+			// Delta time start point
+			auto frameTimeStart = std::chrono::system_clock::now();
+
 			GameManager::device->getCursorControl()->setVisible(false);
 
 			// Set our skydome
@@ -124,7 +265,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::gameObjects.push_back(player);
 			GameManager::levelPlayer = player;
 
-			GameObject* cage = new GameObject(new vector3df(player->getPosition().X, player->getPosition().Y - 100.0f, player->getPosition().Z),
+			GameObject* cage = new GameObject(new vector3df(player->getParent()->getPosition().X, player->getParent()->getPosition().Y - 400.0f, player->getParent()->getPosition().Z),
 				new vector3df(1, 1, 1),
 				new vector3df(0, 0, 0),
 				0,
@@ -135,19 +276,36 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 			// Attach flashlight to player
 			ISceneNode* newPlayer = player;
-			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
+			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, 
+				player->getAbsolutePosition(), 
+				GameManager::smgr->getActiveCamera()->getTarget(), 
+				FLASHLIGHT_RANGE, 
+				true, 
+				player);
 
 			// Spawn shark
-			Shark* shark = new Shark(new vector3df(40000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-				0, GameManager::smgr, -1111,
+			Shark* shark = new Shark(new vector3df(40000, 5000, 0), 
+				new vector3df(1, 1, 1), 
+				new vector3df(0, 0, 0),
+				0, 
+				GameManager::smgr, 
+				-1111,
 				GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-				0, false);
+				0, 
+				false);
 			GameManager::levelMonster = shark;
 			GameManager::gameObjects.push_back(shark);
 
 			// Make a playingField (mesh out of grid)
-			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -300, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
+			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), 
+				-300, 
+				-GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), 
+				new vector3df(1, 1, 1), 
+				new vector3df(0, 0, 0),
+				GameManager::smgr->getRootSceneNode(), 
+				GameManager::smgr, 
+				-100);
+			GameManager::gameObjects.push_back(playingField);
 
 			// Spawn random objects on grid
 			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0); 
@@ -164,14 +322,22 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				int randomizer = rand() % planeBuffer->getVertexCount();
 				// Checks if the vertice is free (no object has been drawn on the vertice)
 				if (!spawnTracker[randomizer]) {
-					GameObject* key = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
-						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
-						0, GameManager::smgr, 4,
-						GameManager::smgr->getMesh("../media/WinLose/key.obj"),
-						0);
+					GameObject* key = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, 
+						mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
+						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), 
+						new vector3df(0.5, 0.5, 0.5), 
+						new vector3df(0, 0, 0),
+						0, 
+						GameManager::smgr, 
+						4,
+						GameManager::smgr->getMesh("../media/WinLose/key.obj"));
 					key->setTag(GameObject::KEY);
 					GameManager::gameObjects.push_back(key);
-					ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
+					ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), 
+						key->getPosition() + keyLightOffset, 
+						KEYLIGHT_RADIUS, 
+						false, 
+						nullptr);
 					break;
 				}
 			}
@@ -183,20 +349,30 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				int randomizer = rand() % planeBuffer->getVertexCount();
 				// Checks if the vertice is free (no object has been drawn on the vertice)
 				if (!spawnTracker[randomizer]) {
-					GameObject* chest = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
-						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
-						0, GameManager::smgr, 5,
-						GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"),
-						0);
+					GameObject* chest = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, 
+						mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
+						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), 
+						new vector3df(13, 13, 13), 
+						new vector3df(0, 0, 0),
+						0, 
+						GameManager::smgr, 
+						5,
+						GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"));
 					chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 					chest->setTag(GameObject::CHEST);
-					ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
+					ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), 
+						chest->getPosition() + chestLightOffset, 
+						CHESTLIGHT_RADIUS, 
+						false, 
+						nullptr);
 					GameManager::gameObjects.push_back(chest);
 					break;
 				}
 			}	
 
 			// Spawn critters
+			meshDirectories.clear();
+			meshTextures.clear();
 			meshDirectories.push_back("../media/Fish/Fish1.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Fish/Fish2.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Fish/Fish3.obj"); meshTextures.push_back("");
@@ -348,6 +524,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			// Initialize our background music
 			sound_init();
 			background_music("../media/Sound/AmbientUnderwaterMaddnes.ogg");
+			
+
+			// Calculate how long the total level generation and setup took until this point
+			auto frameTimeEnd = std::chrono::system_clock::now();
+			std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
+			float generationDuration = elapsed_seconds.count() * GameManager::gameSpeed  * 1000.0f;
+
+			// Start the controls display timers, compensate for the huge deltaTime of 1-frame generation
+			SceneManager::introIsActive = true;
+			SceneManager::introMouseOverlayTimer = generationDuration + SceneManager::introMouseOverlayTime;
+			SceneManager::introKeyOverlayTimer = generationDuration + SceneManager::introKeyOverlayTime;
 			#pragma endregion
 		} break;
 
@@ -436,7 +623,7 @@ void SceneManager::PauseScene(bool mode)
 	else
 	{
 		// Delete the pause menu
-		Menu* pauseMenu = (Menu*)GameManager::FindGameObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
+		Menu* pauseMenu = (Menu*)GameManager::FindObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
 		if (pauseMenu)
 		{
 			// Clear GameManager tracking list entry

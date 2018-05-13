@@ -4,18 +4,24 @@
 
 
 Menu::Menu(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation, 
-	MenuType menuType, irr::scene::ISceneNode * parent, irr::scene::ISceneManager * mgr, irr::s32 id)
+	MenuType menuType, irr::scene::ISceneNode * parent, irr::scene::ISceneManager * mgr, irr::s32 id, bool showCursor)
 	: InterfaceObject(startPosition, startRotation, startScale, parent, mgr, id)
 {
 	tag = INTERFACE_MENU;
 	this->menuType = menuType;
 	positionWindowTitle = vector2df(startPosition->X + elementWidth / 2.0f, startPosition->Y + elementSpacing);
-	GameManager::device->getCursorControl()->setVisible(true);
+
+	if (showCursor)
+	{
+		GameManager::device->getCursorControl()->setVisible(true);
+		shownCursor = showCursor;
+	}
 }
 
 Menu::~Menu()
 {
-	GameManager::device->getCursorControl()->setVisible(false);
+	if (shownCursor)
+		GameManager::device->getCursorControl()->setVisible(false);
 }
 
 void Menu::DrawGUI()
@@ -23,19 +29,20 @@ void Menu::DrawGUI()
 	if (elementHidden)
 		return;
 
+	// Draw background if applicable (stretched fullscreen behind menu)
 	if (hasBackground && background != nullptr)
 	{
 		GameManager::driver->draw2DImage(background, 
 			rect<s32>(0, 0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height),
 			rect<s32>(0, 0, background->getOriginalSize().Width, background->getOriginalSize().Height));
 	}
-	// Draw window
+	// Draw menu window
 	if (hasWindow)
 	{
 		GameManager::driver->draw2DRectangle(windowColor, rect<s32>(getPosition().X, getPosition().Y,
 			getPosition().X + elementWidth, getPosition().Y + elementHeight));
 	}
-	// Draw window title
+	// Draw menu title
 	if (hasWindowTitle)
 	{
 		IGUIStaticText* title = GameManager::guienv->addStaticText(windowTitle.c_str(),

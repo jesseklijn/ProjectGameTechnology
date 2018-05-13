@@ -34,6 +34,7 @@ Camera::Camera(ISceneManager* smgr)
 	// Add a camera in the scene
 	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
 	camera->setFarValue(20000.0f);
+	camera->setPosition(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0));
 }
 
 // Destructor

@@ -104,21 +104,25 @@ void GameManager::Start()
 void GameManager::Update()
 {
 	fixedTime += GameManager::deltaTime;
+
+	// Update our input before any other Update() runs on anything
 	eventManager.Update();
 
 	/* Runs the Update() for all objects in GameManager.
 	Used for basic updates per frame. */
-	for (int gIndex = 0; gIndex < GameManager::gameObjects.size(); gIndex++)
-		if (GameManager::gameObjects[gIndex] != nullptr)
-			GameManager::gameObjects[gIndex]->Update();
-	for (int iIndex = 0; iIndex < GameManager::interfaceObjects.size(); iIndex++)
-		if (GameManager::interfaceObjects[iIndex] != nullptr)
-			GameManager::interfaceObjects[iIndex]->Update();
+	for (GameObject* gameObject : GameManager::gameObjects)
+		if (gameObject != nullptr)
+			gameObject->Update();
+	for (InterfaceObject* interfaceObject : GameManager::interfaceObjects)
+		if (interfaceObject != nullptr)
+			interfaceObject->Update();
 		
 	/* Runs the FixedUpdate() for all objects in GameManager.
 	Used for fixed updates at specific timestep intervals, ideally for physics updates. */
 	if (fixedTime >= 1.0f / GameManager::fixedTimeStep)
 	{
+		/* Since it's practically impossible that we land EXACTLY on our timestep with
+		fixedTime, we calculate a correction of how many ms we went over our timestep. */
 		fixedCorrection = (fixedTime - 1.0f / GameManager::fixedTimeStep);
 		GameManager::FixedUpdate();
 	}
@@ -128,12 +132,15 @@ void GameManager::Update()
 void GameManager::FixedUpdate()
 {
 	fixedTime = 0.0f;
+
+	// Forces the fixed delta times on our timestep, but we add the correction we calculated earlier
 	GameManager::deltaTimeFixed = (1.0f / GameManager::fixedTimeStep + fixedCorrection) * GameManager::gameSpeed;
 	GameManager::deltaTimeFixedMS = GameManager::deltaTimeFixed * 1000.0f * GameManager::gameSpeed;
 
 	// Runs the FixedUpdate() for all GameObjects in GameManager::gameObjects.
-	for (int i = 0; i < GameManager::gameObjects.size(); i++)
-		GameManager::gameObjects[i]->FixedUpdate();
+	for (GameObject* gameObj : GameManager::gameObjects)
+		if (gameObj != nullptr)
+			gameObj->FixedUpdate();
 }
 
 void GameManager::Draw()

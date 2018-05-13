@@ -45,7 +45,7 @@ int main()
 	SceneManager sceneManager;
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
 
-	sceneManager.LoadScene(SceneManager::GAME_OVER);
+	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())

@@ -171,7 +171,7 @@ This is a shortcut instead of having to specify extra Player override functional
 in the other GameManager::FindX(); functions, which should be for general usage. */
 GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
-	Player* player = (Player*)GameManager::FindGameObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
+	Player* player = (Player*)GameManager::FindObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
 	if (player)
 	{
 		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();
