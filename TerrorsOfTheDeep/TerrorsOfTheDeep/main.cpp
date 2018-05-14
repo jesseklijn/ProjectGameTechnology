@@ -30,6 +30,7 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
+bool requiresLoading = true;
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -44,8 +45,8 @@ int main()
 	GameManager gameManager;
 	SceneManager sceneManager;
 
+	SceneManager::LoadScene(SceneManager::LEVEL);
 	GameManager::device->setWindowCaption(L"Terrors of the Deep");
-	sceneManager.LoadScene(SceneManager::LEVEL);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -56,16 +57,17 @@ int main()
 		// Begin the scene for this frame. It basically clears the buffers/screen with the given SColor
 		GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 
-		// Update the world
-		sceneManager.Update();
-		gameManager.Update();		
+			// Update the world
+			sceneManager.Update();
+			gameManager.Update();
 
-		// Draw the world
-		GameManager::smgr->drawAll();
-		GameManager::guienv->clear();	
-		sceneManager.Draw();	
-		gameManager.Draw();
-		GameManager::guienv->drawAll();
+
+			// Draw the world
+			GameManager::smgr->drawAll();
+			GameManager::guienv->clear();
+			sceneManager.Draw();
+			gameManager.Draw();
+			GameManager::guienv->drawAll();
 
 		// Our frame is finished
 		GameManager::driver->endScene();
@@ -77,6 +79,7 @@ int main()
 		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f * GameManager::gameSpeed;
 		GameManager::time += elapsed_seconds.count();
 	}
+
 	// Game end, drop our Irrlicht device
 	GameManager::device->drop();
 
