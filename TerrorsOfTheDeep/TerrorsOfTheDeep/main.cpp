@@ -18,6 +18,8 @@
 #include <iostream>
 #include "FlockingEntity.h"
 #include <chrono>
+#include "Sound.h"
+#include <Windows.h>
 #pragma endregion
 
 
