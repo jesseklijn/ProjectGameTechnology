@@ -98,6 +98,6 @@ void Player::UpdatePos()
 void Player::MoveParent(vector3df movement)
 {
 	vector3df newPos = parent->getAbsolutePosition() + movement;
-	if (newPos.Y > 0)
+	if (newPos.Y > 0 || movement.Y >= 0)
 		parent->setPosition(newPos);
 }

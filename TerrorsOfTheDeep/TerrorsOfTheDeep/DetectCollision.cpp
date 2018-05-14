@@ -152,7 +152,6 @@ void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
 	direction.normalize();
 	if (obj1->tag == GameObject::PLAYER)
 	{
-		//GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * currentVelocity);
 		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
 	}
 	else

@@ -12,8 +12,8 @@ SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
@@ -136,7 +136,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
 
 			// Spawn shark
-			Shark* shark = new Shark(new vector3df(40000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			Shark* shark = new Shark(new vector3df(4000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				0, GameManager::smgr, -1111,
 				GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
 				0, false);
