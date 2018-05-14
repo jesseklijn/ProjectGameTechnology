@@ -1,5 +1,6 @@
 #pragma once
 #include "Camera.h"
+#include "SceneManager.h"
 
 #pragma region Namespaces
 using namespace irr;
@@ -13,12 +14,7 @@ using namespace gui;
 // Constructor
 Camera::Camera(ISceneManager* smgr)
 {
-	const float MOVEMENT_SPEED = 0.4f;
-	const float ROTATION_SPEED = 100.0f;
-
 	// Keymapping for player controls
-	SKeyMap keyMap[4];
-
 	keyMap[0].Action = EKA_MOVE_FORWARD;
 	keyMap[0].KeyCode = KEY_KEY_W;
 
@@ -30,17 +26,40 @@ Camera::Camera(ISceneManager* smgr)
 
 	keyMap[3].Action = EKA_STRAFE_RIGHT;
 	keyMap[3].KeyCode = KEY_KEY_D;
-
-	// Add a camera in the scene
-	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
-	camera->setFarValue(20000.0f);
-	camera->setPosition(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0));
 }
 
 // Destructor
 Camera::~Camera()
 {
 
+}
+
+
+ICameraSceneNode * Camera::CreateCamera(vector3df position, 
+	vector3df lookTarget, float rotationSpeed, float moveSpeed, 
+	float farValue, irr::SKeyMap * keyMapArray, ISceneNode * parent, 
+	int id, bool noVertMovement, float jumpSpeed, bool invertMouse, 
+	bool makeActive)
+{
+	ICameraSceneNode* currentCam = GameManager::smgr->getActiveCamera();
+	if (currentCam)
+	{
+		GameManager::smgr->setActiveCamera(0);
+		camera->remove();
+		camera = nullptr;
+	}	
+
+	// Add a camera in the scene
+	camera = GameManager::smgr->addCameraSceneNodeFPS(parent, rotationSpeed, moveSpeed, id, keyMapArray, 
+		keyMapArray != 0 ? sizeof(keyMapArray) : 0, noVertMovement, jumpSpeed, invertMouse, makeActive);
+	camera->setPosition(position);
+	camera->setTarget(position + lookTarget);
+	camera->setFarValue(farValue);
+
+	if (SceneManager::levelPlayer != nullptr)
+		SceneManager::levelPlayer->setParent(camera);
+
+	return camera;
 }
 
 //check boundaries

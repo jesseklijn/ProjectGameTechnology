@@ -1,6 +1,7 @@
 #pragma once
 #include "Monster.h"
 #include "GameManager.h"
+#include "SceneManager.h"
 
 // Constructor
 Monster::Monster(const irr::core::vector3df* startPosition,
@@ -171,6 +172,9 @@ This is a shortcut instead of having to specify extra Player override functional
 in the other GameManager::FindX(); functions, which should be for general usage. */
 GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
+	if (SceneManager::introIsActive)
+		return nullptr;
+
 	Player* player = (Player*)GameManager::FindObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
 	if (player)
 	{

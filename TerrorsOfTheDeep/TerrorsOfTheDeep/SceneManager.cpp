@@ -16,8 +16,8 @@ GameObject* SceneManager::levelMonster = nullptr;
 GameObject* SceneManager::levelPlayer = nullptr;
 
 // Light data
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
@@ -37,6 +37,8 @@ bool SceneManager::introIsActive = false;
 bool SceneManager::showControls = false;
 bool SceneManager::showMouseOverlay = false;
 bool SceneManager::showKeyOverlay = false;
+bool SceneManager::cageShouldDescend = false;
+float SceneManager::introCageDescendRate = 500.0f;
 float SceneManager::introStartTime = 1.0f * 1000.0f;
 float SceneManager::introStartTimer = -1.0f;
 float SceneManager::introMouseOverlayTime = 1.0f * 1000.0f;
@@ -136,19 +138,28 @@ void SceneManager::Update()
 			#pragma endregion
 
 			// If this is the intro sequence, detect diving cage landing on sea floor
-			if (introIsActive && divingCage != nullptr)
+			if (introIsActive && divingCage != nullptr && cageShouldDescend)
 			{
-				SceneManager::levelPlayer->Move(600.0f * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
-				SceneManager::divingCage->Move(600.0f * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
+				GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() + vector3df(0.0f, -introCageDescendRate * GameManager::deltaTime, 0.0f));
+				SceneManager::divingCage->Move(introCageDescendRate * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
 
-				rayStart = divingCage->getAbsolutePosition() + vector3df(0.0f, -100.0f, 0.0f);
-				rayEnd = rayStart + vector3df(0.0f, -300.0f, 0.0f);
+				rayStart = divingCage->getAbsolutePosition();
+				rayEnd = rayStart + vector3df(0.0f, -100.0f, 0.0f);
 				bool touchedDown = GameManager::PerformRaycast(rayStart, rayEnd) != 0;
 				if (touchedDown)
-				{
+				{				
 					// Start the key overlay timer
-					SceneManager::introKeyOverlayTimer = SceneManager::introKeyOverlayTime;
-					introIsActive = false;
+					if (cageShouldDescend)
+					{
+						cageShouldDescend = false;
+						SceneManager::introKeyOverlayTimer = SceneManager::introKeyOverlayTime;
+
+						// Replace the intro camera with a new camera with keymapping for movement
+						vector3df currentCameraPosition = camera->camera->getPosition();
+						vector3df currentCameraLookAt = camera->camera->getTarget();
+						camera->CreateCamera(currentCameraPosition, currentCameraLookAt,
+							camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue, camera->keyMap);
+					}					
 				}
 			}
 		}
@@ -165,7 +176,21 @@ void SceneManager::StartLevelIntro()
 		return;
 
 	introIsActive = true;
+	cageShouldDescend = true;
 	SceneManager::introMouseOverlayTimer = SceneManager::introMouseOverlayTime;
+}
+
+void SceneManager::EndLevelIntro()
+{
+	if (!introIsActive)
+		return;
+
+	introIsActive = false;
+	SceneManager::introStartTimer = -1.0f;
+	SceneManager::introMouseOverlayTimer = -1.0f;
+	SceneManager::introMouseOverlayDisplayTimer = -1.0f;
+	SceneManager::introKeyOverlayTimer = -1.0f;
+	SceneManager::introKeyOverlayDisplayTimer = -1.0f;
 }
 
 void SceneManager::ShowMouseControlsOverlay()
@@ -175,8 +200,8 @@ void SceneManager::ShowMouseControlsOverlay()
 
 	mouseOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
-	mouseOverlay->elementWidth = 300.0f;
-	mouseOverlay->elementHeight = 48.0f;
+	mouseOverlay->elementWidth = 335.0f;
+	mouseOverlay->elementHeight = 150.0f;
 	mouseOverlay->hasWindowTitle = true;
 	mouseOverlay->windowTitle = "Move the [MOUSE] to look around\n\nFind the key and open the treasure chest somewhere in this level to win";
 	mouseOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - mouseOverlay->elementWidth / 2.0f,
@@ -194,8 +219,8 @@ void SceneManager::ShowKeyControlsOverlay()
 
 	keyOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
-	keyOverlay->elementWidth = 300.0f;
-	keyOverlay->elementHeight = 48.0f;
+	keyOverlay->elementWidth = 335.0f;
+	keyOverlay->elementHeight = 150.0f;
 	keyOverlay->hasWindowTitle = true;
 	keyOverlay->windowTitle = "Press [W], [A], [S], [D] to move around\n\nYou might want to watch out for terrors lurking in the deep darkness...";
 	keyOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - keyOverlay->elementWidth / 2.0f,
@@ -229,6 +254,9 @@ void SceneManager::HideKeyControlsOverlay()
 			GameManager::interfaceObjects[mIndex] = nullptr;
 		keyOverlay->~Menu();
 		keyOverlay = nullptr;
+
+		if (introIsActive)
+			SceneManager::EndLevelIntro();
 	}
 }
 
@@ -238,9 +266,6 @@ void SceneManager::Draw()
 {
 	if (!disableHud && hud)
 		hud->HudDraw(GameManager::driver, GameManager::guienv);
-
-	GameManager::smgr->addCubeSceneNode(100.0f, 0, -1, rayStart);
-	GameManager::smgr->addCubeSceneNode(100.0f, 0, -1, rayEnd);
 }
 
 SceneManager::Tag SceneManager::GetTag()
@@ -267,6 +292,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			delete intObj;
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
+	SceneManager::levelMonster = nullptr;
+	SceneManager::levelPlayer = nullptr;
+	SceneManager::mouseOverlay = nullptr;
+	SceneManager::keyOverlay = nullptr;
 
 	// Load the new scene
 	scene = sceneToLoad;
@@ -289,8 +318,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 			skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
-			// Adds the camera and binds the keys to the camera's movement
-			camera = new Camera(GameManager::smgr);
+			// Adds the camera and binds the keys to the camera's movement			
 			Lighting lighting = Lighting(GameManager::smgr);
 			lighting.SetSceneLight(ambientColor);
 			#pragma endregion
@@ -299,11 +327,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			std::vector<io::path> meshDirectories;
 			std::vector<io::path> meshTextures;
 
+			camera = new Camera(GameManager::smgr);
+
+			// Create a keymap-less camera for the intro sequence
+			camera->CreateCamera(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0), vector3df(-90, 0, 0), 
+				camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
+
 			// Spawn player in cage
 			Player* player = new Player(new vector3df(0, 0, 0), 
 				new vector3df(1, 1, 1), 
 				new vector3df(0, 0, 0),
-				GameManager::smgr->getActiveCamera(), 
+				GameManager::smgr->getActiveCamera(),
 				GameManager::smgr, 
 				-1337,
 				GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
@@ -330,7 +364,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				player);
 
 			// Spawn shark
-			Shark* shark = new Shark(new vector3df(40000, 5000, 0), 
+			Shark* shark = new Shark(new vector3df(8000, 5000, 0), 
 				new vector3df(1, 1, 1), 
 				new vector3df(0, 0, 0),
 				0, 
@@ -348,13 +382,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				-GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), 
 				new vector3df(1, 1, 1), 
 				new vector3df(0, 0, 0),
-				GameManager::smgr->getRootSceneNode(), 
+				0, 
 				GameManager::smgr, 
 				-100);
-			GameManager::gameObjects.push_back(playingField);
+			GameManager::gameObjects.push_back(playingField);	
 
-			// Spawn random objects on grid
-			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0); 
+			ITriangleSelector* selector = GameManager::smgr->createTriangleSelector(playingField->mesh);
+			playingField->mesh->setTriangleSelector(selector);
+			selector->drop();
+
+			// Spawn random objects on grid		
+			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
 			S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
 			int verticesGrid = planeBuffer->getVertexCount();
 

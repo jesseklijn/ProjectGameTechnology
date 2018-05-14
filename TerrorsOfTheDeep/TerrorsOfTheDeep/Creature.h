@@ -43,7 +43,7 @@ public:
 	float agilityDistance = 7500.0f, agility;
 	float targetDistance, targetDistanceLast;
 
-	float stateUpdateTimeDefault = 1.0f * 1000.0f;
+	float stateUpdateTimeDefault = 2.0f * 1000.0f;
 	float stateUpdateTime = stateUpdateTimeDefault;
 	float stateUpdateTimer = 0.0f;
 

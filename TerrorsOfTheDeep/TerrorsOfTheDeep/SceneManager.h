@@ -57,12 +57,13 @@ public:
 	static irr::core::vector3df rayEnd;
 
 	// Intro
-	static bool introIsActive, showControls, showMouseOverlay, showKeyOverlay;
+	static bool introIsActive, cageShouldDescend, showControls, showMouseOverlay, showKeyOverlay;
 	static float introStartTime, introStartTimer;
 	static float introMouseOverlayTime, introMouseOverlayTimer;
 	static float introMouseOverlayDisplayTime, introMouseOverlayDisplayTimer;
 	static float introKeyOverlayTime, introKeyOverlayTimer;
 	static float introKeyOverlayDisplayTime, introKeyOverlayDisplayTimer;
+	static float introCageDescendRate;
 
 	static Menu* mouseOverlay;
 	static Menu* keyOverlay;	
@@ -76,12 +77,15 @@ public:
 
 	static bool LoadScene(SceneType sceneToLoad);
 	static void PauseScene(bool mode);
+	static void OnSceneChange();
+
+	static void StartLoadingScreen();
+	static void EndLoadingScreen();
+
 	static void StartLevelIntro();
+	static void EndLevelIntro();
 	static void ShowMouseControlsOverlay();
 	static void ShowKeyControlsOverlay();
 	static void HideMouseControlsOverlay();
 	static void HideKeyControlsOverlay();
-	static void StartLoadingScreen();
-	static void EndLoadingScreen();
-	static void OnSceneChange();
 };

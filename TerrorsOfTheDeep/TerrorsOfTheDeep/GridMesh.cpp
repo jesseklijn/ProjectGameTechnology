@@ -67,22 +67,20 @@ void GridMesh::GenerateMesh()
 	SMesh* sMesh = new SMesh();
 	SMeshBuffer* buffer = new SMeshBuffer();
 
-	sMesh->addMeshBuffer(buffer);
-	buffer->drop();
-
 	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid);
 	buffer->Indices = DrawTriangles(xSizeGrid, ySizeGrid);
 
-	meshManipulator->recalculateNormals(sMesh);
-
 	// Recalculate the bounding box of the mesh
 	buffer->recalculateBoundingBox();
+	sMesh->addMeshBuffer(buffer);
+	meshManipulator->recalculateNormals(sMesh);
+	sMesh->recalculateBoundingBox();
 
 	// Convert the SMesh into a SAnimatedMesh 
 	meshGrid->addMesh(sMesh);
 
 	// Adds the SAnimatedMesh to the mesh of gameObject
-	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
+	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, 0);
 	mesh->setPosition(startPos);
 
 	// Set the material flags

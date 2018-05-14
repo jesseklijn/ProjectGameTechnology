@@ -67,7 +67,6 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 			mesh->setTriangleSelector(selector);
 			selector->drop();
 		}
-
 	}
 }
 

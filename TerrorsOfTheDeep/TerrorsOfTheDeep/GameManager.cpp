@@ -25,7 +25,7 @@ irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDri
 irr::scene::ISceneManager* GameManager::smgr = GameManager::device->getSceneManager();
 irr::gui::IGUIEnvironment* GameManager::guienv = GameManager::device->getGUIEnvironment();
 irr::scene::ISceneCollisionManager* GameManager::collMan = GameManager::smgr->getSceneCollisionManager();
-irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
+irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getFont("../media/UI/Fonts/fontStandard.xml");
 #pragma endregion
 
 #pragma region Raycasting
@@ -53,7 +53,7 @@ const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driv
 
 // World dimensions
 const int GameManager::WORLD_RADIUS_X = 12000.0f;
-const int GameManager::WORLD_RADIUS_Y = 9000.0f;
+const int GameManager::WORLD_RADIUS_Y = 12000.0f;
 const int GameManager::WORLD_RADIUS_Z = 12000.0f;
 bool GameManager::keyPickedUp = false;
 bool GameManager::escaped = false;
@@ -73,8 +73,8 @@ int GameManager::skullCount = 2;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0f);
-	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0002f);
+	GameManager::guienv->getSkin()->setFont(GameManager::font);
 	GameManager::smgr->setShadowColor(SColor(100, 0, 0, 0));
 	
 	Awake();
@@ -206,10 +206,10 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 	ISceneNode* selectedSceneNode =
 		GameManager::collMan->getSceneNodeAndCollisionPointFromRay(
 			ray,
-			intersection,    // This will be the position of the collision
-			hitTriangle,    // This will be the triangle hit in the collision
-			0,  // This ensures that only nodes that we have set up to be pickable are considered
-			0);          // Check the entire scene (this is actually the implicit default)
+			intersection,	// This will be the position of the collision
+			hitTriangle,	// This will be the triangle hit in the collision
+			0,				// This ensures that only nodes that we have set up to be pickable are considered
+			0);				// Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
 }
