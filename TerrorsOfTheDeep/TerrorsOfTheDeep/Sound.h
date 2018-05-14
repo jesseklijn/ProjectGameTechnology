@@ -13,7 +13,7 @@ public:
 	Sound();
 	~Sound();
 	static void SoundShutdown();
-	static void BackGroundMusic(
+	static void BackGroundMusic2D(
 		const char* soundFile,
 		float volume);
 private:

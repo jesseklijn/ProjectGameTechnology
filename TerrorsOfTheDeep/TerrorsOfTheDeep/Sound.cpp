@@ -11,8 +11,6 @@ Sound::~Sound()
 {
 }	
 
-irrklang::ISound* Sound::backGroundMusic = 0;
-
 void Sound::SoundShutdown()
 {
 	if (backGroundMusic)
@@ -26,8 +24,9 @@ void Sound::SoundShutdown()
 	}
 }
 
+irrklang::ISound* Sound::backGroundMusic = 0;
 
-void Sound::BackGroundMusic(const char* soundFile, const float volume)
+void Sound::BackGroundMusic2D(const char* soundFile, const float volume)
 {
 	if (backGroundMusic)
 	{
@@ -46,6 +45,6 @@ void Sound::BackGroundMusic(const char* soundFile, const float volume)
 #else
 
 void Sound::SoundShutdown();
-void Sound::BackGroundMusic(const char * soundFile, const irrklang::ik_f32 volume);
+void Sound::BackGroundMusic2D(const char * soundFile, const irrklang::ik_f32 volume);
 
 #endif
