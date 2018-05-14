@@ -34,6 +34,7 @@ public:
 	static irr::scene::ISceneManager* smgr;
 	static irr::gui::IGUIEnvironment* guienv;
 	static irr::scene::ISceneCollisionManager* collMan;
+	static irr::video::IGPUProgrammingServices* gpu;
 	static irr::gui::IGUIFont* font;
 	#pragma endregion
 

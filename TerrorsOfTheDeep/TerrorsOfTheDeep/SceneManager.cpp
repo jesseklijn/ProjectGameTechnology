@@ -1,6 +1,7 @@
 
 #pragma once
 #include "SceneManager.h"
+#include "diffuseShaderCallBack.h"
 
 static const int NO_PARENT = 0;
 static const float KEYLIGHT_RADIUS = 50.f;
@@ -107,6 +108,16 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			#pragma region World Generation
 			std::vector<io::path> meshDirectories;
 			std::vector<io::path> meshTextures;
+
+			// Shader Test
+			DiffuseShaderCallBack* cb = new DiffuseShaderCallBack();
+			ISceneNode* cube = GameManager::smgr->addCubeSceneNode(5, 0, 0, vector3df(100, 100, 100));
+			cube->setMaterialFlag(EMF_LIGHTING, true);
+
+			s32 newMaterial = GameManager::gpu->addHighLevelShaderMaterialFromFiles(
+				"..\DiffuseShaderVert.hlsl", "vertexMain", video::EVST_VS_5_0,
+				"..\DiffuseShaderFrag.hlsl", "fragMain", video::EPST_PS_5_0,
+				cb, video::EMT_SOLID, 0, EGSL_DEFAULT);
 
 			// Spawn critters
 			meshDirectories.push_back("../media/dolphin.obj"); meshTextures.push_back("");

@@ -28,6 +28,7 @@ irr::video::IVideoDriver* GameManager::driver = GameManager::device->getVideoDri
 irr::scene::ISceneManager* GameManager::smgr = GameManager::device->getSceneManager();
 irr::gui::IGUIEnvironment* GameManager::guienv = GameManager::device->getGUIEnvironment();
 irr::scene::ISceneCollisionManager* GameManager::collMan = GameManager::smgr->getSceneCollisionManager();
+irr::video::IGPUProgrammingServices* GameManager::gpu = GameManager::driver->getGPUProgrammingServices();
 irr::gui::IGUIFont* GameManager::font = GameManager::guienv->getBuiltInFont();
 #pragma endregion
 
