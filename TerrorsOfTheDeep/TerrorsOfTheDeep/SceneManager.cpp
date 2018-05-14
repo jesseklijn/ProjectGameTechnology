@@ -49,7 +49,7 @@ void SceneManager::Update()
 	if (camera)
 		camera->updatePos();
 
-	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL) 
+	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL)
 		SceneManager::PauseScene(!sceneIsPaused);
 }
 
@@ -83,23 +83,37 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
 
+
+	//Update loading screen
+	StartLoadingScreen(SceneManager::BASICS);
+	EndLoadingScreen();
+
 	// Load the new scene
 	scene = sceneToLoad;
-	switch (scene) 
+	switch (scene)
 	{
-		case TITLE_SCREEN:
-		{
+	case TITLE_SCREEN:
+	{
 
-		} break;
+	} break;
+	case LOADING:
+	{
+
+	} break;
+
 
 		case LEVEL:
 		{
-			#pragma region Begin setup
+			#pragma region Setup
 			GameManager::device->getCursorControl()->setVisible(false);
 
 			// Set our skydome
 			ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 			skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
+
+			// Initialize our background music
+			sound_init();
+			background_music("../media/AmbientUnderwaterMaddnes.ogg");
 
 			// Adds the camera and binds the keys to the camera's movement
 			camera = new Camera(GameManager::smgr);
@@ -107,9 +121,34 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			lighting.SetSceneLight(ambientColor);
 			#pragma endregion
 
-			#pragma region World Generation
-			std::vector<io::path> meshDirectories;
-			std::vector<io::path> meshTextures;
+#pragma region World Generation
+		std::vector<io::path> meshDirectories;
+		std::vector<io::path> meshTextures;
+
+			// Spawn critters
+			meshDirectories.push_back("../media/dolphin.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish1.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish2.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/Fish3.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/MantaRay.obj"); meshTextures.push_back("");
+			meshDirectories.push_back("../media/GoldenFish.obj"); meshTextures.push_back("../media/naranjaojo.png");
+			meshDirectories.push_back("../media/Rudd_Fish.obj"); meshTextures.push_back("../media/Rudd-Fish_Colourmap.png");
+			for (int critterIndex = 0; critterIndex < GameManager::critterCount; critterIndex++)
+			{
+				int graphicsIndex = rand() % meshDirectories.size();
+				Critter* critter = new Critter(new vector3df(rand() % (GameManager::WORLD_RADIUS_X * 2) - GameManager::WORLD_RADIUS_X,
+					rand() % GameManager::WORLD_RADIUS_Y,
+					rand() % (GameManager::WORLD_RADIUS_Z * 2) - GameManager::WORLD_RADIUS_Z),
+					new vector3df(1, 1, 1),
+					new vector3df(0, 0, 0),
+					0,
+					GameManager::smgr,
+					-1111,
+					GameManager::smgr->getMesh(meshDirectories[graphicsIndex]),
+					meshTextures[graphicsIndex] != "" ? GameManager::driver->getTexture(meshTextures[graphicsIndex]) : 0,
+					false);
+				GameManager::gameObjects.push_back(critter);
+			}
 
 			// Spawn world objects
 			IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
@@ -143,17 +182,23 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::levelMonster = shark;
 			GameManager::gameObjects.push_back(shark);
 
+			StartLoadingScreen(SceneManager::WORLD);
+			EndLoadingScreen();
 			// Make a playingField (mesh out of grid)
 			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -300, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
 
-			// Spawn random objects on grid
-			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0); 
+			// Spawn random objects on grid;
+			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
+
+			// Get the vertices of the playingField 
 			S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
+
+			// Amount of objects to be spawn on the grid
 			int verticesGrid = planeBuffer->getVertexCount();
 
-			// Keeps track what vertex has an object spawned on it
-			vector<bool> spawnTracker(verticesGrid);
+		// Keeps track what vertex has an object spawned on it
+		vector<bool> spawnTracker(verticesGrid);
 
 			// Key collectible object
 			while (true)
@@ -165,8 +210,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 					GameObject* key = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
 						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
 						0, GameManager::smgr, 4,
-						GameManager::smgr->getMesh("../media/WinLose/key.obj"),
-						0);
+						GameManager::smgr->getMesh("../media/key.obj"),
+						GameManager::driver->getTexture("../media/RustTexture.jpg"));
 					key->setTag(GameObject::KEY);
 					GameManager::gameObjects.push_back(key);
 					ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
@@ -174,7 +219,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				}
 			}
 
-			// Win condition trigger object
+		StartLoadingScreen(SceneManager::LAND_MARKS);
+		EndLoadingScreen();			
+		// Win condition trigger object
 			while (true)
 			{
 				// Generate a random number for the selection of a vertice so an object can get spawned on it
@@ -226,20 +273,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			// Spawn rocks
 			meshDirectories.clear();
 			meshTextures.clear();
-			meshDirectories.push_back("../media/Rocks/Rock1.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
-			meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
-			// Adds objects on the vertices of the playingfield mesh 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::rockCount, 
-				playingField->getPosition(),
-				vector3df(1.0f, 1.0f, 1.0f),
-				vector3df(0.0f, 0.0f, 0.0f), 
-				-1111,
-				meshDirectories, 
-				meshTextures, 
-				playingField->mesh->getMesh()->getMeshBuffer(0),
-				0.6f, 0.6f, 0.6f,
-				45.0f, 360.0f, 45.0f);
+			meshDirectories.push_back("../media/Rock.obj"); meshTextures.push_back("");
 
 
 			//// Spawn ruins
@@ -337,15 +371,15 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			#pragma endregion
 		} break;
 
-		case GAME_OVER:
-		{
+	case GAME_OVER:
+	{
 
-		} break;
+	} break;
 
-		default: 
-		{
-			return false; 
-		} break;
+	default:
+	{
+		return false;
+	} break;
 	}
 
 	SceneManager::OnSceneChange();
@@ -417,13 +451,52 @@ void SceneManager::OnSceneChange()
 
 /* Creates a loading screen effect.
 Used to smoothly load a scene before showing it.*/
-void SceneManager::StartLoadingScreen()
+void SceneManager::StartLoadingScreen(LoadingType loadingType)
 {
-	// TODO: Loading screen!
+
+	//TODO: Loading screen!
+	GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
+	GameManager::guienv->clear();
+	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
+
+
+	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/ruins.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
+	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
+	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
+
+	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingTitle.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 1036) / 2, 0), true, 0, -1, L"test");
+	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/underwater-ruins.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 700) / 2, (GameManager::screenDimensions.Height - 454) / 1.5F	), true, 0, -1, L"test");
+	
+	if (loadingType == SceneManager::BASICS) {
+		GameManager::device->setWindowCaption(L"Loading BASICS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)	), true, 0, -1, L"test");
+
+	}
+	else if(loadingType == SceneManager::CREATURES)
+	{
+		GameManager::device->setWindowCaption(L"Loading CREATURES Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/Creatures.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::WORLD)
+	{
+		GameManager::device->setWindowCaption(L"Loading WORLD Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/World.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::LAND_MARKS)
+	{
+		GameManager::device->setWindowCaption(L"Loading LAND_MARKS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/Landmarks.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	
+	GameManager::guienv->drawAll();
+
 }
 
 /* Ends the currently active loading screen.*/
 void SceneManager::EndLoadingScreen()
 {
-	// TODO: Loading screen!
+	GameManager::driver->endScene();
 }

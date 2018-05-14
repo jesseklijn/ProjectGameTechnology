@@ -30,6 +30,7 @@ using namespace io;
 using namespace gui;
 #pragma endregion
 
+bool requiresLoading = true;
 
 /*
 This is the main method. We can now use main() on every platform.
@@ -61,12 +62,12 @@ int main()
 		gameManager.Update();		
 		detectCollision.Detect(GameManager::smgr);
 
-		// Draw the world
-		GameManager::smgr->drawAll();
-		GameManager::guienv->clear();	
-		sceneManager.Draw();	
-		gameManager.Draw();
-		GameManager::guienv->drawAll();
+			// Draw the world
+			GameManager::smgr->drawAll();
+			GameManager::guienv->clear();
+			sceneManager.Draw();
+			gameManager.Draw();
+			GameManager::guienv->drawAll();
 
 		// Our frame is finished
 		GameManager::driver->endScene();
@@ -78,6 +79,7 @@ int main()
 		GameManager::deltaTimeMS = GameManager::deltaTime * 1000.0f * GameManager::gameSpeed;
 		GameManager::time += elapsed_seconds.count();
 	}
+
 	// Game end, drop our Irrlicht device
 	GameManager::device->drop();
 

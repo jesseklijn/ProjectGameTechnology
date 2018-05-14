@@ -34,10 +34,21 @@ public:
 		NONE,
 		TITLE_SCREEN,
 		LEVEL,
+		LOADING,
 		GAME_OVER
 	};
+
+	enum LoadingType
+	{
+		NO_OBJECTS,
+		BASICS,
+		CREATURES,
+		WORLD,
+		LAND_MARKS
+	};
+
 	static SceneType scene, scenePrevious;
-	static bool sceneIsPaused;
+	static bool sceneIsPaused, sceneIsLoaded;
 
 	// Light data
 	static irr::video::SColorf ambientColor, flashlightColor, sharkEyesColor;
@@ -58,7 +69,7 @@ public:
 
 	static bool LoadScene(SceneType sceneToLoad);
 	static void PauseScene(bool mode);
-	static void StartLoadingScreen();
+	static void StartLoadingScreen(LoadingType loadingType);
 	static void EndLoadingScreen();
 	static void OnSceneChange();
 };
