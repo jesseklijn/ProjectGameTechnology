@@ -49,17 +49,23 @@ public:
 	// Components for every scene
 	static Camera* camera;
 	static HUD* hud;
+	static GameObject* levelMonster;
+	static GameObject* levelPlayer;
+	static GameObject* divingCage;
 	static bool disableHud;
+	static irr::core::vector3df rayStart;
+	static irr::core::vector3df rayEnd;
 
 	// Intro
 	static bool introIsActive, showControls, showMouseOverlay, showKeyOverlay;
+	static float introStartTime, introStartTimer;
 	static float introMouseOverlayTime, introMouseOverlayTimer;
 	static float introMouseOverlayDisplayTime, introMouseOverlayDisplayTimer;
 	static float introKeyOverlayTime, introKeyOverlayTimer;
 	static float introKeyOverlayDisplayTime, introKeyOverlayDisplayTimer;
 
 	static Menu* mouseOverlay;
-	static Menu* keyOverlay;
+	static Menu* keyOverlay;	
 
 
 	// Functions
@@ -70,6 +76,7 @@ public:
 
 	static bool LoadScene(SceneType sceneToLoad);
 	static void PauseScene(bool mode);
+	static void StartLevelIntro();
 	static void ShowMouseControlsOverlay();
 	static void ShowKeyControlsOverlay();
 	static void HideMouseControlsOverlay();
@@ -78,4 +85,3 @@ public:
 	static void EndLoadingScreen();
 	static void OnSceneChange();
 };
-

@@ -12,9 +12,12 @@ SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
 SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
+GameObject* SceneManager::levelMonster = nullptr;
+GameObject* SceneManager::levelPlayer = nullptr;
+
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
@@ -23,6 +26,9 @@ vector3df SceneManager::keyLightOffset = vector3df(0, 100, 0);
 Camera* SceneManager::camera;
 HUD* SceneManager::hud = new HUD();
 bool SceneManager::disableHud = false;
+vector3df SceneManager::rayStart = vector3df(0, 0, 0);
+vector3df SceneManager::rayEnd = vector3df(0, 0, 0);
+GameObject* SceneManager::divingCage = nullptr;
 
 // Intro / Controls overlay
 Menu* SceneManager::mouseOverlay = nullptr;
@@ -31,11 +37,13 @@ bool SceneManager::introIsActive = false;
 bool SceneManager::showControls = false;
 bool SceneManager::showMouseOverlay = false;
 bool SceneManager::showKeyOverlay = false;
-float SceneManager::introMouseOverlayTime = 3.0f * 1000.0f;
+float SceneManager::introStartTime = 1.0f * 1000.0f;
+float SceneManager::introStartTimer = -1.0f;
+float SceneManager::introMouseOverlayTime = 1.0f * 1000.0f;
 float SceneManager::introMouseOverlayTimer = -1.0f;
 float SceneManager::introMouseOverlayDisplayTime = 10.0f * 1000.0f;
 float SceneManager::introMouseOverlayDisplayTimer = -1.0f;
-float SceneManager::introKeyOverlayTime = SceneManager::introMouseOverlayTime + SceneManager::introMouseOverlayDisplayTime + 2.0f * 1000.0f;
+float SceneManager::introKeyOverlayTime = 1.0f * 1000.0f;
 float SceneManager::introKeyOverlayTimer = -1.0f;
 float SceneManager::introKeyOverlayDisplayTime = 10.0f * 1000.0f;
 float SceneManager::introKeyOverlayDisplayTimer = -1.0f;
@@ -61,75 +69,103 @@ void SceneManager::Update()
 	if (GameManager::gameOver)
 		SceneManager::LoadScene(GAME_OVER);
 
+	// Pause menu trigger
 	if (GameManager::eventManager.IsKeyPressed(KEY_ESCAPE) && scene == LEVEL)
 		SceneManager::PauseScene(!sceneIsPaused);
 
-	if (introIsActive || showControls)
+	// Control overlay timers / intro management
+	if (scene == LEVEL)
 	{
-		#pragma region Timer for the mouse controls overlay to show
-		SceneManager::introMouseOverlayTimer = (SceneManager::introMouseOverlayTimer > 0.0f) 
-			? GameManager::Clamp(SceneManager::introMouseOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayTime) 
+		SceneManager::introStartTimer = (SceneManager::introStartTimer > 0.0f)
+			? GameManager::Clamp(SceneManager::introStartTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introStartTime)
 			: -1.0f;
-		if (SceneManager::introMouseOverlayTimer == 0.0f)
+		if (SceneManager::introStartTimer == 0.0f)
 		{
-			SceneManager::ShowMouseControlsOverlay();
-
-			// Starts the display timer for this overlay.
-			SceneManager::introMouseOverlayDisplayTimer = SceneManager::introMouseOverlayDisplayTime;
-
-			// Disable this timer, since it's only timed once
-			SceneManager::introMouseOverlayTimer = -1.0f;
+			SceneManager::StartLevelIntro();
+			SceneManager::introStartTimer = -1.0f;
 		}
-		#pragma endregion
 
-		#pragma region The display timer for mouse overlay
-		SceneManager::introMouseOverlayDisplayTimer = (SceneManager::introMouseOverlayDisplayTimer > 0.0f)
-			? GameManager::Clamp(SceneManager::introMouseOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayDisplayTime)
-			: -1.0f;
-		if (SceneManager::introMouseOverlayDisplayTimer == 0.0f)
+		bool countdownOverlayTimers = (introIsActive || showControls);
+		if (countdownOverlayTimers)
 		{
-			SceneManager::HideMouseControlsOverlay();
+			#pragma region Timer for the mouse controls overlay to show
+			SceneManager::introMouseOverlayTimer = (SceneManager::introMouseOverlayTimer > 0.0f)
+				? GameManager::Clamp(SceneManager::introMouseOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayTime)
+				: -1.0f;
+			if (SceneManager::introMouseOverlayTimer == 0.0f)
+			{
+				SceneManager::ShowMouseControlsOverlay();
+				SceneManager::introMouseOverlayTimer = -1.0f;
+			}
+			#pragma endregion
 
-			// Disable this timer, since it's only timed once
-			SceneManager::introMouseOverlayDisplayTimer = -1.0f;
+			#pragma region The display timer for mouse overlay
+			SceneManager::introMouseOverlayDisplayTimer = (SceneManager::introMouseOverlayDisplayTimer > 0.0f)
+				? GameManager::Clamp(SceneManager::introMouseOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayDisplayTime)
+				: -1.0f;
+			if (SceneManager::introMouseOverlayDisplayTimer == 0.0f)
+			{
+				SceneManager::HideMouseControlsOverlay();
+				SceneManager::introMouseOverlayDisplayTimer = -1.0f;
+			}
+			#pragma endregion
+
+			#pragma region Timer for the key controls overlay to show
+			SceneManager::introKeyOverlayTimer = (SceneManager::introKeyOverlayTimer > 0.0f)
+				? GameManager::Clamp(SceneManager::introKeyOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayTime)
+				: -1.0f;
+			if (SceneManager::introKeyOverlayTimer == 0.0f)
+			{
+				SceneManager::ShowKeyControlsOverlay();
+				SceneManager::introKeyOverlayTimer = -1.0f;
+			}
+			#pragma endregion
+
+			#pragma region The display timer for key overlay
+			SceneManager::introKeyOverlayDisplayTimer = (SceneManager::introKeyOverlayDisplayTimer > 0.0f)
+				? GameManager::Clamp(SceneManager::introKeyOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayDisplayTime)
+				: -1.0f;
+			if (SceneManager::introKeyOverlayDisplayTimer == 0.0f)
+			{
+				// Timer trigger, done with all overlays
+				SceneManager::HideKeyControlsOverlay();
+				SceneManager::introIsActive = false;
+				SceneManager::showControls = false;
+				SceneManager::introKeyOverlayDisplayTimer = -1.0f;
+			}
+			#pragma endregion
+
+			// If this is the intro sequence, detect diving cage landing on sea floor
+			if (introIsActive && divingCage != nullptr)
+			{
+				SceneManager::levelPlayer->Move(600.0f * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
+				SceneManager::divingCage->Move(600.0f * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
+
+				rayStart = divingCage->getAbsolutePosition() + vector3df(0.0f, -100.0f, 0.0f);
+				rayEnd = rayStart + vector3df(0.0f, -300.0f, 0.0f);
+				bool touchedDown = GameManager::PerformRaycast(rayStart, rayEnd) != 0;
+				if (touchedDown)
+				{
+					// Start the key overlay timer
+					SceneManager::introKeyOverlayTimer = SceneManager::introKeyOverlayTime;
+					introIsActive = false;
+				}
+			}
 		}
-		#pragma endregion
-
-		#pragma region Timer for the key controls overlay to show
-		SceneManager::introKeyOverlayTimer = (SceneManager::introKeyOverlayTimer > 0.0f)
-			? GameManager::Clamp(SceneManager::introKeyOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayTime)
-			: -1.0f;
-		if (SceneManager::introKeyOverlayTimer == 0.0f)
-		{
-			SceneManager::ShowKeyControlsOverlay();
-
-			// Starts the display timer for this overlay.
-			SceneManager::introKeyOverlayDisplayTimer = SceneManager::introKeyOverlayDisplayTime;
-
-			// Disable this timer, since it's only timed once
-			SceneManager::introKeyOverlayTimer = -1.0f;
-		}
-		#pragma endregion
-
-		#pragma region The display timer for key overlay
-		SceneManager::introKeyOverlayDisplayTimer = (SceneManager::introKeyOverlayDisplayTimer > 0.0f)
-			? GameManager::Clamp(SceneManager::introKeyOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayDisplayTime)
-			: -1.0f;
-		if (SceneManager::introKeyOverlayDisplayTimer == 0.0f)
-		{
-			// Timer trigger, done with all overlays
-			SceneManager::HideKeyControlsOverlay();
-			SceneManager::introIsActive = false;
-			SceneManager::showControls = false;
-
-			// Disable this timer, since it's only timed once
-			SceneManager::introKeyOverlayDisplayTimer = -1.0f;
-		}
-		#pragma endregion
 	}
+
 
 	if (camera)
 		camera->updatePos();
+}
+
+void SceneManager::StartLevelIntro()
+{
+	if (introIsActive)
+		return;
+
+	introIsActive = true;
+	SceneManager::introMouseOverlayTimer = SceneManager::introMouseOverlayTime;
 }
 
 void SceneManager::ShowMouseControlsOverlay()
@@ -146,6 +182,9 @@ void SceneManager::ShowMouseControlsOverlay()
 	mouseOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - mouseOverlay->elementWidth / 2.0f,
 		GameManager::screenDimensions.Height - mouseOverlay->elementHeight - mouseOverlay->elementSpacing, 0.0f));
 	GameManager::interfaceObjects.push_back(mouseOverlay);
+
+	// Starts the display timer for this overlay.
+	SceneManager::introMouseOverlayDisplayTimer = SceneManager::introMouseOverlayDisplayTime;	
 }
 
 void SceneManager::ShowKeyControlsOverlay()
@@ -162,6 +201,9 @@ void SceneManager::ShowKeyControlsOverlay()
 	keyOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - keyOverlay->elementWidth / 2.0f,
 		GameManager::screenDimensions.Height - keyOverlay->elementHeight - keyOverlay->elementSpacing, 0.0f));
 	GameManager::interfaceObjects.push_back(keyOverlay);
+
+	// Starts the display timer for this overlay.
+	SceneManager::introKeyOverlayDisplayTimer = SceneManager::introKeyOverlayDisplayTime;
 }
 
 void SceneManager::HideMouseControlsOverlay()
@@ -196,6 +238,9 @@ void SceneManager::Draw()
 {
 	if (!disableHud && hud)
 		hud->HudDraw(GameManager::driver, GameManager::guienv);
+
+	GameManager::smgr->addCubeSceneNode(100.0f, 0, -1, rayStart);
+	GameManager::smgr->addCubeSceneNode(100.0f, 0, -1, rayEnd);
 }
 
 SceneManager::Tag SceneManager::GetTag()
@@ -263,7 +308,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				-1337,
 				GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
 			GameManager::gameObjects.push_back(player);
-			GameManager::levelPlayer = player;
+			SceneManager::levelPlayer = player;
 
 			GameObject* cage = new GameObject(new vector3df(player->getParent()->getPosition().X, player->getParent()->getPosition().Y - 400.0f, player->getParent()->getPosition().Z),
 				new vector3df(1, 1, 1),
@@ -273,6 +318,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				-1111,
 				GameManager::smgr->getMesh("../media/Ruins/SharkCage.obj"));
 			GameManager::gameObjects.push_back(cage);
+			divingCage = cage;
 
 			// Attach flashlight to player
 			ISceneNode* newPlayer = player;
@@ -293,7 +339,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
 				0, 
 				false);
-			GameManager::levelMonster = shark;
+			SceneManager::levelMonster = shark;
 			GameManager::gameObjects.push_back(shark);
 
 			// Make a playingField (mesh out of grid)
@@ -532,9 +578,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			float generationDuration = elapsed_seconds.count() * GameManager::gameSpeed  * 1000.0f;
 
 			// Start the controls display timers, compensate for the huge deltaTime of 1-frame generation
-			SceneManager::introIsActive = true;
-			SceneManager::introMouseOverlayTimer = generationDuration + SceneManager::introMouseOverlayTime;
-			SceneManager::introKeyOverlayTimer = generationDuration + SceneManager::introKeyOverlayTime;
+			SceneManager::introStartTimer = generationDuration + SceneManager::introStartTime;
 			#pragma endregion
 		} break;
 

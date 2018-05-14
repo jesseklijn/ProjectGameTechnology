@@ -23,6 +23,8 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 {
 	tag = GameObject::WORLD_OBJECT;
 
+	GameManager::FindIndexInList<GameObject>(this, GameManager::gameObjects);
+
 	setPosition(*startPosition);
 	setScale(*startScale);
 	setRotation(*startRotation);

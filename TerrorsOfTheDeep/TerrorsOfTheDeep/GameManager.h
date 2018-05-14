@@ -80,9 +80,6 @@ public:
 
 	static bool gameOver;
 
-	static GameObject* levelMonster;
-	static GameObject* levelPlayer;
-
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;
 
@@ -101,7 +98,8 @@ public:
 	Because we now have GameObjects as well as InterfaceObjects, we'd have to write double functions for both classes.
 	With a template this can be varied, but template functions must be implemented in the same header file as the class
 	that holds the functions, so you can find their implementation below this class. */
-	template <class T> static int FindIndexInList(T* object, std::vector<T*> targetList);
+	template <class T> 
+	static int FindIndexInList(T* object, std::vector<T*> targetList);
 	template <class T> static T* FindObjectWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList);
 	template <class T> static std::vector<T*> FindObjectsWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList);
 	template <class T> static std::vector<T*> FindObjectsWithTags(std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList);

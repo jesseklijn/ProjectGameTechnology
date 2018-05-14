@@ -1,6 +1,7 @@
 #pragma once
 #include "Creature.h"
 #include "GameManager.h"
+#include "SceneManager.h"
 
 
 // Constructor
@@ -54,7 +55,7 @@ void Creature::UpdateState()
 	// If I'm within base fleeing distance of the closest predator, max out fleeing timer
 	if (canFlee)
 	{
-		targetFleeingFrom = GameManager::levelMonster;//GameManager::FindNearestGameObjectWithTag<GameObject>(this, GameObject::MONSTER, GameManager::gameObjects, INFINITY, true);
+		targetFleeingFrom = SceneManager::levelMonster;//GameManager::FindNearestGameObjectWithTag<GameObject>(this, GameObject::MONSTER, GameManager::gameObjects, INFINITY, true);
 		if (targetFleeingFrom)
 		{
 			if ((targetFleeingFrom->getAbsolutePosition() - currentPosition).getLength() < fleeingDetectionRange)

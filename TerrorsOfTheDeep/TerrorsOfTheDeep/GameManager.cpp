@@ -38,9 +38,6 @@ triangle3df hitTriangle;
 std::vector<GameObject*> GameManager::gameObjects;
 std::vector<InterfaceObject*> GameManager::interfaceObjects;
 
-GameObject* GameManager::levelMonster = nullptr;
-GameObject* GameManager::levelPlayer = nullptr;
-
 // Timing
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
@@ -76,7 +73,7 @@ int GameManager::skullCount = 2;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0002f);
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 	GameManager::smgr->setShadowColor(SColor(100, 0, 0, 0));
 	
@@ -211,7 +208,7 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			ray,
 			intersection,    // This will be the position of the collision
 			hitTriangle,    // This will be the triangle hit in the collision
-			GameManager::ID_FLAG_IS_PICKABLE,  // This ensures that only nodes that we have set up to be pickable are considered
+			0,  // This ensures that only nodes that we have set up to be pickable are considered
 			0);          // Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
