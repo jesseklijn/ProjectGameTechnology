@@ -84,4 +84,20 @@ void Player::UpdatePos()
 	{
 		mesh->setPosition(vector3df(0, 0, 0));
 	}
+
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_SPACE))
+	{
+		MoveParent(vector3df(0, 5, 0));
+	} 
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_LCONTROL))
+	{
+		MoveParent(vector3df(0, -5, 0));
+	}
+}
+
+void Player::MoveParent(vector3df movement)
+{
+	vector3df newPos = parent->getAbsolutePosition() + movement;
+	if (newPos.Y > 0)
+		parent->setPosition(newPos);
 }
