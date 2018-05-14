@@ -40,6 +40,7 @@ public:
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
 
 	void UpdatePos();
-	void MoveArms(float speed);
+	void MoveParent(irr::core::vector3df movement);
+	//void MoveArms(float speed);
 };
 
