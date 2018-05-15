@@ -11,9 +11,9 @@ using namespace gui;
 #pragma endregion
 
 GridMesh::GridMesh(
-	const irr::core::vector3df* startPosition,
-	const irr::core::vector3df* startScale,
-	const irr::core::vector3df* startRotation,
+	irr::core::vector3df* startPosition,
+	irr::core::vector3df* startScale,
+	irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) : GameObject(
 		startPosition,  
@@ -25,7 +25,7 @@ GridMesh::GridMesh(
 		relatedMesh,
 		relatedTexture)
 {
-	startPos = *startPosition;
+	startPos = startPosition;
 	GenerateField();
 }
 
@@ -78,12 +78,12 @@ void GridMesh::GenerateMesh()
 	// Recalculate the bounding box of the mesh
 	buffer->recalculateBoundingBox();
 
-	// Convert the SMesh into a SAnimatedMesh 
+	// Convert the SMesh into a SAnimatedMesh (GameObjects uses SAnimatedMesh only and not 1 static mesh)
 	meshGrid->addMesh(sMesh);
 
-	// Adds the SAnimatedMesh to the mesh of gameObject
+	// Adds the SAnimatedMesh to the mesh of gameObject 
 	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
-	mesh->setPosition(startPos);
+	mesh->setPosition(*startPos);
 
 	// Set the material flags
 	IVideoDriver* driver = SceneManager->getVideoDriver();
@@ -108,12 +108,12 @@ u32 GridMesh::getMaterialCount() const
 
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
 void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vector3df scale,
-                                           vector3df rotation,
-                                           irr::s32 id, std::vector<irr::io::path> meshDirectories,std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer)
+	vector3df rotation,
+	irr::s32 id, std::vector<irr::io::path> meshDirectories, std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer, bool excludeOffset)
 {
 	// Amount of tries before it skips the current object and go to the next object
 	int currentTimeOutTries = 0;
-	int TimeOutTries = 10;
+	const int timeOutTries = 10;
 
 	// Spawn random objects on grid;
 	IMeshBuffer* buffer = meshBuffer;
@@ -127,10 +127,30 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 	// Tracks what vertices has an object spawned on them 
 	vector<bool> spawnTracker(verticesGrid);
 
+	// Checks if this function has been called more than one time so it will assign the same data of the previous call to prevent multiple object placements on the same vertex
+	if (!previousSpawnTracker.empty())
+	{
+		spawnTracker = previousSpawnTracker;
+	}
+
+	//exclude the vertices that are in the offset
+	if (excludeOffset)
+	{
+		for (int i = 0; i < verticesGrid; i++)
+		{
+			S3DVertex currentVertex = mb_vertices[i];
+			if (currentVertex.Pos.X + startPos->X > GameManager::WORLD_RADIUS_X || currentVertex.Pos.X + startPos->X < -GameManager::WORLD_RADIUS_X ||
+				currentVertex.Pos.Z + startPos->Z > GameManager::WORLD_RADIUS_Z || currentVertex.Pos.Z + startPos->Z < -GameManager::WORLD_RADIUS_Z)
+			{
+				// Exclude vertex from object spawn
+				spawnTracker[i] = true;
+			}
+		}
+	}
+
 	for (int i = 0; i < amount; i++)
 	{
 		while (true) {
-			currentTimeOutTries++;
 			// Generate a random number for the selection of a vertice so an object can get spawned on it
 			int randomizer = rand() % buffer->getVertexCount();
 			// Checks if the vertice is free (no object has been drawn on the vertex)
@@ -153,12 +173,17 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 				!textureDirectories[typeIndex].empty() ? GameManager::driver->getTexture(textureDirectories[typeIndex]) : 0;
 				GameManager::gameObjects.push_back(object);
 				spawnTracker[randomizer] = true;
+
+				// Saves the placements of the vertices so it can be used for the next call
+				previousSpawnTracker = spawnTracker;
 				break;
 				// Checks if the function needs to time out due to the failed attempts of the object placements
-			} else if (currentTimeOutTries == TimeOutTries)
+			}
+			if (currentTimeOutTries == timeOutTries)
 			{
 				break;
 			}
+			currentTimeOutTries++;
 		}
 	}
 	return;
