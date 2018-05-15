@@ -15,29 +15,32 @@ HUD::~HUD()
 //draws the HUD in the scene
 void HUD::HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv)
 {
+	if (!hudIsVisible)
+		return;
+
 	//array for hud strings
 	array<stringw> amountStrings;
 
 
 	//creating the strings for 
 	auto fps = driver->getFPS();
-	stringw str = L"HUD - Test [";
+	stringw str = "Driver: [";
 	str += driver->getName();
-	str += "] frames = ";
-	str += fps;
-
-	stringw str2 = "this is string 2";
+	str += "]";
+	stringw str2 = "FPS: [";
+	str2 += fps;
+	str2 += "]";
 
 	//add the strings to the array
 	amountStrings.push_back(str);
 	amountStrings.push_back(str2);
-	amountStrings.push_back(str);
 
 	//put string in the hud
 	for (size_t i = 0; i < amountStrings.size(); i++)
 	{
-		guienv->addStaticText(amountStrings[i].c_str(),
-			rect<s32>(10, 10 + (i * spacingText), 520, 22 + (i * spacingText)), true, true, 0, -1, true);		
+		IGUIStaticText* guiText = guienv->addStaticText(amountStrings[i].c_str(),
+			rect<s32>(10, 10 + (i * spacingText), 520, 42 + (i * spacingText)), true, true, 0, -1, false);	
+		guiText->setOverrideColor(SColor(255, 255, 255, 255));
 	}
 
 	//Conditions for HUD to show

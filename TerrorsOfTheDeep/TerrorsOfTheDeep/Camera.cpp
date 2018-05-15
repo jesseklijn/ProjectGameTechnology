@@ -41,23 +41,24 @@ ICameraSceneNode * Camera::CreateCamera(vector3df position,
 	int id, bool noVertMovement, float jumpSpeed, bool invertMouse, 
 	bool makeActive)
 {
-	ICameraSceneNode* currentCam = GameManager::smgr->getActiveCamera();
-	if (currentCam)
-	{
-		GameManager::smgr->setActiveCamera(0);
-		camera->remove();
-		camera = nullptr;
-	}	
-
-	// Add a camera in the scene
+	// Add a new main camera in the scene
 	camera = GameManager::smgr->addCameraSceneNodeFPS(parent, rotationSpeed, moveSpeed, id, keyMapArray, 
 		keyMapArray != 0 ? sizeof(keyMapArray) : 0, noVertMovement, jumpSpeed, invertMouse, makeActive);
+	GameManager::smgr->setActiveCamera(camera);
 	camera->setPosition(position);
-	camera->setTarget(position + lookTarget);
+	camera->setTarget(lookTarget);
 	camera->setFarValue(farValue);
 
+	// Parent the player to it
 	if (SceneManager::levelPlayer != nullptr)
+	{
 		SceneManager::levelPlayer->setParent(camera);
+
+		/* Once the player's previous parent (last camera) has changed, apparently the player's mesh
+		also loses its player parent for some reason. Re-initialize it. */
+		if (SceneManager::levelPlayer->mesh)
+			SceneManager::levelPlayer->mesh->setParent(SceneManager::levelPlayer);
+	}
 
 	return camera;
 }

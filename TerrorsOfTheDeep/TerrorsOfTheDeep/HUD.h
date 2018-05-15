@@ -19,10 +19,11 @@ public:
 	~HUD();
 
 	//Variables
-	float spacingText = 22;
+	float spacingText = 32;
 	float spacingImage = 60;
 	float hudItemCoordinateX = 800;
 	float hudItemCoordinateY = 60;
+	bool hudIsVisible = true;
 
 	// Functions
 	void HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv);

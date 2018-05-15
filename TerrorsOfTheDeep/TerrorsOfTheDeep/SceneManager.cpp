@@ -14,6 +14,7 @@ bool SceneManager::sceneIsPaused = false;
 
 GameObject* SceneManager::levelMonster = nullptr;
 GameObject* SceneManager::levelPlayer = nullptr;
+Menu* SceneManager::pauseMenu = nullptr;
 
 // Light data
 irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
@@ -201,7 +202,8 @@ void SceneManager::ShowMouseControlsOverlay()
 	mouseOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
 	mouseOverlay->elementWidth = 335.0f;
-	mouseOverlay->elementHeight = 150.0f;
+	mouseOverlay->elementHeight = 175.0f;
+	mouseOverlay->elementSpacing = 16.0f;
 	mouseOverlay->hasWindowTitle = true;
 	mouseOverlay->windowTitle = "Move the [MOUSE] to look around\n\nFind the key and open the treasure chest somewhere in this level to win";
 	mouseOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - mouseOverlay->elementWidth / 2.0f,
@@ -220,9 +222,10 @@ void SceneManager::ShowKeyControlsOverlay()
 	keyOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
 	keyOverlay->elementWidth = 335.0f;
-	keyOverlay->elementHeight = 150.0f;
+	keyOverlay->elementHeight = 200.0f;
+	keyOverlay->elementSpacing = 16.0f;
 	keyOverlay->hasWindowTitle = true;
-	keyOverlay->windowTitle = "Press [W], [A], [S], [D] to move around\n\nYou might want to watch out for terrors lurking in the deep darkness...";
+	keyOverlay->windowTitle = "Touchdown!\n\nPress [W], [A], [S], [D] to move around\nYou might want to watch out for terrors lurking in the deep darkness...";
 	keyOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - keyOverlay->elementWidth / 2.0f,
 		GameManager::screenDimensions.Height - keyOverlay->elementHeight - keyOverlay->elementSpacing, 0.0f));
 	GameManager::interfaceObjects.push_back(keyOverlay);
@@ -676,7 +679,7 @@ void SceneManager::PauseScene(bool mode)
 	// Toggle pause menu
 	if (sceneIsPaused)
 	{
-		Menu* pauseMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+		pauseMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
 		pauseMenu->elementWidth = 200.0f;
 		pauseMenu->elementHeight = 250.0f;
@@ -705,8 +708,7 @@ void SceneManager::PauseScene(bool mode)
 	else
 	{
 		// Delete the pause menu
-		Menu* pauseMenu = (Menu*)GameManager::FindObjectWithTag<InterfaceObject>(DynamicUpdater::INTERFACE_MENU, GameManager::interfaceObjects);
-		if (pauseMenu)
+		if (pauseMenu != nullptr)
 		{
 			// Clear GameManager tracking list entry
 			int mIndex = GameManager::FindIndexInList<InterfaceObject>(pauseMenu, GameManager::interfaceObjects);

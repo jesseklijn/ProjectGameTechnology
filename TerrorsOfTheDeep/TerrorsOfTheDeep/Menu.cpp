@@ -42,11 +42,17 @@ void Menu::DrawGUI()
 		GameManager::driver->draw2DRectangle(windowColor, rect<s32>(getPosition().X, getPosition().Y,
 			getPosition().X + elementWidth, getPosition().Y + elementHeight));
 	}
+	if (hasWindowBorder)
+	{
+		GameManager::driver->draw2DRectangleOutline(rect<s32>(getPosition().X, getPosition().Y,
+			getPosition().X + elementWidth, getPosition().Y + elementHeight), windowBorderColor);
+	}
 	// Draw menu title
 	if (hasWindowTitle)
 	{
 		IGUIStaticText* title = GameManager::guienv->addStaticText(windowTitle.c_str(),
-			rect<s32>(getPosition().X, getPosition().Y + elementSpacing, getPosition().X + elementWidth - 1, getPosition().Y + elementHeight - 1));
+			rect<s32>(getPosition().X + elementSpacing, getPosition().Y + elementSpacing, 
+				getPosition().X + elementWidth - 1 - elementSpacing, getPosition().Y + elementHeight - 1 - elementSpacing));
 		title->setTextAlignment(EGUIA_CENTER, EGUIA_UPPERLEFT);
 		title->setOverrideColor(windowTitleColor);
 	}

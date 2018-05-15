@@ -66,7 +66,8 @@ public:
 	static float introCageDescendRate;
 
 	static Menu* mouseOverlay;
-	static Menu* keyOverlay;	
+	static Menu* keyOverlay;
+	static Menu* pauseMenu;
 
 
 	// Functions
