@@ -20,6 +20,9 @@
 #include <chrono>
 #pragma endregion
 
+// Forward declaration
+class Menu;
+
 /* Class responsible for managing different scenes in the game.
 This includes scenes like a title screen, loading screen etcetera. */
 class SceneManager : public DynamicUpdater
@@ -54,11 +57,28 @@ public:
 	static irr::video::SColorf ambientColor, flashlightColor, sharkEyesColor;
 	static vector3df chestLightOffset, keyLightOffset;
 
+	// Components for every scene
 	static Camera* camera;
 	static HUD* hud;
-
-	// Whether to hide or show the HUD
+	static GameObject* levelMonster;
+	static GameObject* levelPlayer;
+	static GameObject* divingCage;
 	static bool disableHud;
+	static irr::core::vector3df rayStart;
+	static irr::core::vector3df rayEnd;
+
+	// Intro
+	static bool introIsActive, cageShouldDescend, showControls, showMouseOverlay, showKeyOverlay;
+	static float introStartTime, introStartTimer;
+	static float introMouseOverlayTime, introMouseOverlayTimer;
+	static float introMouseOverlayDisplayTime, introMouseOverlayDisplayTimer;
+	static float introKeyOverlayTime, introKeyOverlayTimer;
+	static float introKeyOverlayDisplayTime, introKeyOverlayDisplayTimer;
+	static float introCageDescendRate;
+
+	static Menu* mouseOverlay;
+	static Menu* keyOverlay;
+	static Menu* pauseMenu;
 
 
 	// Functions
@@ -69,8 +89,15 @@ public:
 
 	static bool LoadScene(SceneType sceneToLoad);
 	static void PauseScene(bool mode);
+	static void OnSceneChange();
+
 	static void StartLoadingScreen(LoadingType loadingType);
 	static void EndLoadingScreen();
-	static void OnSceneChange();
-};
 
+	static void StartLevelIntro();
+	static void EndLevelIntro();
+	static void ShowMouseControlsOverlay();
+	static void ShowKeyControlsOverlay();
+	static void HideMouseControlsOverlay();
+	static void HideKeyControlsOverlay();
+};

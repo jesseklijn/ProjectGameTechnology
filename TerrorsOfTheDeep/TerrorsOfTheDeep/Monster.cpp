@@ -1,14 +1,16 @@
 #pragma once
 #include "Monster.h"
 #include "GameManager.h"
+#include "SceneManager.h"
 
 // Constructor
 Monster::Monster(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision)
-	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision)
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, 
+	bool detectCollision, bool castsShadows)
+	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision, castsShadows)
 {
 	GameObject::setTag(GameObject::MONSTER);
 
@@ -170,7 +172,10 @@ This is a shortcut instead of having to specify extra Player override functional
 in the other GameManager::FindX(); functions, which should be for general usage. */
 GameObject* Monster::PlayerCanBeSeen(double detectionRange, bool visibilityCheck)
 {
-	Player* player = (Player*)GameManager::FindGameObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
+	if (SceneManager::introIsActive)
+		return nullptr;
+
+	Player* player = (Player*)GameManager::FindObjectWithTag<GameObject>(PLAYER, GameManager::gameObjects);
 	if (player)
 	{
 		float currentDistance = (player->getAbsolutePosition() - getAbsolutePosition()).getLength();

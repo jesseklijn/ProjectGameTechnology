@@ -3,14 +3,16 @@
 
 // Constructor
 GameObject::GameObject(const irr::core::vector3df* startPosition,
-						const irr::core::vector3df* startScale,
-						const irr::core::vector3df* startRotation, 
-						irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,						
-						irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision,
-						float mass)
+	const irr::core::vector3df* startScale,
+	const irr::core::vector3df* startRotation,
+	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
+	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture, bool detectCollision, bool castsShadows, float mass)
 						: PhysicsObject(parent, mgr, id, startPosition, mass)
+
 {
 	setTag(GameObject::WORLD_OBJECT);
+
+	GameManager::FindIndexInList<GameObject>(this, GameManager::gameObjects);
 
 	setPosition(*startPosition);
 	setScale(*startScale);
@@ -42,6 +44,9 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 		mesh->setScale(*startScale);
 		mesh->setRotation(*startRotation);
 
+		if (castsShadows)
+			mesh->addShadowVolumeSceneNode();
+
 		/* Create selection functionality so raycasts will detect it
 		Initialize a base selector, used for assigning selection to scene nodes
 		It's dropped after every selector assignment, but it's easily re-usable*/
@@ -51,7 +56,6 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 			mesh->setTriangleSelector(selector);
 			selector->drop();
 		}
-
 	}
 }
 
@@ -59,7 +63,10 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 // Destructor
 GameObject::~GameObject()
 {
-
+	// Clear GameManager tracking list entry
+	int oIndex = GameManager::FindIndexInList<GameObject>(this, GameManager::gameObjects);
+	if (oIndex != -1)
+		GameManager::gameObjects[oIndex] = nullptr;
 }
 
 void GameObject::OnRegisterSceneNode()
@@ -123,22 +130,22 @@ void GameObject::Draw()
 
 void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDirection)
 {
-	PhysicsObject::AddForce(0.0001 * moveSpeed * direction.normalize());
-	if (turnToDirection)
-	{
-		PhysicsObject::TurnToDirection(direction);
-	}
-
-	// Add a vector of length speed in the given direction
-	//setPosition(getPosition() + (direction.normalize() * speed));
-	//if (mesh)
-	//	mesh->setPosition(getPosition());
+	//PhysicsObject::AddForce(0.0001 * moveSpeed * direction.normalize());
 	//if (turnToDirection)
 	//{
-	//	setRotation(direction.getHorizontalAngle());
-	//	if (mesh)
-	//		mesh->setRotation(direction.getHorizontalAngle());
+	//	PhysicsObject::TurnToDirection(direction);
 	//}
+
+	//Add a vector of length speed in the given direction
+	setPosition(getPosition() + (direction.normalize() * speed));
+	if (mesh)
+		mesh->setPosition(getPosition());
+	if (turnToDirection)
+	{
+		setRotation(direction.getHorizontalAngle());
+		if (mesh)
+			mesh->setRotation(direction.getHorizontalAngle());
+	}
 }
 
 GameObject::Tag GameObject::GetTag()

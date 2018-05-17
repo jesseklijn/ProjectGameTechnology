@@ -12,7 +12,9 @@ public:
 		const irr::core::vector3df* startScale,
 		const irr::core::vector3df* startRotation,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
-		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0, bool detectCollision = true);
+		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0,
+		bool detectCollision = true,
+		bool castsShadows = false);
 	~Creature();
 
 
@@ -41,7 +43,7 @@ public:
 	float agilityDistance = 7500.0f, agility;
 	float targetDistance, targetDistanceLast;
 
-	float stateUpdateTimeDefault = 1.0f * 1000.0f;
+	float stateUpdateTimeDefault = 2.0f * 1000.0f;
 	float stateUpdateTime = stateUpdateTimeDefault;
 	float stateUpdateTimer = 0.0f;
 

@@ -44,6 +44,8 @@ public:
 		std::vector<irr::io::path> meshDirectories,
 		std::vector<irr::io::path> textureDirectories, 
 		irr::scene::IMeshBuffer* playingFieldMesh,
+		bool detectCollision = true,
+		bool castsShadows = false,
 		float scaleVariationX = 0.0f,
 		float scaleVariationY = 0.0f,
 		float scaleVariationZ = 0.0f,

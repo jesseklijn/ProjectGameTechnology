@@ -9,11 +9,11 @@ void DetectCollision::fillInitialArray()
 {
 	if (!arrayFilled)
 	{
-		for (int k = 0; k < GameManager::gameObjects.size(); k++)
+		for (GameObject* gameObject : GameManager::gameObjects)
 		{
-			if (GameManager::gameObjects[k]->tag != GameObject::CREATURE)
+			if (gameObject != nullptr && gameObject->tag != GameObject::CREATURE)
 			{
-				oList.push_back(GameManager::gameObjects[k]);
+				oList.push_back(gameObject);
 			}
 		}
 		arrayFilled = true;
@@ -44,7 +44,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 
 		for (int i = 0; i < oList.size(); i++)
 		{
-			getNearestObjectsFromPosition(GameManager::FindGameObjectWithTag<GameObject>(GameObject::PLAYER, GameManager::gameObjects), oList[i]);
+			getNearestObjectsFromPosition(GameManager::FindObjectWithTag<GameObject>(GameObject::PLAYER, GameManager::gameObjects), oList[i]);
 		}
 		//std::cout << nearestObjects.size() << std::endl;
 		findNearestObjectsTimer = findNearestObjectsTime;

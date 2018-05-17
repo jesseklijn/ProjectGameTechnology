@@ -19,6 +19,8 @@ public:
 	virtual ~Player();
 
 	// Variables
+	irr::scene::IParticleSystemSceneNode* particleSystem;
+	irr::scene::IParticleEmitter* particleEmitter;
 	irr::IrrlichtDevice* irrDevice;
 	irr::scene::ISceneManager* smgr;
 	irr::core::aabbox3d<irr::f32> Box;
@@ -29,7 +31,10 @@ public:
 	float deltaX;
 	float deltaZ;
 
-	// int oxygen, stamina...
+	float bubbleStartTime = 5.0f * 1000.0f;
+	float bubbleStartTimer = 0.0f;
+	float bubbleDurationTime = 1.0f * 1000.0f;
+	float bubbleDurationTimer = 0.0f;
 
 	// Functions
 	virtual void Update();
