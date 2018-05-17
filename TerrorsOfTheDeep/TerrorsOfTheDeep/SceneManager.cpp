@@ -1,7 +1,9 @@
 
 #pragma once
 #include "SceneManager.h"
+#include "GridMesh.h"
 
+using namespace std;
 static const int NO_PARENT = 0;
 static const float KEYLIGHT_RADIUS = 50.f;
 static const float CHESTLIGHT_RADIUS = 90.f;
@@ -12,8 +14,8 @@ SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 30, 0);
@@ -22,6 +24,13 @@ vector3df SceneManager::keyLightOffset = vector3df(0, 20, 0);
 Camera* SceneManager::camera;
 HUD* SceneManager::hud = new HUD();
 bool SceneManager::disableHud = false;
+
+// Define default parameters
+ vector3df* SceneManager::vectorZero = new vector3df(0,0,0);
+ int SceneManager::noID = -1111;
+ GameObject* SceneManager::defaultGameObject;
+ vector<GameObject*> SceneManager::defaultGameObjectList;
+ float SceneManager::distanceKeyChest = 1500;
 
 // Constructor
 SceneManager::SceneManager()
@@ -160,73 +169,82 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::gameObjects.push_back(flockOfFish);
 
 			// Make a playingField (mesh out of grid)
-			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			GridMesh* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
 
-			// Spawn random objects on grid;
+			// Grab the buffer of the playingfield mesh to be used for putting random objects on the vertex
 			IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
 
-			// Get the vertices of the playingField 
-			S3DVertex* mb_vertices = (S3DVertex*)planeBuffer->getVertices();
-
-			// Amount of objects to be spawn on the grid
-			int verticesGrid = planeBuffer->getVertexCount();
-
-			// Keeps track what vertex has an object spawned on it
-			vector<bool> spawnTracker(verticesGrid);
-
 			// Key collectible object
-			while (true)
-			{
-				// Generate a random number for the selection of a vertice so an object can get spawned on it
-				int randomizer = rand() % planeBuffer->getVertexCount();
-				// Checks if the vertice is free (no object has been drawn on the vertice)
-				if (!spawnTracker[randomizer]) {
-					GameObject* key = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, mb_vertices[randomizer].Pos.Y + playingField->getPosition().Y + 25,
-						mb_vertices[randomizer].Pos.Z + playingField->getPosition().Z), new vector3df(0.5, 0.5, 0.5), new vector3df(0, 0, 0),
-						0, GameManager::smgr, 4,
-						GameManager::smgr->getMesh("../media/key.obj"),
-						GameManager::driver->getTexture("../media/RustTexture.jpg"));
-					key->setTag(GameObject::KEY);
-					GameManager::gameObjects.push_back(key);
-					ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
-					break;
-				}
-			}
+			GameObject* key = new GameObject(new vector3df(0,50,0), new vector3df(0.5, 0.5, 0.5), SceneManager::vectorZero,
+				0, GameManager::smgr, 4,
+				GameManager::smgr->getMesh("../media/key.obj"),
+				GameManager::driver->getTexture("../media/RustTexture.jpg"));
+			key->setTag(GameObject::KEY);
+			GameManager::gameObjects.push_back(key);
+			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
 
 			// Win condition trigger object
-			while (true)
+			GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
+				0, GameManager::smgr, 5,
+				GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
+				GameManager::driver->getTexture("../media/GoldTexture.jpg"));
+			chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
+			chest->setTag(GameObject::CHEST);
+			ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
+			GameManager::gameObjects.push_back(chest);
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
+
+			// Keeps placing the key and chest on a different vertex if it's too close
+			while (true) 
 			{
-				// Generate a random number for the selection of a vertice so an object can get spawned on it
-				int randomizer = rand() % planeBuffer->getVertexCount();
-				// Checks if the vertice is free (no object has been drawn on the vertice)
-				if (!spawnTracker[randomizer]) {
-					GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
-						0, GameManager::smgr, 5,
-						GameManager::smgr->getMesh("../media/ChestCartoon.obj"),
-						GameManager::driver->getTexture("../media/GoldTexture.jpg"));
-					chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-					chest->setTag(GameObject::CHEST);
-					ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
-					GameManager::gameObjects.push_back(chest);
+				float distance = key->getPosition().getDistanceFrom(chest->getPosition());
+				if (distance < SceneManager::distanceKeyChest)
+				{
+					playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
+					playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
+				} else
+				{
 					break;
 				}
 			}
 
+			// Used for generating random meshes when creating game objects
+			int meshSelector;
 
-			// Spawn rocks
+			// Uses the meshDirectionaries and meshTexture list to create game objects (rock)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Rock.obj"); meshTextures.push_back("");
 
+			// List contains rock game objects
+			vector<GameObject*> rockList;
+
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::rockCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* rock = new GameObject(SceneManager::vectorZero, new vector3df(50, 50, 50), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
+
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < rock->mesh->getMaterialCount(); mIndex++)
+				{
+					rock->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				rockList.push_back(rock);
+			}
 
 			// Adds objects on the vertices of the playingfield mesh 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::rockCount, playingField->getPosition(),
-				vector3df(150 + (rand() % 150) * 0.25f, 150 + (rand() % 150) * 0.25f,
-					150 + (rand() % 150) * 0.25f),
-				vector3df(rand() % 360, rand() % 360, rand() % 360), -1111,
-				meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
-			//// Spawn ruins
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), rockList, {}, {});
+
+			// Uses the meshDirectionaries and meshTexture list to create game objects (ruins)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/ruinsArc.obj"); meshTextures.push_back("");
@@ -236,11 +254,29 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/ruinsTempleRuin1.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/ruinsTempleRuin2.obj"); meshTextures.push_back("");
 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::ruinsCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
-				-1111
-				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+			// List contains ruins game objects
+			vector<GameObject*> ruinsList;
 
-			// Spawn corals
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::ruinsCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* ruins = new GameObject(SceneManager::vectorZero, new vector3df(0.2f, 0.2f, 0.2f), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
+
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < ruins->mesh->getMaterialCount(); mIndex++)
+				{
+					ruins->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				ruinsList.push_back(ruins);
+			}
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), ruinsList, {}, {});
+
+			// Uses the meshDirectionaries and meshTexture list to create game objects (coral)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Coral/coralBrain1.obj"); meshTextures.push_back("");
@@ -248,30 +284,83 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Coral/coralBrain3.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Coral/coralPillar.obj"); meshTextures.push_back("");
 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::coralCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
-				-1111
-				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+			// List contains coral game objects
+			vector<GameObject*> coralList;
 
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::coralCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* coral = new GameObject(SceneManager::vectorZero, new vector3df(1, 1, 1), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
-			// Spawn vines
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < coral->mesh->getMaterialCount(); mIndex++)
+				{
+					coral->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				coralList.push_back(coral);
+			}
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), coralList, {}, {});
+
+			// Uses the meshDirectionaries and meshTexture list to create game objects (vines)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Plants/tiny_weed_03_01.obj"); meshTextures.push_back("");
 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::plantCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
-				-1111
-				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+			// List contains coral game objects
+			vector<GameObject*> vinesList;
 
-			// Spawn skulls
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::plantCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* vines = new GameObject(SceneManager::vectorZero, new vector3df(1, 1, 1), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
+
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < vines->mesh->getMaterialCount(); mIndex++)
+				{
+					vines->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				vinesList.push_back(vines);
+			}
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), vinesList, {}, {});
+
+			// Uses the meshDirectionaries and meshTexture list to create game objects (skull)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Bones/skullBig.obj"); meshTextures.push_back("");
 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::skullCount, playingField->getPosition(), vector3df(1, 1, 1), vector3df(0, 0, 0),
-				-1111
-				, meshDirectories, meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+			// List contains skull game objects
+			vector<GameObject*> skullList;
 
-			// Spawn ship
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::skullCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* skull = new GameObject(SceneManager::vectorZero, new vector3df(0.25f, 0.25f, 0.25f), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
+
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < skull->mesh->getMaterialCount(); mIndex++)
+				{
+					skull->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				skullList.push_back(skull);
+			}
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), skullList, {}, {});
+
+			// Uses the meshDirectionaries and meshTexture list to create game objects (ship)
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/ship.obj"); meshTextures.push_back("");
@@ -279,9 +368,27 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Boat.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/BoatWSail.obj"); meshTextures.push_back("");
 
-			GridMesh::RandomObjectPlacementOnVertex(GameManager::shipCount, playingField->getPosition(), {},
-				vector3df(rand() % 25, rand() % 10, rand() % 10), -1111, meshDirectories,
-				meshTextures, playingField->mesh->getMesh()->getMeshBuffer(0));
+			// List contains ship game objects
+			vector<GameObject*> shipList;
+
+			// Creates x amount gameObjects 
+			for (int i = 0; i < GameManager::shipCount; i++) {
+				meshSelector = rand() % meshDirectories.size();
+				GameObject* ship = new GameObject(SceneManager::vectorZero, new vector3df(0.5f, 0.5f, 0.5f), SceneManager::vectorZero,
+					0, GameManager::smgr, SceneManager::noID,
+					GameManager::smgr->getMesh(meshDirectories[meshSelector]));
+
+				// Needs to be included to prevent textures being half transparent
+				for (int mIndex = 0; mIndex < ship->mesh->getMaterialCount(); mIndex++)
+				{
+					ship->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
+				}
+
+				shipList.push_back(ship);
+			}
+
+			// Adds objects on the vertices of the playingfield mesh 
+			playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), shipList, {}, {});
 
 			
 		#pragma endregion

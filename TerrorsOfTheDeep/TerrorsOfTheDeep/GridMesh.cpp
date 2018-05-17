@@ -107,10 +107,33 @@ u32 GridMesh::getMaterialCount() const
 }
 
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
-void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vector3df scale,
-	vector3df rotation,
-	irr::s32 id, std::vector<irr::io::path> meshDirectories, std::vector<irr::io::path> textureDirectories, IMeshBuffer* meshBuffer, bool excludeOffset)
+// Either use a list with GameObjects or a single GameObject. One of the 2 must be given as a parameter.
+void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df rootPosition, vector<GameObject*> gameObjectList, GameObject* singleGameObject, vector3df
+                                             positionOffset, bool excludeOffset, bool resetOffsetPlacement)
 {
+	bool useSingleGameObject = false;
+	bool useMultipleGameObjects = false;
+
+	// Amount of game objects that needs to be placed on the vertex
+	int amount;
+
+	// Error prevention if both parameters are default and checks if it needs to use a list or a single game object
+	if (!gameObjectList.empty())
+	{
+		amount = gameObjectList.size();
+		useMultipleGameObjects = true;
+	}
+
+	else if (singleGameObject != nullptr) {
+		amount = 1;
+		useSingleGameObject = true;
+	}
+	else
+	{
+		puts("Error - Function GridMesh::RandomObjectPlacementOnVertex contains both default parameters (gameObjectList and singleGameObject)");
+		return;
+	}
+
 	// Amount of tries before it skips the current object and go to the next object
 	int currentTimeOutTries = 0;
 	const int timeOutTries = 10;
@@ -125,15 +148,15 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 	int verticesGrid = buffer->getVertexCount();
 
 	// Tracks what vertices has an object spawned on them 
-	vector<bool> spawnTracker(verticesGrid);
+	vector<bool> placementTracker(verticesGrid);
 
 	// Checks if this function has been called more than one time so it will assign the same data of the previous call to prevent multiple object placements on the same vertex
-	if (!previousSpawnTracker.empty())
+	if (!previousPlacementTracker.empty())
 	{
-		spawnTracker = previousSpawnTracker;
+		placementTracker = previousPlacementTracker;
 	}
 
-	//exclude the vertices that are in the offset
+	// Exclude the vertices that are in the offset
 	if (excludeOffset)
 	{
 		for (int i = 0; i < verticesGrid; i++)
@@ -142,49 +165,82 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount, vector3df position, vec
 			if (currentVertex.Pos.X + startPos->X > GameManager::WORLD_RADIUS_X || currentVertex.Pos.X + startPos->X < -GameManager::WORLD_RADIUS_X ||
 				currentVertex.Pos.Z + startPos->Z > GameManager::WORLD_RADIUS_Z || currentVertex.Pos.Z + startPos->Z < -GameManager::WORLD_RADIUS_Z)
 			{
-				// Exclude vertex from object spawn
-				spawnTracker[i] = true;
+				// Exclude vertex from object placement
+				placementTracker[i] = true;
 			}
 		}
-	}
+	} 
 
 	for (int i = 0; i < amount; i++)
 	{
-		while (true) {
-			// Generate a random number for the selection of a vertice so an object can get spawned on it
+		while (true) 
+		{
+			// Generate a random number for the selection of a vertex so an object can get spawned on it
 			int randomizer = rand() % buffer->getVertexCount();
-			// Checks if the vertice is free (no object has been drawn on the vertex)
-			if (!spawnTracker[randomizer])
+
+			if (!placementTracker[randomizer] && useMultipleGameObjects)
 			{
-				int typeIndex = rand() % meshDirectories.size();
-				GameObject* object = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + position.X, mb_vertices[randomizer].Pos.Y + position.Y,
-					mb_vertices[randomizer].Pos.Z + position.Z),
-					new vector3df(scale.X, scale.Y, scale.Z),
-					new vector3df(rotation.X, rotation.Y, rotation.Z),
-					0, GameManager::smgr, id,
-					GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-					0);
-				// Needs to be included to prevent textures being half transparent
-				for (int mIndex = 0; mIndex < object->mesh->getMaterialCount(); mIndex++)
-				{
-					object->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-				}
-				// Checks if the object can use a texture if there's any in the vector
-				!textureDirectories[typeIndex].empty() ? GameManager::driver->getTexture(textureDirectories[typeIndex]) : 0;
-				GameManager::gameObjects.push_back(object);
-				spawnTracker[randomizer] = true;
+				// Sets the position of the game object to the position of the vertices (+ offset)
+				gameObjectList[i]->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X, mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Sets the position of the game object mesh to the same position
+				gameObjectList[i]->mesh->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X, mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Set the vertex bool on true so no other object can be placed on the same vertex
+				placementTracker[randomizer] = true;
 
 				// Saves the placements of the vertices so it can be used for the next call
-				previousSpawnTracker = spawnTracker;
+				previousPlacementTracker = placementTracker;
 				break;
-				// Checks if the function needs to time out due to the failed attempts of the object placements
+			} 
+			else if (!placementTracker[randomizer] && useSingleGameObject)
+			{
+				// Sets the position of the game object to the position of the vertices (+ offset)
+				singleGameObject->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X,
+				                                             mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y +
+				                                             100,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Sets the position of the game object mesh to the same position
+				singleGameObject->mesh->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X,
+					mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y +
+					100,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Set the vertex bool on true so no other object can be placed on the same vertex
+				placementTracker[randomizer] = true;
+
+				break;
 			}
+
+			// Skips the current gameObject due to multiple failed tries
 			if (currentTimeOutTries == timeOutTries)
 			{
 				break;
 			}
 			currentTimeOutTries++;
 		}
+
+		// Resets the offset vertices for the next use 
+		if (resetOffsetPlacement)
+		{
+			for (int i = 0; i < verticesGrid; i++)
+			{
+				S3DVertex currentVertex = mb_vertices[i];
+				if (currentVertex.Pos.X + startPos->X > GameManager::WORLD_RADIUS_X || currentVertex.Pos.X + startPos->X < -GameManager::WORLD_RADIUS_X ||
+					currentVertex.Pos.Z + startPos->Z > GameManager::WORLD_RADIUS_Z || currentVertex.Pos.Z + startPos->Z < -GameManager::WORLD_RADIUS_Z)
+				{
+					// reset vertex for the next object placement on the offset
+					placementTracker[i] = false;
+
+				}
+			}
+		}
+
+		// Saves the placements of the vertices so it can be used for the next call
+		previousPlacementTracker = placementTracker;
 	}
 	return;
 }

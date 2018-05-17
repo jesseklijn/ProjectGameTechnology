@@ -4,7 +4,6 @@
 #include "Lighting.h"
 #include "HUD.h"
 #include "Player.h"
-#include "GridMesh.h"
 #include "Camera.h"
 #include "DetectCollision.h"
 #include "Sound.h"
@@ -49,6 +48,12 @@ public:
 	// Whether to hide or show the HUD
 	static bool disableHud;
 
+	// Default parameters
+	static vector3df* vectorZero; // Short for new vector3df(0,0,0)
+	static int noID; // ID that isn't going to be used
+	static GameObject* defaultGameObject; // Empty GameObject
+	static std::vector<GameObject*> defaultGameObjectList; // Empty GameObjectList
+	static float distanceKeyChest;
 
 	// Functions
 	virtual void Update();

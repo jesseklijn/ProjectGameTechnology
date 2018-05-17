@@ -1,6 +1,8 @@
 ﻿#pragma once
+#include "SceneManager.h"
 #include "GameObject.h"
 #include "Grid.h"
+#pragma endregion
 
 class GridMesh :
 	public GameObject, public Grid
@@ -46,13 +48,19 @@ public:
 	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
 	virtual irr::u32 getMaterialCount() const;
 	const irr::core::vector3df GetGridSize();
-	void RandomObjectPlacementOnVertex(int amount, irr::core::vector3df position, irr::core::vector3df scale,
-		irr::core::vector3df rotation, irr::s32 id,
-		std::vector<irr::io::path> meshDirectories,
-		std::vector<irr::io::path> textureDirectories, irr::scene::IMeshBuffer* meshBuffer, bool excludeOffset = false);
+
+	// This function allows game objects to be placed on the vertex of the given mesh buffer. 
+	// This is needed to create a more random level where the objects are placed randomly in the level.
+	// You must give either a GameObject or a list of GameObjects as one of the parameters in order to get this function to work.
+	void RandomObjectPlacementOnVertex(irr::scene::IMeshBuffer* meshBuffer,
+	                                   vector3df rootPosition, vector<GameObject*> gameObjectList = SceneManager::defaultGameObjectList, GameObject*
+		                                   singleGameObject =
+		                                   SceneManager::defaultGameObject
+	                                   , irr::core::vector3df positionOffset = irr::core::vector3df(0, 0, 0), bool excludeOffset = false, bool resetOffsetPlacement = false);
+
 	// Tracks what vertices has an object spawned on them 
-	vector<bool> previousSpawnTracker;
+	vector<bool> previousPlacementTracker;
 private:
 	irr::core::array<irr::video::S3DVertex> DrawVertices(int xSizeGrid, int ySizeGrid);
 	irr::core::array<unsigned short> DrawTriangles(int xSizeGrid, int ySizeGrid);
-};
+}; 
