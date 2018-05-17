@@ -71,14 +71,16 @@ public:
 	static const int WORLD_RADIUS_X, WORLD_RADIUS_Y, WORLD_RADIUS_Z;
 
 	static const irr::core::dimension2du& screenDimensions;
+	static bool gameOver;
 
 	static bool keyPickedUp;
 	static bool escaped;
 	static bool hasDied;
 	static float creatureStateRange;
-	static float gameSpeed;
+	static float gameSpeed;	
 
-	static bool gameOver;
+	float listCleanupTime = 3.0f * 1000.0f;
+	float listCleanupTimer = 0.0f;
 
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;

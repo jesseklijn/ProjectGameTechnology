@@ -369,6 +369,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
 		GameManager::gameObjects.push_back(player);
 		SceneManager::levelPlayer = player;
+		player->isKinematic = true;
 
 		GameObject* cage = new GameObject(new vector3df(player->getParent()->getPosition().X, player->getParent()->getPosition().Y - 400.0f, player->getParent()->getPosition().Z),
 			new vector3df(1, 1, 1),
@@ -379,6 +380,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr->getMesh("../media/Ruins/SharkCage.obj"));
 		GameManager::gameObjects.push_back(cage);
 		SceneManager::divingCage = cage;
+		cage->isKinematic = true;
 
 		// Attach flashlight to the player
 		ISceneNode* newPlayer = player;
@@ -413,6 +415,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr,
 			-100);
 		GameManager::gameObjects.push_back(playingField);
+		playingField->isKinematic = true;
+
 		ITriangleSelector* selector = GameManager::smgr->createTriangleSelector(playingField->mesh);
 		playingField->mesh->setTriangleSelector(selector);
 		selector->drop();
@@ -537,7 +541,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			false,
 			0.6f, 0.6f, 0.6f,
 			45.0f, 360.0f, 45.0f);
-
 
 		//// Spawn ruins
 		meshDirectories.clear();
