@@ -98,7 +98,7 @@ void PhysicsObject::UpdatePosition()
 	setPosition(position_);
 	
 	force_ = vector3df(0);
-	velocity_ *= 0.1;		// SHOULDN'T NEED THIS
+	velocity_ *= 0.1;
 }
 
 /**
@@ -213,6 +213,3 @@ void PhysicsObject::SetVelocity(vector3df velocity)
 {
 	velocity_ = velocity;
 }
-
-// TODO: better drag: get something for those constants
-// TODO: better buoyance: actually use different volumes somehow
