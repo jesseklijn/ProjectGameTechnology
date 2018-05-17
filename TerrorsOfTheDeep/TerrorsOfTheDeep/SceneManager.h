@@ -42,7 +42,15 @@ public:
 	{
 		NO_OBJECTS,
 		BASICS,
+		PLAYER,
 		CREATURES,
+		CRITTERS,
+		RELICS,
+		CORALS,
+		VINES,
+		RUINS,
+		TERRORS,
+		SHIPS,
 		WORLD,
 		LAND_MARKS
 	};
