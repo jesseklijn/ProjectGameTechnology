@@ -91,7 +91,7 @@ void SceneManager::Update()
 		bool countdownOverlayTimers = (introIsActive || showControls);
 		if (countdownOverlayTimers)
 		{
-			#pragma region Timer for the mouse controls overlay to show
+			#pragma region Mouse overlay show timer
 			SceneManager::introMouseOverlayTimer = (SceneManager::introMouseOverlayTimer > 0.0f)
 				? GameManager::Clamp(SceneManager::introMouseOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayTime)
 				: -1.0f;
@@ -102,7 +102,7 @@ void SceneManager::Update()
 			}
 			#pragma endregion
 
-			#pragma region The display timer for mouse overlay
+			#pragma region Mouse overlay display timer
 			SceneManager::introMouseOverlayDisplayTimer = (SceneManager::introMouseOverlayDisplayTimer > 0.0f)
 				? GameManager::Clamp(SceneManager::introMouseOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introMouseOverlayDisplayTime)
 				: -1.0f;
@@ -113,7 +113,7 @@ void SceneManager::Update()
 			}
 			#pragma endregion
 
-			#pragma region Timer for the key controls overlay to show
+			#pragma region Key overlay show timer
 			SceneManager::introKeyOverlayTimer = (SceneManager::introKeyOverlayTimer > 0.0f)
 				? GameManager::Clamp(SceneManager::introKeyOverlayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayTime)
 				: -1.0f;
@@ -124,7 +124,7 @@ void SceneManager::Update()
 			}
 			#pragma endregion
 
-			#pragma region The display timer for key overlay
+			#pragma region Key overlay display timer
 			SceneManager::introKeyOverlayDisplayTimer = (SceneManager::introKeyOverlayDisplayTimer > 0.0f)
 				? GameManager::Clamp(SceneManager::introKeyOverlayDisplayTimer - GameManager::deltaTimeMS, 0.0f, SceneManager::introKeyOverlayDisplayTime)
 				: -1.0f;
@@ -199,6 +199,8 @@ void SceneManager::ShowMouseControlsOverlay()
 	if (mouseOverlay != nullptr)
 		SceneManager::HideMouseControlsOverlay();
 
+	/* Creates the overlay as a Menu
+	This simply uses the window functionality to act as an overlay */
 	mouseOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
 	mouseOverlay->elementWidth = 335.0f;
@@ -219,6 +221,8 @@ void SceneManager::ShowKeyControlsOverlay()
 	if (keyOverlay != nullptr)
 		SceneManager::HideKeyControlsOverlay();
 
+	/* Creates the overlay as a Menu
+	This simply uses the window functionality to act as an overlay */
 	keyOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
 	keyOverlay->elementWidth = 335.0f;
@@ -242,6 +246,7 @@ void SceneManager::HideMouseControlsOverlay()
 		int mIndex = GameManager::FindIndexInList<InterfaceObject>(mouseOverlay, GameManager::interfaceObjects);
 		if (mIndex != -1)
 			GameManager::interfaceObjects[mIndex] = nullptr;
+
 		mouseOverlay->~Menu();
 		mouseOverlay = nullptr;
 	}
@@ -255,6 +260,7 @@ void SceneManager::HideKeyControlsOverlay()
 		int mIndex = GameManager::FindIndexInList<InterfaceObject>(keyOverlay, GameManager::interfaceObjects);
 		if (mIndex != -1)
 			GameManager::interfaceObjects[mIndex] = nullptr;
+
 		keyOverlay->~Menu();
 		keyOverlay = nullptr;
 
@@ -312,16 +318,19 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		case LEVEL:
 		{
 			#pragma region Begin setup
-			// Delta time start point
-			auto frameTimeStart = std::chrono::system_clock::now();
-
 			GameManager::device->getCursorControl()->setVisible(false);
+
+			/* Delta time start point
+			Other than main(), it's also needed here to calculate the generation time
+			to compensate for active timers. Otherwise most will instantly trigger
+			when on the next frame 10000 ms has passed while generating for example */
+			auto frameTimeStart = std::chrono::system_clock::now();			
 
 			// Set our skydome
 			ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 			skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
-			// Adds the camera and binds the keys to the camera's movement			
+			// Base setup lighting		
 			Lighting lighting = Lighting(GameManager::smgr);
 			lighting.SetSceneLight(ambientColor);
 			#pragma endregion
@@ -330,13 +339,13 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			std::vector<io::path> meshDirectories;
 			std::vector<io::path> meshTextures;
 
-			camera = new Camera(GameManager::smgr);
-
 			// Create a keymap-less camera for the intro sequence
+			camera = new Camera(GameManager::smgr);
 			camera->CreateCamera(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0), vector3df(-90, 0, 0), 
 				camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
 
-			// Spawn player in cage
+			/* Spawn player in cage.
+			NOTE: The player is parented to the camera */
 			Player* player = new Player(new vector3df(0, 0, 0), 
 				new vector3df(1, 1, 1), 
 				new vector3df(0, 0, 0),
@@ -357,7 +366,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::gameObjects.push_back(cage);
 			divingCage = cage;
 
-			// Attach flashlight to player
+			// Attach flashlight to the player
 			ISceneNode* newPlayer = player;
 			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, 
 				player->getAbsolutePosition(), 
@@ -366,7 +375,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				true, 
 				player);
 
-			// Spawn shark
 			Shark* shark = new Shark(new vector3df(8000, 5000, 0), 
 				new vector3df(1, 1, 1), 
 				new vector3df(0, 0, 0),
@@ -389,7 +397,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				GameManager::smgr, 
 				-100);
 			GameManager::gameObjects.push_back(playingField);	
-
 			ITriangleSelector* selector = GameManager::smgr->createTriangleSelector(playingField->mesh);
 			playingField->mesh->setTriangleSelector(selector);
 			selector->drop();
@@ -407,6 +414,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				// Generate a random number for the selection of a vertice so an object can get spawned on it
 				int randomizer = rand() % planeBuffer->getVertexCount();
+
 				// Checks if the vertice is free (no object has been drawn on the vertice)
 				if (!spawnTracker[randomizer]) {
 					GameObject* key = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, 
@@ -434,6 +442,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				// Generate a random number for the selection of a vertice so an object can get spawned on it
 				int randomizer = rand() % planeBuffer->getVertexCount();
+
 				// Checks if the vertice is free (no object has been drawn on the vertice)
 				if (!spawnTracker[randomizer]) {
 					GameObject* chest = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + playingField->getPosition().X, 
@@ -494,7 +503,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			meshDirectories.push_back("../media/Rocks/Rock1.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
-			// Adds objects on the vertices of the playingfield mesh 
 			GridMesh::RandomObjectPlacementOnVertex(GameManager::rockCount, 
 				playingField->getPosition(),
 				vector3df(1.0f, 1.0f, 1.0f),
@@ -586,7 +594,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				0.0f, 0.0f, 0.0f,
 				15.0f, 360.0f, 15.0f);
 
-			// Spawn ship
+			// Spawn ships
 			meshDirectories.clear();
 			meshTextures.clear();
 			meshDirectories.push_back("../media/Ships/ship.obj"); meshTextures.push_back("");
@@ -612,7 +620,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			sound_init();
 			background_music("../media/Sound/AmbientUnderwaterMaddnes.ogg");
 			
-
 			// Calculate how long the total level generation and setup took until this point
 			auto frameTimeEnd = std::chrono::system_clock::now();
 			std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
