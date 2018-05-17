@@ -72,13 +72,14 @@ SMaterial& PhysicsObject::getMaterial(u32 i)
 
 void PhysicsObject::Update()
 {
-	if (tag != GameObject::GROUND && tag != GameObject::PLAYER) UpdatePosition();
+	if (!isKinematic)
+		UpdatePosition();
 	
-	if (mesh)
+	/*if (mesh)
 	{
 		mesh->setPosition(getAbsolutePosition());
 		mesh->setRotation(getRotation());
-	}
+	}*/
 }
 
 /**

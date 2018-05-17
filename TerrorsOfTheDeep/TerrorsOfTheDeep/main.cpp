@@ -16,7 +16,6 @@
 #include "Shark.h"
 #include <string>
 #include <iostream>
-#include "FlockingEntity.h"
 #include <chrono>
 #pragma endregion
 
@@ -44,7 +43,7 @@ int main()
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
-	DetectCollision detectCollision;
+	//DetectCollision detectCollision;
 
 	sceneManager.LoadScene(SceneManager::LEVEL);
 
@@ -60,7 +59,7 @@ int main()
 		// Update the world
 		sceneManager.Update();
 		gameManager.Update();		
-		detectCollision.Detect(GameManager::smgr);
+		//detectCollision.Detect(GameManager::smgr);
 
 			// Draw the world
 			GameManager::smgr->drawAll();

@@ -123,6 +123,29 @@ void GameManager::Update()
 		fixedCorrection = (fixedTime - 1.0f / GameManager::fixedTimeStep);
 		GameManager::FixedUpdate();
 	}
+
+	// Clean up object lists
+	listCleanupTimer = (listCleanupTimer > 0) ? GameManager::Clamp(listCleanupTimer - GameManager::deltaTimeMS, 0.0f, listCleanupTime) : -1.0f;
+	if (listCleanupTimer == 0.0f)
+	{
+		for (int goIndex = 0; goIndex < GameManager::gameObjects.size(); goIndex++)
+		{
+			if (GameManager::gameObjects[goIndex] == nullptr)
+			{
+				GameManager::gameObjects.erase(GameManager::gameObjects.begin() + goIndex);
+				goIndex--;
+			}
+		}
+		for (int ioIndex = 0; ioIndex < GameManager::interfaceObjects.size(); ioIndex++)
+		{
+			if (GameManager::interfaceObjects[ioIndex] == nullptr)
+			{
+				GameManager::interfaceObjects.erase(GameManager::interfaceObjects.begin() + ioIndex);
+				ioIndex--;
+			}
+		}
+		listCleanupTimer = listCleanupTime;
+	}
 }
 
 /* Runs similar to Update();, but after a predetermined timestep. */

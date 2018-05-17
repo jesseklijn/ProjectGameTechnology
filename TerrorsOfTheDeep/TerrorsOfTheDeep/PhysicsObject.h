@@ -33,6 +33,7 @@ public:
 	~PhysicsObject();
 
 	// Variables
+	bool isKinematic = false;
 	irr::scene::IAnimatedMeshSceneNode* mesh;
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::SMaterial Material;

@@ -1,4 +1,5 @@
 #include "DetectCollision.h"
+#include "SceneManager.h"
 
 // simple collision code. 
 bool DetectCollision::Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
@@ -23,6 +24,9 @@ void DetectCollision::fillInitialArray()
 
 void DetectCollision::getNearestObjectsFromPosition(GameObject* object, GameObject* objectTwo)
 {
+	if (object == nullptr || objectTwo == nullptr)
+		return;
+
 	float distance = (object->getAbsolutePosition() - objectTwo->getAbsolutePosition()).getLength();
 
 	if (distance <= 1000)
@@ -44,7 +48,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 
 		for (int i = 0; i < oList.size(); i++)
 		{
-			getNearestObjectsFromPosition(GameManager::FindObjectWithTag<GameObject>(GameObject::PLAYER, GameManager::gameObjects), oList[i]);
+			getNearestObjectsFromPosition(SceneManager::levelPlayer, oList[i]);
 		}
 		//std::cout << nearestObjects.size() << std::endl;
 		findNearestObjectsTimer = findNearestObjectsTime;
@@ -64,13 +68,16 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 			GameObject* obj1 = nearestObjects[i];
 
 
-			if (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER) {
+			if (obj1 != nullptr && (obj1->tag == GameObject::PLAYER || obj1->tag == GameObject::MONSTER)) {
 				for (int j = 0; j < nearestObjects.size(); j++)
 				{
 					GameObject* obj2 = nearestObjects[j];
 					//float size = ((obj1->getTransformedBoundingBox().getExtent().X +
 					//	(obj2->getTransformedBoundingBox().getExtent().X)) * 0.5f
 					//	);
+
+					if (obj2 == nullptr)
+						continue;
 
 					// Temporary fix to be replaced by mesh collision
 					float size = 50;
