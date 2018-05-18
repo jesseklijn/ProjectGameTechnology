@@ -17,22 +17,22 @@ Camera::Camera(ISceneManager* smgr)
 	const float ROTATION_SPEED = 100.0f;
 
 	// Keymapping for player controls
-	SKeyMap keyMap[4];
+	//SKeyMap keyMap[4];
 
-	keyMap[0].Action = EKA_MOVE_FORWARD;
-	keyMap[0].KeyCode = KEY_KEY_W;
+	//keyMap[0].Action = EKA_MOVE_FORWARD;
+	//keyMap[0].KeyCode = KEY_KEY_W;
 
-	keyMap[1].Action = EKA_MOVE_BACKWARD;
-	keyMap[1].KeyCode = KEY_KEY_S;
+	//keyMap[1].Action = EKA_MOVE_BACKWARD;
+	//keyMap[1].KeyCode = KEY_KEY_S;
 
-	keyMap[2].Action = EKA_STRAFE_LEFT;
-	keyMap[2].KeyCode = KEY_KEY_A;
+	//keyMap[2].Action = EKA_STRAFE_LEFT;
+	//keyMap[2].KeyCode = KEY_KEY_A;
 
-	keyMap[3].Action = EKA_STRAFE_RIGHT;
-	keyMap[3].KeyCode = KEY_KEY_D;
+	//keyMap[3].Action = EKA_STRAFE_RIGHT;
+	//keyMap[3].KeyCode = KEY_KEY_D;
 
 	// Add a camera in the scene
-	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100, keyMap, 4);
+	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100);	//, keyMap, 4
 	camera->setFarValue(20000.0f);
 }
 

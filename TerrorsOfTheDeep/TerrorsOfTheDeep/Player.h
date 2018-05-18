@@ -14,6 +14,7 @@ public:
 	Player(const irr::core::vector3df* startPosition,
 		const irr::core::vector3df* startScale,
 		const irr::core::vector3df* startRotation,
+		float movementSpeed,
 		irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 		irr::scene::IAnimatedMesh* relatedMesh = 0, irr::video::ITexture* relatedTexture = 0);
 	virtual ~Player();
@@ -24,12 +25,15 @@ public:
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::S3DVertex vertices[8];
 	irr::video::SMaterial Material;
-	irr::u32 then;
-	irr::core::vector3df latestPos;
-	float deltaX;
-	float deltaZ;
 
-	// int oxygen, stamina...
+	float speed;
+
+	// used?
+	irr::core::vector3df latestPos;
+
+	bool isColliding;
+	irr::core::vector3df colPos;
+
 
 	// Functions
 	virtual void Update();
@@ -41,6 +45,9 @@ public:
 
 	void UpdatePos();
 	void MoveParent(irr::core::vector3df movement);
-	//void MoveArms(float speed);
+
+	void NotifyCollision(irr::core::vector3df objPosition);
+
+	irr::core::vector3df Cross(irr::core::vector3df vector1, irr::core::vector3df vector2);
 };
 

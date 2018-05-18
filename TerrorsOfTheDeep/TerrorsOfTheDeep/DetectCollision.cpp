@@ -73,11 +73,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 					//	);
 
 					// Temporary fix to be replaced by mesh collision
-					float size = 50;
-					if (obj2->tag == GameObject::WORLD_OBJECT)
-					{
-						size = 200;
-					}
+					float size = 500;
 					if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 					{
 						size = 1000;
@@ -104,8 +100,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 										GameManager::escaped = true;
 									break;
 								case GameObject::WORLD_OBJECT:
-									// collision resolution
-									Resolve(obj1, obj2);
+									GameManager::levelPlayer->NotifyCollision(obj2->getAbsolutePosition());
 									break;
 								case GameObject::MONSTER:
 									GameManager::hasDied = true;
@@ -150,15 +145,9 @@ void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
 
 	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
 	direction.normalize();
-	if (obj1->tag == GameObject::PLAYER)
-	{
-		GameManager::smgr->getActiveCamera()->setPosition(GameManager::smgr->getActiveCamera()->getPosition() - 5 * sizeVelocity * direction);
-	}
-	else
-	{
-		obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
-		obj1->SetVelocity(sizeVelocity * reflection.normalize());
-	}
+
+	obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
+	obj1->SetVelocity(sizeVelocity * reflection.normalize());
 }
 
 float DetectCollision::Dot(vector3df vector1, vector3df vector2)

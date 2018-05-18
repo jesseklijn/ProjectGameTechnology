@@ -6,6 +6,7 @@
 #include "EventManager.h"
 #include <iostream>
 #include "irrlicht.h"
+#include "Player.h"
 #pragma endregion
 
 #pragma region Namespaces
@@ -81,7 +82,8 @@ public:
 	static bool gameOver;
 
 	static GameObject* levelMonster;
-	static GameObject* levelPlayer;
+	//static GameObject* levelPlayer;
+	static Player* levelPlayer;
 
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;

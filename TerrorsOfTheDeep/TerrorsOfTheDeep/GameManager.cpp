@@ -47,7 +47,8 @@ std::vector<GameObject*> GameManager::gameObjects;
 std::vector<InterfaceObject*> GameManager::interfaceObjects;
 
 GameObject* GameManager::levelMonster = nullptr;
-GameObject* GameManager::levelPlayer = nullptr;
+//GameObject* GameManager::levelPlayer = nullptr;
+Player* GameManager::levelPlayer = nullptr;
 
 // Timing
 float GameManager::deltaTime = 0.0;
