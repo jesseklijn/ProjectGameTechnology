@@ -171,7 +171,6 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Critter.cpp" />
-    <ClCompile Include="diffuseShaderCallBack.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="InterfaceObject.cpp" />
     <ClCompile Include="Lighting.cpp" />
@@ -200,7 +199,6 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Critter.h" />
-    <ClInclude Include="diffuseShaderCallBack.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="InterfaceObject.h" />
     <ClInclude Include="Lighting.h" />
@@ -227,10 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TerrorsOfTheDeep.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="DiffuseShaderFrag.hlsl" />
-    <FxCompile Include="DiffuseShaderVert.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

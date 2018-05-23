@@ -85,18 +85,6 @@
     <Filter Include="Source Files\Interface Objects\Components">
       <UniqueIdentifier>{0dea8c95-5aaf-4c91-b42e-e2d62256d623}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Misc\Shaders">
-      <UniqueIdentifier>{bb7b483a-9b40-46e2-ac0d-caf478a48b53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Misc\Shaders\CallBack">
-      <UniqueIdentifier>{476e2ae4-f57c-4ee9-9bd1-d659bbb25ca4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Misc\Shaders">
-      <UniqueIdentifier>{6bbd8f1a-d4d0-47ed-a93a-4874800c3804}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Misc\Shaders\CallBack">
-      <UniqueIdentifier>{2ecca25b-8b2b-465e-8aa0-23307841e5f7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -159,6 +147,9 @@
     <ClCompile Include="GridMesh.cpp">
       <Filter>Source Files\Controllers\Grid</Filter>
     </ClCompile>
+    <ClCompile Include="PlayingField.cpp">
+      <Filter>Source Files\Controllers\Grid</Filter>
+    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Controllers\Misc</Filter>
     </ClCompile>
@@ -185,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source Files\Interface Objects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="diffuseShaderCallBack.cpp">
-      <Filter>Source Files\Misc\Shaders\CallBack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -266,24 +254,10 @@
     <ClInclude Include="Button.h">
       <Filter>Header Files\Interface Objects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="OctTree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="diffuseShaderCallBack.h">
-      <Filter>Header Files\Misc\Shaders\CallBack</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TerrorsOfTheDeep.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="DiffuseShaderFrag.hlsl">
-      <Filter>Source Files\Misc\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="DiffuseShaderVert.hlsl">
-      <Filter>Source Files\Misc\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>
