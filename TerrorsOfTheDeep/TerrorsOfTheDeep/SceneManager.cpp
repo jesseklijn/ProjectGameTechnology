@@ -13,8 +13,8 @@ SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 30, 0);
@@ -110,15 +110,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			std::vector<io::path> meshTextures;
 
 			// Shader Test
+			ISceneNode* cube = GameManager::smgr->addCubeSceneNode(250, 0, -1, vector3df(0, 0, 500));
+			cube->setMaterialFlag(EMF_LIGHTING, false);
+
 			DiffuseShaderCallBack* cb = new DiffuseShaderCallBack();
-			ISceneNode* cube = GameManager::smgr->addCubeSceneNode(5, 0, 0, vector3df(100, 100, 100));
-			cube->setMaterialFlag(EMF_LIGHTING, true);
+			cb->node = cube;
 
 			s32 newMaterial = GameManager::gpu->addHighLevelShaderMaterialFromFiles(
-				"..\DiffuseShaderVert.hlsl", "vertexMain", video::EVST_VS_5_0,
-				"..\DiffuseShaderFrag.hlsl", "fragMain", video::EPST_PS_5_0,
+				"DiffuseShaderVert.hlsl", "main", video::EVST_VS_3_0,
+				"", "main", video::EPST_PS_3_0,
 				cb, video::EMT_SOLID, 0, EGSL_DEFAULT);
-
+			cube->setMaterialType((video::E_MATERIAL_TYPE) newMaterial);
 			// Spawn critters
 			meshDirectories.push_back("../media/dolphin.obj"); meshTextures.push_back("");
 			meshDirectories.push_back("../media/Fish1.obj"); meshTextures.push_back("");
@@ -158,17 +160,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor, player->getAbsolutePosition(), GameManager::smgr->getActiveCamera()->getTarget(), FLASHLIGHT_RANGE, true, player);
 
 			// Spawn shark
-			Shark* shark = new Shark(new vector3df(4000, 500, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-				0, GameManager::smgr, -1111,
-				GameManager::smgr->getMesh("../media/Shark.obj"),
-				0, false);
-			GameManager::gameObjects.push_back(shark);
-
-			FlockingEntity* flockOfFish = new FlockingEntity(new vector3df(100, -80, 100), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-				GameManager::smgr->getRootSceneNode(), GameManager::smgr, -500, GameManager::smgr->getMesh("../media/FishSpawn.obj"),
-				GameManager::driver->getTexture("../media/GoldTexture.jpg"));
-			flockOfFish->tag = GameObject::CREATURE;
-			GameManager::gameObjects.push_back(flockOfFish);
+			//Shark* shark = new Shark(new vector3df(4000, 500, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			//	0, GameManager::smgr, -1111,
+			//	GameManager::smgr->getMesh("../media/Shark.obj"),
+			//	0, false);
+			//GameManager::gameObjects.push_back(shark);
 
 			// Make a playingField (mesh out of grid)
 			GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200, -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)), new vector3df(1, 1, 1), new vector3df(0, 0, 0),

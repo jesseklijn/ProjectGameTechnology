@@ -1,28 +1,53 @@
-float4x4 world;
-float4x4 view;
-float4x4 projection;
 
-float4 ambientColor = float4(1,1,1,1);
-float ambientIntensity = 0,1;
-
-struct vertInput
+cbuffer MatrixBuffer
 {
-	float4 pos : POSITION;
-	float4 normal : NORMAL;
-	float2 uv : TEXCOORD0;
-	float4 color : COLOR0;
-}
+matrix world;
+matrix view;
+matrix proj;
+};
 
-struct v2f
+
+struct VS_INPUT
 {
 	float4 pos : SV_POSITION;
-	float4 color : COLOR0;
-	float2 uv : TEXCOORD0;
-}
+};
 
-float4 v2f(vertInput input)
+struct VS_OUTPUT
 {
-	v2f o;
-	o.pos = mul(world, input.pos);
+	float4 pos : POSITION;
+	float4 col : COLOR0;
+};
+
+VS_OUTPUT main(VS_INPUT input)
+{
+	VS_OUTPUT o;
+	o.pos = mul(input.pos, world);
+	o.pos = mul(o.pos, view);
+	o.pos = mul(o.pos, proj);
+	o.col = float4(1.0f, 0.0f, 0.0f, 1.0f);
 	return o;
 }
+
+
+//struct VS_INPUT 
+////{
+//	float4 Pos : SV_POSITION;
+//   float4 Col : COLOR0;
+//};
+
+//struct VS_OUTPUT 
+//{
+//   float4 PosOut : SV_POSITION;
+//   float4 ColOut : COLOR0;
+//};
+
+
+//VS_OUTPUT main( VS_INPUT Input )
+//{
+//   VS_OUTPUT Output;
+
+//   Output.PosOut = Input.Pos;
+//   Output.ColOut = float4(1.0f, 0.0f, 0.0f, 1.0f);
+//   return( Output );
+   
+//}

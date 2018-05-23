@@ -186,7 +186,7 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files\Interface Objects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="diffuseShaderCallBack.cpp">
+    <ClCompile Include="DiffuseShaderCallBack.cpp">
       <Filter>Header Files\Misc\Shaders\CallBack</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,7 +269,7 @@
     <ClInclude Include="OctTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="diffuseShaderCallBack.h">
+    <ClInclude Include="DiffuseShaderCallBack.h">
       <Filter>Source Files\Controllers\Misc\Shaders\CallBack</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,10 +279,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DiffuseShaderFrag.hlsl">
+    <FxCompile Include="DiffuseShaderVert.hlsl">
       <Filter>Header Files\Misc\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="DiffuseShaderVert.hlsl">
+    <FxCompile Include="DiffuseShaderFrag.hlsl">
       <Filter>Header Files\Misc\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -68,13 +68,13 @@ bool GameManager::escaped = false;
 bool GameManager::hasDied = false;
 
 // World generation
-int GameManager::critterCount = 300;
-int GameManager::shipCount = 6;
-int GameManager::rockCount = 60;
-int GameManager::ruinsCount = 25;
-int GameManager::coralCount = 75;
-int GameManager::plantCount = 25;
-int GameManager::skullCount = 1;
+int GameManager::critterCount = 0;
+int GameManager::shipCount = 0;
+int GameManager::rockCount = 0;
+int GameManager::ruinsCount = 0;
+int GameManager::coralCount = 0;
+int GameManager::plantCount = 0;
+int GameManager::skullCount = 0;
 
 float GameManager::gameSpeed = 1.0f;
 #pragma endregion
@@ -83,7 +83,7 @@ float GameManager::gameSpeed = 1.0f;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0005f);
+	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP, 0.0f, 5000.0f, 0.0f);
 	GameManager::guienv->getSkin()->setFont(GameManager::device->getGUIEnvironment()->getBuiltInFont());
 	
 	Awake();
