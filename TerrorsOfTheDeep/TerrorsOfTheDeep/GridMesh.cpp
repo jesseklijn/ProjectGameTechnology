@@ -81,6 +81,7 @@ void GridMesh::GenerateMesh()
 
 	// Adds the SAnimatedMesh to the mesh of gameObject
 	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, 0);
+	mesh->setID(-1234);
 	mesh->setPosition(startPos);
 
 	// Set the material flags

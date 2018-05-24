@@ -15,7 +15,7 @@ public:
 
 	float cameraSpeed = 0.4f;
 	float cameraRotationSpeed = 100.0f;
-	float cameraFarValue = 20000.0f;
+	float cameraFarValue = 60000.0f;
 	SKeyMap keyMap[4];
 	ICameraSceneNode* camera;
 

@@ -62,6 +62,7 @@ public:
 	static HUD* hud;
 	static GameObject* levelMonster;
 	static GameObject* levelPlayer;
+	static IAnimatedMeshSceneNode* levelPlane;
 	static GameObject* divingCage;
 	static bool disableHud;
 	static irr::core::vector3df rayStart;

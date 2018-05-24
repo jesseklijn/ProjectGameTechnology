@@ -14,6 +14,7 @@ bool SceneManager::sceneIsPaused = false;
 
 GameObject* SceneManager::levelMonster = nullptr;
 GameObject* SceneManager::levelPlayer = nullptr;
+IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
 
 // Light data
@@ -146,7 +147,7 @@ void SceneManager::Update()
 
 				rayStart = divingCage->getAbsolutePosition();
 				rayEnd = rayStart + vector3df(0.0f, -400.0f, 0.0f);
-				bool touchedDown = (GameManager::PerformRaycast(rayStart, rayEnd) != 0);
+				bool touchedDown = (GameManager::PerformRaycast(rayStart, rayEnd, SceneManager::levelPlane->getID()) != 0);
 				if (touchedDown)
 				{
 					// Start the key overlay timer
@@ -304,6 +305,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	GameManager::interfaceObjects.clear();
 	SceneManager::levelMonster = nullptr;
 	SceneManager::levelPlayer = nullptr;
+	SceneManager::levelPlane = nullptr;
 	SceneManager::mouseOverlay = nullptr;
 	SceneManager::keyOverlay = nullptr;
 
@@ -391,22 +393,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			true,
 			player);
 
-		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
-			new vector3df(1, 1, 1),
-			new vector3df(0, 0, 0),
-			0,
-			GameManager::smgr,
-			-1111,
-			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-			0,
-			false);
-		SceneManager::levelMonster = shark;
-		GameManager::gameObjects.push_back(shark);
-
 		StartLoadingScreen(SceneManager::WORLD);
 		EndLoadingScreen();
 		// Make a playingField (mesh out of grid)
-		GameObject* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2),
+		GridMesh* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2),
 			-300,
 			-GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)),
 			new vector3df(1, 1, 1),
@@ -420,6 +410,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		ITriangleSelector* selector = GameManager::smgr->createTriangleSelector(playingField->mesh);
 		playingField->mesh->setTriangleSelector(selector);
 		selector->drop();
+
+		SceneManager::levelPlane = playingField->mesh;
 
 		// Spawn random objects on grid
 		IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
@@ -491,6 +483,24 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				break;
 			}
 		}
+
+		meshDirectories.clear();
+		meshTextures.clear();
+		//meshDirectories.push_back("../media/Monsters/Shark.obj"); meshTextures.push_back("");
+		//meshDirectories.push_back("../media/Monsters/Leviathan.obj"); meshTextures.push_back("");
+		meshDirectories.push_back("../media/Monsters/DeepLurker.obj"); meshTextures.push_back("");
+		int graphicsIndex = rand() % meshDirectories.size();
+		Shark* shark = new Shark(new vector3df(6000, 6000, 6000),
+			new vector3df(1, 1, 1),
+			new vector3df(0, 0, 0),
+			0,
+			GameManager::smgr,
+			-1111,
+			GameManager::smgr->getMesh(meshDirectories[graphicsIndex]),
+			0,
+			false);
+		SceneManager::levelMonster = shark;
+		GameManager::gameObjects.push_back(shark);
 
 		// Spawn critters
 		meshDirectories.clear();

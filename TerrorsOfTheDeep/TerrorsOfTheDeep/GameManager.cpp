@@ -221,7 +221,7 @@ Example:
 	<NODE>->setTriangleSelector(selector);
 	selector->drop();
 */
-ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
+ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition, irr::s32 id)
 {
 	ray.start = startPosition;
 	ray.end = endPosition;
@@ -231,8 +231,8 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			ray,
 			intersection,	// This will be the position of the collision
 			hitTriangle,	// This will be the triangle hit in the collision
-			0,				// This ensures that only nodes that we have set up to be pickable are considered
-			0);				// Check the entire scene (this is actually the implicit default)
+			id,				// This ensures that only nodes that we have set up to be pickable are considered
+			0);	// Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
 }
