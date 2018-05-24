@@ -145,17 +145,3 @@ void Player::NotifyCollision(vector3df objPosition)
 	isColliding = true;
 	colPos = objPosition;
 }
-
-vector3df Player::Cross(vector3df vector1, vector3df vector2)
-{
-	float a = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
-	float b = vector1.X * vector2.Z - vector1.Z * vector2.X;
-	float c = vector1.X * vector2.Y - vector1.Y * vector2.X;
-
-	return vector3df(a, b, c);
-}
-
-float Player::Dot(vector3df vector1, vector3df vector2)
-{
-	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
-}

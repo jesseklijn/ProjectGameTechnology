@@ -47,7 +47,4 @@ public:
 	void MoveParent(irr::core::vector3df movement);
 
 	void NotifyCollision(irr::core::vector3df objPosition);
-
-	irr::core::vector3df Cross(irr::core::vector3df vector1, irr::core::vector3df vector2);
-	float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2);
 };
