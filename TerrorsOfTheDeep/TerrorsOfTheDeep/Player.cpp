@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameManager.h"
+#include <matrix4.h>
 
 #pragma region Namespaces
 using namespace irr;
@@ -15,42 +16,17 @@ using namespace gui;
 Player::Player(const irr::core::vector3df* startPosition,
 	const irr::core::vector3df* startScale,
 	const irr::core::vector3df* startRotation,
+	float movementSpeed,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture)
 	: GameObject(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture)
 {
 	GameObject::setTag(GameObject::PLAYER);
-	//buoyancyConstant = 9.79;
+
+	speed = movementSpeed;
 
 	irrDevice = GameManager::device;
 	smgr = mgr;
-
-	latestPos = getAbsolutePosition();
-
-	// Create bubble particle system and emitter
-	particleSystem =
-		smgr->addParticleSystemSceneNode(false);
-	particleEmitter = particleSystem->createBoxEmitter(
-		core::aabbox3d<f32>(-24, -50, -24, 24, -25, 24),	// Emitter bounding box
-		core::vector3df(0.0f, 0.03f, 0.0f),					// Base particle direction
-		25, 35,												// Emission rate (min, max)
-		video::SColor(0, 50, 50, 50),						// Darkest color particle
-		video::SColor(0, 200, 200, 200),					// Brightest color particle
-		2500, 4500,											// Lifetime (min, max)
-		10.0f,												// Max angle deviation
-		core::dimension2df(5.0f, 5.0f),						// Min size
-		core::dimension2df(8.0f, 8.0f));					// Max size
-	particleSystem->setEmitter(particleEmitter);
-
-	// Make sure the particles fade away
-	scene::IParticleAffector* particleFadeOut = particleSystem->createFadeOutParticleAffector();
-	particleSystem->addAffector(particleFadeOut);
-	particleFadeOut->drop();
-
-	particleSystem->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
-	particleSystem->setMaterialFlag(video::EMF_LIGHTING, false);
-	particleSystem->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
-	particleSystem->setMaterialTexture(0, GameManager::driver->getTexture("../media/Particles/bubble.png"));
 }
 
 Player::~Player()
@@ -71,44 +47,11 @@ void Player::Update()
 	// Inherit base class Update
 	GameObject::Update();
 
-	// TODO: player movement not through camera
-	// TODO: proper movement - on user input add to force
-	// TODO: make it look like actual swimming with the back and forth thing
-
 	updateAbsolutePosition();
 
-	//UpdatePos();
+	UpdatePos();
 
-	//vector3df currentPos = getAbsolutePosition();
-	//setVelocity(currentPos - latestPos);
-	//latestPos = currentPos;
-
-	if (particleSystem)
-	{
-		particleSystem->setPosition(getAbsolutePosition());
-
-		// Timer that triggers the start of a new burst of bubbles from the player
-		bubbleStartTimer = GameManager::Clamp(bubbleStartTimer - GameManager::deltaTimeMS, 0.0f, bubbleStartTime);
-		if (bubbleStartTimer == 0.0f)
-		{
-			particleSystem->setEmitter(particleEmitter);
-			bubbleDurationTimer = bubbleDurationTime;
-
-			// Set the timer again for the next bubble trigger
-			bubbleStartTimer = bubbleStartTime;
-		}
-
-		// Timer that triggers when a burst is supposed to end
-		bubbleDurationTimer = (bubbleDurationTimer > 0.0f) ? GameManager::Clamp(bubbleDurationTimer - GameManager::deltaTimeMS, 0.0f, bubbleDurationTime) : -1.0f;
-		if (bubbleDurationTimer == 0.0f)
-		{
-			particleSystem->setEmitter(0);
-
-			/* Disable this timer by setting it below 0.
-			It should only run after the bubbleStartTimer goes off and not repeat itself automatically. */
-			bubbleDurationTimer = -1.0f;
-		}
-	}
+	isColliding = false;
 }
 
 void Player::render()
@@ -132,5 +75,74 @@ SMaterial& Player::getMaterial(u32 i)
 
 void Player::UpdatePos()
 {
+	ICameraSceneNode* camera = smgr->getActiveCamera();
 
+	// gets direction camera is facing
+	vector3df frontDirection = camera->getTarget() - camera->getAbsolutePosition();
+	frontDirection.normalize();
+
+	// gets (non vertical) rotation of camera
+	quaternion r = quaternion();
+	r.rotationFromTo(vector3df(0, 0, 1), vector3df(frontDirection.X, 0, frontDirection.Z));
+
+	// applies rotation to x-axis direction
+	vector3df sideDirection = r * vector3df(1, 0, 0);
+	sideDirection.normalize();
+
+	// Front
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_W))
+	{
+		MoveParent(frontDirection);
+	}
+	// Left
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_A))
+	{
+		MoveParent(-sideDirection);
+	}
+	// Back
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_S))
+	{
+		MoveParent(-frontDirection);
+	}
+	// Right
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_D))
+	{
+		MoveParent(sideDirection);
+	}
+	// Up
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_SPACE))
+	{
+		MoveParent(vector3df(0, 1, 0));
+	}
+	// Down
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_LCONTROL))
+	{
+		MoveParent(vector3df(0, -1, 0));
+	}
+
+	if (mesh != nullptr)
+	{
+		mesh->setPosition(vector3df(0, 0, 0));
+	}
+
+}
+
+void Player::MoveParent(vector3df movement)
+{
+	parent = getParent();
+	vector3df newPos = parent->getAbsolutePosition() + speed * movement;
+
+	// prevents moving towards the object that the camera is colliding with
+	bool collisionStop = isColliding && (colPos - newPos).getLength() < (colPos - parent->getAbsolutePosition()).getLength();
+	bool groundStop = newPos.Y < 0 && movement.Y < 0;
+	if (!collisionStop && !groundStop)
+	{
+		parent->setPosition(newPos);
+	}
+}
+
+void Player::NotifyCollision(vector3df objPosition)
+{
+	isColliding = true;
+	colPos = objPosition;
 }

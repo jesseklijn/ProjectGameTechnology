@@ -12,13 +12,12 @@ SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
 SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
 
-GameObject* SceneManager::levelMonster = nullptr;
-GameObject* SceneManager::levelPlayer = nullptr;
+
 Menu* SceneManager::pauseMenu = nullptr;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.15f, 0.15f, 0.2f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
@@ -159,7 +158,7 @@ void SceneManager::Update()
 						vector3df currentCameraPosition = camera->camera->getPosition();
 						vector3df currentCameraLookAt = camera->camera->getTarget();
 						camera->CreateCamera(currentCameraPosition, currentCameraLookAt,
-							camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue, camera->keyMap);
+							camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
 					}
 				}
 			}
@@ -302,8 +301,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			delete intObj;
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
-	SceneManager::levelMonster = nullptr;
-	SceneManager::levelPlayer = nullptr;
 	SceneManager::mouseOverlay = nullptr;
 	SceneManager::keyOverlay = nullptr;
 
@@ -359,17 +356,14 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		camera->CreateCamera(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0), vector3df(-90, 0, 0),
 			camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
 
+		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
+
+
 		// Spawn player in cage
-		Player* player = new Player(new vector3df(0, 0, 0),
-			new vector3df(1, 1, 1),
-			new vector3df(0, 0, 0),
-			GameManager::smgr->getActiveCamera(),
-			GameManager::smgr,
-			-1337,
-			GameManager::smgr->getMesh("../media/Player/FPSArms.obj"));
+		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 5,
+			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, playerMesh, GameManager::driver->getTexture("../media/armsText.jpg"));
 		GameManager::gameObjects.push_back(player);
-		SceneManager::levelPlayer = player;
-		player->isKinematic = true;
+		GameManager::levelPlayer = player;
 
 		GameObject* cage = new GameObject(new vector3df(player->getParent()->getPosition().X, player->getParent()->getPosition().Y - 400.0f, player->getParent()->getPosition().Z),
 			new vector3df(1, 1, 1),
@@ -391,16 +385,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			true,
 			player);
 
-		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
-			new vector3df(1, 1, 1),
-			new vector3df(0, 0, 0),
-			0,
-			GameManager::smgr,
-			-1111,
+		// Spawn shark
+		Shark* shark = new Shark(new vector3df(40000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
+			0, GameManager::smgr, -1111,
 			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-			0,
-			false);
-		SceneManager::levelMonster = shark;
+			0, false);
+		GameManager::levelMonster = shark;
 		GameManager::gameObjects.push_back(shark);
 
 		StartLoadingScreen(SceneManager::WORLD);

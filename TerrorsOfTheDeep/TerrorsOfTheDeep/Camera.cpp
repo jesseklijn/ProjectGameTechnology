@@ -14,18 +14,12 @@ using namespace gui;
 // Constructor
 Camera::Camera(ISceneManager* smgr)
 {
-	// Keymapping for player controls
-	keyMap[0].Action = EKA_MOVE_FORWARD;
-	keyMap[0].KeyCode = KEY_KEY_W;
+	const float MOVEMENT_SPEED = 1.5f;
+	const float ROTATION_SPEED = 100.0f;
 
-	keyMap[1].Action = EKA_MOVE_BACKWARD;
-	keyMap[1].KeyCode = KEY_KEY_S;
-
-	keyMap[2].Action = EKA_STRAFE_LEFT;
-	keyMap[2].KeyCode = KEY_KEY_A;
-
-	keyMap[3].Action = EKA_STRAFE_RIGHT;
-	keyMap[3].KeyCode = KEY_KEY_D;
+	// Add a camera in the scene
+	ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0, ROTATION_SPEED, MOVEMENT_SPEED, -100);
+	camera->setFarValue(20000.0f);
 }
 
 // Destructor
@@ -50,14 +44,14 @@ ICameraSceneNode * Camera::CreateCamera(vector3df position,
 	camera->setFarValue(farValue);
 
 	// Parent the player to it
-	if (SceneManager::levelPlayer != nullptr)
+	if (GameManager::levelPlayer != nullptr)
 	{
-		SceneManager::levelPlayer->setParent(camera);
+		GameManager::levelPlayer->setParent(camera);
 
 		/* Once the player's previous parent (last camera) has changed, apparently the player's mesh
 		also loses its player parent for some reason. Re-initialize it. */
-		if (SceneManager::levelPlayer->mesh)
-			SceneManager::levelPlayer->mesh->setParent(SceneManager::levelPlayer);
+		if (GameManager::levelPlayer->mesh)
+			GameManager::levelPlayer->mesh->setParent(GameManager::levelPlayer);
 	}
 
 	return camera;
@@ -100,6 +94,3 @@ void Camera::updatePos()
 			-GameManager::WORLD_RADIUS_Z + 1));
 	}
 }
-
-// In main:
-// Camera camera = Camera(smgr);

@@ -6,6 +6,7 @@
 #include "EventManager.h"
 #include <iostream>
 #include "irrlicht.h"
+#include "Player.h"
 #pragma endregion
 
 #pragma region Namespaces
@@ -81,6 +82,9 @@ public:
 
 	float listCleanupTime = 3.0f * 1000.0f;
 	float listCleanupTimer = 0.0f;
+
+	static GameObject* levelMonster;
+	static Player* levelPlayer;
 
 	// Scenery generation
 	static int critterCount, shipCount, rockCount, ruinsCount, coralCount, plantCount, skullCount;

@@ -38,6 +38,9 @@ triangle3df hitTriangle;
 std::vector<GameObject*> GameManager::gameObjects;
 std::vector<InterfaceObject*> GameManager::interfaceObjects;
 
+GameObject* GameManager::levelMonster = nullptr;
+Player* GameManager::levelPlayer = nullptr;
+
 // Timing
 float GameManager::deltaTime = 0.0;
 float GameManager::deltaTimeMS = 0.0;
