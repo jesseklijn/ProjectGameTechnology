@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameManager.h"
+#include <matrix4.h>
 
 #pragma region Namespaces
 using namespace irr;
@@ -76,11 +77,17 @@ void Player::UpdatePos()
 {
 	ICameraSceneNode* camera = smgr->getActiveCamera();
 
+	// gets direction camera is facing
 	vector3df frontDirection = camera->getTarget() - camera->getAbsolutePosition();
 	frontDirection.normalize();
 
-	//vector3df sideDirection = vector3df(-1, 0, 0) * (frontDirection - vector3df(0, 0, -1));
-	//sideDirection.normalize();
+	// gets (non vertical) rotation of camera
+	quaternion r = quaternion();
+	r.rotationFromTo(vector3df(0, 0, 1), vector3df(frontDirection.X, 0, frontDirection.Z));
+
+	// applies rotation to x-axis direction
+	vector3df sideDirection = r * vector3df(1, 0, 0);
+	sideDirection.normalize();
 
 	// Front
 	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_W))
@@ -88,20 +95,20 @@ void Player::UpdatePos()
 		MoveParent(frontDirection);
 	}
 	// Left
-	//if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_A))
-	//{
-	//	MoveParent(sideDir);
-	//}
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_A))
+	{
+		MoveParent(-sideDirection);
+	}
 	// Back
 	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_S))
 	{
 		MoveParent(-frontDirection);
 	}
 	// Right
-	//if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_D))
-	//{
-	//	MoveParent(-sideDir);
-	//}
+	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_D))
+	{
+		MoveParent(sideDirection);
+	}
 	// Up
 	if (GameManager::eventManager.IsKeyDown(irr::KEY_SPACE))
 	{
@@ -146,4 +153,9 @@ vector3df Player::Cross(vector3df vector1, vector3df vector2)
 	float c = vector1.X * vector2.Y - vector1.Y * vector2.X;
 
 	return vector3df(a, b, c);
+}
+
+float Player::Dot(vector3df vector1, vector3df vector2)
+{
+	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
 }
