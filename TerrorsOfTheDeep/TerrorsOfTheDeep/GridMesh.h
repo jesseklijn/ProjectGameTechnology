@@ -25,29 +25,15 @@ public:
 	// Variables
 	static const int GRID_OFFSET = 10; //grid part that �sn't accessible by the player (field beyond level boundaries)
 	static const int CELL_SIZE = 250; //Define the size of 1 cell (1 unit)
+	irr::core::vector3df* startPos;
 	int xSizeGrid, ySizeGrid;
 
-	// High mountains landmark
-	int maxHighMountainHeight = 1000; //defines the max mountain differences (landmark)
-	int highMountainConstantHeight = 400;
-	irr::core::vector2df sizeHighMountain;
-
-	// Ruins landmark
-	int ruinsConstantDepthLevel1 = -100; //defines the 3 depth levels of the ruin part of grid (landmark)
-	int ruinsConstantDepthLevel2 = -300;
-	int ruinsConstantDepthLevel3 = -500;
-	irr::core::vector2df sizeRuins;
-
-	// Basic ground
-	int maxHeightNormalGround = 100;  //defines the max ground differences (no landmark)
-	int constantHeightNormalGround = 50;
-	irr::core::vector3df* startPos;
+	// Ground
+	int heightMultiplier = 3;  //defines the max ground differences between the vertices
 
 	// Functions 
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
 	virtual const irr::core::aabbox3d<irr::f32>& getBoundingBox() const;
-	virtual irr::u32 getMaterialCount() const;
-	const irr::core::vector3df GetGridSize();
 
 	// This function allows game objects to be placed on the vertex of the given mesh buffer. 
 	// This is needed to create a more random level where the objects are placed randomly in the level.
@@ -58,9 +44,10 @@ public:
 		                                   SceneManager::defaultGameObject
 	                                   , irr::core::vector3df positionOffset = irr::core::vector3df(0, 0, 0), bool excludeOffset = false, bool resetOffsetPlacement = false);
 
-	// Tracks what vertices has an object spawned on them 
+	// Tracks what vertices has an object spawned on them (include previous calls of the "RandomObjectPlacementOnVertex" function as well)
 	vector<bool> previousPlacementTracker;
+
 private:
-	irr::core::array<irr::video::S3DVertex> DrawVertices(int xSizeGrid, int ySizeGrid);
+	irr::core::array<irr::video::S3DVertex> DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap = false);
 	irr::core::array<unsigned short> DrawTriangles(int xSizeGrid, int ySizeGrid);
 }; 

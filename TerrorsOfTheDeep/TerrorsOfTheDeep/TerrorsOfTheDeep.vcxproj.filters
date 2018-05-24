@@ -147,9 +147,6 @@
     <ClCompile Include="GridMesh.cpp">
       <Filter>Source Files\Controllers\Grid</Filter>
     </ClCompile>
-    <ClCompile Include="PlayingField.cpp">
-      <Filter>Source Files\Controllers\Grid</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Controllers\Misc</Filter>
     </ClCompile>
@@ -176,6 +173,12 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Source Files\Interface Objects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseGenerator.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="noiseutils.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +256,15 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Header Files\Interface Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="OctTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NoiseGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="noiseutils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
