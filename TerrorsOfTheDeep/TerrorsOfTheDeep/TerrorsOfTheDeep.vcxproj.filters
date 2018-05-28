@@ -174,7 +174,13 @@
     <ClCompile Include="Button.cpp">
       <Filter>Source Files\Interface Objects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="NoiseGenerator.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
     <ClCompile Include="SoundEngine.cpp">
+      <Filter>Source Files\Controllers\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="noiseutils.cpp">
       <Filter>Source Files\Controllers\Misc</Filter>
     </ClCompile>
   </ItemGroup>
@@ -257,7 +263,13 @@
     <ClInclude Include="OctTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NoiseGenerator.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
     <ClInclude Include="SoundEngine.h">
+      <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="noiseutils.h">
       <Filter>Header Files\Controllers\Misc</Filter>
     </ClInclude>
   </ItemGroup>

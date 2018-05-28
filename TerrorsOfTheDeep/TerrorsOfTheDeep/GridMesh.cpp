@@ -1,5 +1,7 @@
 #include "GridMesh.h"
 #include "GameManager.h"
+#include "NoiseGenerator.h"
+#include "SceneManager.h"
 
 #pragma region Namespaces
 using namespace irr;
@@ -11,9 +13,9 @@ using namespace gui;
 #pragma endregion
 
 GridMesh::GridMesh(
-	const irr::core::vector3df* startPosition,
-	const irr::core::vector3df* startScale,
-	const irr::core::vector3df* startRotation,
+	irr::core::vector3df* startPosition,
+	irr::core::vector3df* startScale,
+	irr::core::vector3df* startRotation,
 	irr::scene::ISceneNode* parent, irr::scene::ISceneManager* mgr, irr::s32 id,
 	irr::scene::IAnimatedMesh* relatedMesh, irr::video::ITexture* relatedTexture) : GameObject(
 		startPosition,  
@@ -25,7 +27,7 @@ GridMesh::GridMesh(
 		relatedMesh,
 		relatedTexture)
 {
-	startPos = *startPosition;
+	startPos = startPosition;
 	GenerateField();
 }
 
@@ -55,9 +57,9 @@ void GridMesh::OnRegisterSceneNode()
 /* The grid generation makes use of a seed which makes it possible to get different vertices every time the playing mesh gets generated.
 The output (not from the function) is an IAnimatedMeshSceneNode which is the mesh component for the GameObject class. This mesh will be added to the GameObject of the playing field.
 */
-//NOTE: still needs to be refactored!
 void GridMesh::GenerateMesh()
 {
+	// Sets the total grid size to be generated (including the offset)
 	xSizeGrid = xWidth * 2 + GRID_OFFSET;
 	ySizeGrid = yHeight * 2 + GRID_OFFSET;
 
@@ -67,21 +69,26 @@ void GridMesh::GenerateMesh()
 	SMesh* sMesh = new SMesh();
 	SMeshBuffer* buffer = new SMeshBuffer();
 
-	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid);
+	// Adds a buffer to the sMesh to make it possible for the sMesh to be manipulated
+	sMesh->addMeshBuffer(buffer);
+
+	// Draw the vertices and triangles of the grid
+	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid, true);
 	buffer->Indices = DrawTriangles(xSizeGrid, ySizeGrid);
+
+	// Recalucate the normals of the sMesh
+	meshManipulator->recalculateNormals(sMesh);
 
 	// Recalculate the bounding box of the mesh
 	buffer->recalculateBoundingBox();
-	sMesh->addMeshBuffer(buffer);
-	meshManipulator->recalculateNormals(sMesh);
-	sMesh->recalculateBoundingBox();
 
-	// Convert the SMesh into a SAnimatedMesh 
+	// Convert the SMesh into a SAnimatedMesh (GameObjects uses SAnimatedMesh only and not 1 static mesh which is this sMesh)
+	// So by putting the sMesh into a SAnimatedMesh, it creates a mesh with no animation
 	meshGrid->addMesh(sMesh);
 
-	// Adds the SAnimatedMesh to the mesh of gameObject
-	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, 0);
-	mesh->setPosition(startPos);
+	// Adds the SAnimatedMesh to the mesh of gameObject 
+	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
+	mesh->setPosition(*startPos);
 
 	// Set the material flags
 	IVideoDriver* driver = SceneManager->getVideoDriver();
@@ -99,32 +106,37 @@ const aabbox3d<f32>&  GridMesh::getBoundingBox() const
 	return box;
 }
 
-u32 GridMesh::getMaterialCount() const
-{
-	return 1;
-}
-
 // Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
-void GridMesh::RandomObjectPlacementOnVertex(int amount, 
-	vector3df position, 
-	vector3df scale,
-	vector3df rotation,
-	irr::s32 id, 
-	std::vector<irr::io::path> meshDirectories,
-	std::vector<irr::io::path> textureDirectories, 
-	IMeshBuffer* meshBuffer,
-	bool detectCollision,
-	bool castsShadows,
-	float scaleVariationX, 
-	float scaleVariationY, 
-	float scaleVariationZ,
-	float rotationVariationX, 
-	float rotationVariationY, 
-	float rotationVariationZ)
+// Either use a list with GameObjects or a single GameObject. One of the 2 must be given as a parameter.
+void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df rootPosition, vector<GameObject*> gameObjectList, GameObject* singleGameObject, vector3df
+                                             positionOffset, bool excludeOffset, bool resetOffsetPlacement)
 {
+	bool useSingleGameObject = false;
+	bool useMultipleGameObjects = false;
+
+	// Amount of game objects that needs to be placed on the vertex
+	int amount;
+
+	// Error prevention if both parameters are default and checks if it needs to use a list or a single game object
+	if (!gameObjectList.empty())
+	{
+		amount = gameObjectList.size();
+		useMultipleGameObjects = true;
+	}
+
+	else if (singleGameObject != nullptr) {
+		amount = 1;
+		useSingleGameObject = true;
+	}
+	else
+	{
+		puts("Error - Function GridMesh::RandomObjectPlacementOnVertex contains both default parameters (gameObjectList and singleGameObject)");
+		return;
+	}
+
 	// Amount of tries before it skips the current object and go to the next object
 	int currentTimeOutTries = 0;
-	int TimeOutTries = 10;
+	const int timeOutTries = 10;
 
 	// Spawn random objects on grid;
 	IMeshBuffer* buffer = meshBuffer;
@@ -136,97 +148,145 @@ void GridMesh::RandomObjectPlacementOnVertex(int amount,
 	int verticesGrid = buffer->getVertexCount();
 
 	// Tracks what vertices has an object spawned on them 
-	vector<bool> spawnTracker(verticesGrid);
+	vector<bool> placementTracker(verticesGrid);
+
+	// Checks if this function has been called more than one time so it will assign the same data of the previous call to prevent multiple object placements on the same vertex
+	if (!previousPlacementTracker.empty())
+	{
+		placementTracker = previousPlacementTracker;
+	}
+
+	// Exclude the vertices that are in the offset
+	if (excludeOffset)
+	{
+		for (int i = 0; i < verticesGrid; i++)
+		{
+			S3DVertex currentVertex = mb_vertices[i];
+			if (currentVertex.Pos.X + startPos->X > GameManager::WORLD_RADIUS_X || currentVertex.Pos.X + startPos->X < -GameManager::WORLD_RADIUS_X ||
+				currentVertex.Pos.Z + startPos->Z > GameManager::WORLD_RADIUS_Z || currentVertex.Pos.Z + startPos->Z < -GameManager::WORLD_RADIUS_Z)
+			{
+				// Exclude vertex from object placement
+				placementTracker[i] = true;
+			}
+		}
+	} 
 
 	for (int i = 0; i < amount; i++)
 	{
-		while (true) {
-			currentTimeOutTries++;
-			// Generate a random number for the selection of a vertice so an object can get spawned on it
+		while (true) 
+		{
+			// Generate a random number for the selection of a vertex so an object can get spawned on it
 			int randomizer = rand() % buffer->getVertexCount();
-			// Checks if the vertice is free (no object has been drawn on the vertex)
-			if (!spawnTracker[randomizer])
+
+			// This will be used if a list of objects has been given as a parameter
+			// It also checks if the selected vertex hasn't an object spawn on it
+			if (!placementTracker[randomizer] && useMultipleGameObjects)
 			{
-				int typeIndex = rand() % meshDirectories.size();
-				float scaleAdditionX = ((rand() % 100) * scaleVariationX) / 100.0f - scaleVariationX / 2.0f;
-				float scaleAdditionY = ((rand() % 100) * scaleVariationY) / 100.0f - scaleVariationY / 2.0f;
-				float scaleAdditionZ = ((rand() % 100) * scaleVariationZ) / 100.0f - scaleVariationZ / 2.0f;
-				float rotationAdditionX = ((rand() % 100) * rotationVariationX) / 100.0f - rotationVariationX / 2.0f;
-				float rotationAdditionY = ((rand() % 100) * rotationVariationY) / 100.0f - rotationVariationY / 2.0f;
-				float rotationAdditionZ = ((rand() % 100) * rotationVariationZ) / 100.0f - rotationVariationZ / 2.0f;
-				GameObject* object = new GameObject(new vector3df(mb_vertices[randomizer].Pos.X + position.X, mb_vertices[randomizer].Pos.Y + position.Y,
-					mb_vertices[randomizer].Pos.Z + position.Z),
-					new vector3df(scale.X + scaleAdditionX, scale.Y + scaleAdditionY, scale.Z + scaleAdditionZ),
-					new vector3df(rotation.X + rotationAdditionX, rotation.Y + rotationAdditionY, rotation.Z + rotationAdditionZ),
-					0, GameManager::smgr, id,
-					GameManager::smgr->getMesh(meshDirectories[typeIndex]),
-					0, detectCollision, castsShadows);
-				object->mesh->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
-				// Needs to be included to prevent textures being half transparent
-				for (int mIndex = 0; mIndex < object->mesh->getMaterialCount(); mIndex++)
-				{
-					object->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
-				}
-				// Checks if the object can use a texture if there's any in the vector
-				!textureDirectories[typeIndex].empty() ? GameManager::driver->getTexture(textureDirectories[typeIndex]) : 0;
-				GameManager::gameObjects.push_back(object);
-				spawnTracker[randomizer] = true;
+				// Sets the position of the game object to the position of the vertices (+ offset)
+				gameObjectList[i]->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X, mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Sets the position of the game object mesh to the same position 
+				gameObjectList[i]->mesh->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X, mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Set the vertex bool on true so no other object can be placed on the same vertex
+				placementTracker[randomizer] = true;
+
+				// Saves the placements of the vertices so it can be used for the next call
+				previousPlacementTracker = placementTracker;
 				break;
-				// Checks if the function needs to time out due to the failed attempts of the object placements
-			} else if (currentTimeOutTries == TimeOutTries)
+			}
+			// This will be used if a single game object has been given as a parameter
+			// It also checks if the selected vertex hasn't an object spawn on it
+			else if (!placementTracker[randomizer] && useSingleGameObject)
+			{
+				// Sets the position of the game object to the position of the vertices (+ offset)
+				singleGameObject->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X,
+				                                             mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y +
+				                                             100,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Sets the position of the game object mesh to the same position
+				singleGameObject->mesh->setPosition(vector3df(mb_vertices[randomizer].Pos.X + rootPosition.X + positionOffset.X,
+					mb_vertices[randomizer].Pos.Y + rootPosition.Y + positionOffset.Y +
+					100,
+					mb_vertices[randomizer].Pos.Z + rootPosition.Z + positionOffset.Z));
+
+				// Set the vertex bool on true so no other object can be placed on the same vertex
+				placementTracker[randomizer] = true;
+
+				break;
+			}
+
+			// Skips the current gameObject due to multiple failed tries
+			if (currentTimeOutTries == timeOutTries)
 			{
 				break;
 			}
+			currentTimeOutTries++;
 		}
+
+		// Resets the offset vertices for the next use 
+		if (resetOffsetPlacement)
+		{
+			for (int i = 0; i < verticesGrid; i++)
+			{
+				S3DVertex currentVertex = mb_vertices[i];
+				if (currentVertex.Pos.X + startPos->X > GameManager::WORLD_RADIUS_X || currentVertex.Pos.X + startPos->X < -GameManager::WORLD_RADIUS_X ||
+					currentVertex.Pos.Z + startPos->Z > GameManager::WORLD_RADIUS_Z || currentVertex.Pos.Z + startPos->Z < -GameManager::WORLD_RADIUS_Z)
+				{
+					// reset vertex for the next object placement on the offset
+					placementTracker[i] = false;
+
+				}
+			}
+		}
+
+		// Saves the placements of the vertices so it can be used for the next call
+		previousPlacementTracker = placementTracker;
 	}
 	return;
 }
 
-core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid)
+core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap)
 {
+	// Buffer to put the vertices in it. The vertices will be returned as an array and not the whole buffer.
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
 
-	for (size_t y = 0; y <= ySizeGrid; y++)
+	if (useHeightMap) 
 	{
-		for (size_t x = 0; x <= xSizeGrid; x++)
+		// Generate noiseMap 
+		NoiseGenerator* noiseGenerator = new NoiseGenerator();
+		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp");
+
+		// Divide the noise map by the vertices of the mesh to get good color differences
+		float precisionX = noiseGenerator->xSizeImage / xSizeGrid;
+		float precisionY = noiseGenerator->ySizeImage / xSizeGrid;
+
+		for (size_t y = 0; y <= ySizeGrid; y++)
 		{
-			// Use a part of the grid to create a landmark
-			if ((float)xSizeGrid / 1.7f < x && (float)ySizeGrid / 1.7f < y) {
-				// Random landmark (high mountains)
-				if ((float)xSizeGrid / 1.3f < x && (float)ySizeGrid / 1.3f < y)
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % highMountainConstantHeight + maxHighMountainHeight, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else if ((float)xSizeGrid / 1.5f < x && (float)ySizeGrid / 1.5f < y)
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, (rand() % highMountainConstantHeight + maxHighMountainHeight) / 2, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % highMountainConstantHeight / 4 + maxHighMountainHeight / 4, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-			}
-			// Use a part of the grid to create a landmark
-			else if ((float)xSizeGrid / 2 > x && (float)ySizeGrid / 2 > y && (float)xSizeGrid / 6 < x && (float)ySizeGrid / 6 < y)
+			for (size_t x = 0; x <= xSizeGrid; x++)
 			{
-				// Random landmark (ruins)
-				if ((float)xSizeGrid / 3 > x && (float)ySizeGrid / 3 > y && (float)xSizeGrid / 3.5 < x && (float)ySizeGrid / 3.5 < y)
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel3, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else if ((float)xSizeGrid / 2.5f > x && (float)ySizeGrid / 2.5f > y && (float)xSizeGrid / 4.5f < x && (float)ySizeGrid / 4.5f < y)
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel2, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
-				else 
-				{
-					bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, ruinsConstantDepthLevel1, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
-				}
+				// Draw the vertices and use the noise map's pixel for the height of the vertex to create natural hill heights
+				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
+					noiseGenerator->getPixelColor(GameManager::driver->getTexture("../media/heightMap.bmp"), x * precisionX, y * precisionY).getRed() * heightMultiplier,
+					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
+					x, y));
 			}
-			else
+		}
+	} 
+	else
+	{
+		for (size_t y = 0; y <= ySizeGrid; y++)
+		{
+			for (size_t x = 0; x <= xSizeGrid; x++)
 			{
-				// Default ground
-				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE, rand() % maxHeightNormalGround + constantHeightNormalGround, y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255), x, y));
+				// Draw the vertices of the grid. This will make a plain playing field with no height differences
+				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
+					0,
+					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
+					x, y));
 			}
 		}
 	}

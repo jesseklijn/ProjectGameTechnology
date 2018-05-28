@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\lib;$(IRRKLANG_HOME)\lib</LibraryPath>
+    <IncludePath>D:\HvA\Game Technology\IrrlichtSDK\noiselib\include\noise;$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\HvA\Game Technology\IrrlichtSDK\noiselib\bin;$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\lib;$(IRRKLANG_HOME)\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(IRRKLANG_HOME)\include;$(IncludePath);;$(IRRKLANG_HOME)\include</IncludePath>
@@ -96,8 +96,17 @@
       <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\HvA\Game Technology\IrrlichtSDK\noiselib\bin;$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>irrKlang.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <HeapReserveSize>
+      </HeapReserveSize>
+      <HeapCommitSize>
+      </HeapCommitSize>
+      <StackReserveSize>
+      </StackReserveSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)"\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -115,7 +124,7 @@
       <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>irrKlang.lib;Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>irrKlang.lib;libnoise.lib;Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -140,6 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>LinkVerbose</ShowProgress>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(SolutionDir)"\lib\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -187,6 +197,8 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="NoiseGenerator.cpp" />
+    <ClCompile Include="noiseutils.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -212,6 +224,8 @@
     <ClInclude Include="GridMesh.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="NoiseGenerator.h" />
+    <ClInclude Include="noiseutils.h" />
     <ClInclude Include="OctTree.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="Player.h" />
