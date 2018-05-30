@@ -486,8 +486,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		meshDirectories.clear();
 		meshTextures.clear();
-		//meshDirectories.push_back("../media/Monsters/Shark.obj"); meshTextures.push_back("");
-		//meshDirectories.push_back("../media/Monsters/Leviathan.obj"); meshTextures.push_back("");
+		meshDirectories.push_back("../media/Monsters/Shark.obj"); meshTextures.push_back("");
+		meshDirectories.push_back("../media/Monsters/Leviathan.obj"); meshTextures.push_back("");
 		meshDirectories.push_back("../media/Monsters/DeepLurker.obj"); meshTextures.push_back("");
 		int graphicsIndex = rand() % meshDirectories.size();
 		Shark* shark = new Shark(new vector3df(6000, 6000, 6000),
