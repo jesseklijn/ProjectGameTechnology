@@ -27,6 +27,7 @@ public:
 	irr::video::SMaterial Material;
 
 	float speed;
+	bool canMove = false;
 
 	// used?
 	irr::core::vector3df latestPos;

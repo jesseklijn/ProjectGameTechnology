@@ -56,14 +56,16 @@ NoiseGenerator::~NoiseGenerator()
 }
 
 // Get the color of the pixel in the selected texture
-video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, int x, int y)
+video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, video::IImage* image, int x, int y)
  {
 	// Set the default color of the pixel 
 	video::SColor pixel = video::SColor(0, 0, 0, 0);
 
 	// Does the texture exist?
-	 if (texture == nullptr)
+	 if (texture == nullptr || image == nullptr)
 		 return pixel;
+
+	 dimension2du textureDimensions = texture->getOriginalSize();
 
 	// Checks if the X and Y are positive so they can be used for the image
 	 if (x < 0 || y < 0) 
@@ -72,14 +74,11 @@ video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, int x, int
 	 }
 
 	 // Is the given X and Y within the image size?
-	 if (x > texture->getSize().Width || y > texture->getSize().Height)
+	 if (x > textureDimensions.Width || y > textureDimensions.Height)
 	 {
 		 return pixel;
 	 }
 
-	// Convert ITexture into IImage to make use of the irrlicht pixel picker function
-	// Bug: If we don't divide the getOriginalSize by 3, it causes a memory allocation problem
-	  IImage* image = GameManager::driver->createImage(texture, vector2d<s32>(0, 0), texture->getOriginalSize()/3);
 	  pixel = image->getPixel(x, y);
 
 	 return pixel;

@@ -89,42 +89,44 @@ void Player::UpdatePos()
 	vector3df sideDirection = r * vector3df(1, 0, 0);
 	sideDirection.normalize();
 
-	// Front
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_W))
+	if (canMove)
 	{
-		MoveParent(frontDirection);
-	}
-	// Left
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_A))
-	{
-		MoveParent(-sideDirection);
-	}
-	// Back
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_S))
-	{
-		MoveParent(-frontDirection);
-	}
-	// Right
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_D))
-	{
-		MoveParent(sideDirection);
-	}
-	// Up
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_SPACE))
-	{
-		MoveParent(vector3df(0, 1, 0));
-	}
-	// Down
-	if (GameManager::eventManager.IsKeyDown(irr::KEY_LCONTROL))
-	{
-		MoveParent(vector3df(0, -1, 0));
-	}
+		// Front
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_W))
+		{
+			MoveParent(frontDirection);
+		}
+		// Left
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_A))
+		{
+			MoveParent(-sideDirection);
+		}
+		// Back
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_S))
+		{
+			MoveParent(-frontDirection);
+		}
+		// Right
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_KEY_D))
+		{
+			MoveParent(sideDirection);
+		}
+		// Up
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_SPACE))
+		{
+			MoveParent(vector3df(0, 1, 0));
+		}
+		// Down
+		if (GameManager::eventManager.IsKeyDown(irr::KEY_LCONTROL))
+		{
+			MoveParent(vector3df(0, -1, 0));
+		}
 
-	if (mesh != nullptr)
-	{
-		mesh->setPosition(vector3df(0, 0, 0));
+		if (mesh != nullptr)
+		{
+			mesh->setPosition(vector3df(0, 0, 0));
+		}
 	}
-
 }
 
 void Player::MoveParent(vector3df movement)
