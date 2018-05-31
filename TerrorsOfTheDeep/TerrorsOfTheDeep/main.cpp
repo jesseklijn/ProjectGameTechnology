@@ -69,7 +69,8 @@ int main()
 		gameManager.Draw();
 		GameManager::guienv->drawAll();
 		
-		Sound::TestSound3D();
+		//Sound::TestSound3D();
+		Sound::Sound3D();
 
 
 

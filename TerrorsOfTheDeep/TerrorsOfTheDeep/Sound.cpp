@@ -20,7 +20,7 @@ irrklang::ISound* Sound::backGroundMusic = 0;
 irrklang::ISound* Sound::soundEffect = 0;
 
 
-//testSoundFunction
+//testSound 3D Function
 bool doOnce = false;
 float posOnCircle = 0;
 const float radius = 5;
@@ -113,19 +113,20 @@ void Sound::TestSound3D()
 	}
 	doOnce = true;
 	
-
+	//while not necessary
 	//add this while loop to the fixed update so t4he position is tracked at all times
 	/*while(true)
 	{*/
-		posOnCircle += 0.04f;
-		irrklang::vec3df pos3d(radius * cosf(posOnCircle), 0,
-			radius * sinf(posOnCircle * 0.5f));
+	posOnCircle += 0.04f;
+	irrklang::vec3df pos3d(radius * cosf(posOnCircle), 0,
+		radius * sinf(posOnCircle * 0.5f));
 
-		SoundEngine::_SoundEngine()->setListenerPosition(irrklang::vec3df(0, 0, 0), irrklang::vec3df(0, 0, 1));
+	SoundEngine::_SoundEngine()->setListenerPosition(irrklang::vec3df(0, 0, 0), irrklang::vec3df(0, 0, 1));
 
-		if (soundEffect)
-			soundEffect->setPosition(pos3d);
+	if (soundEffect)
+		soundEffect->setPosition(pos3d);
 
+	//while not necessary
 		//if (_kbhit())
 		//{
 		//	int key = _getch();
@@ -136,7 +137,7 @@ void Sound::TestSound3D()
 }
 
 
-void Sound::SoundEffect3D(const char* soundFile, irr::core::vector3df sourcePos, const float volume)
+void Sound::InitSoundEffect3D(const char* soundFile, irr::core::vector3df sourcePos, const float volume)
 {
 	soundEffect = SoundEngine::_SoundEngine()->play3D(soundFile, irr::core::vector3df(0, 0, 0), false, false, true);
 
@@ -144,23 +145,22 @@ void Sound::SoundEffect3D(const char* soundFile, irr::core::vector3df sourcePos,
 	{
 		soundEffect->setMinDistance(5.0f);
 	}
+}
 
-	//set listener direction
+void Sound::Sound3D()
+{	
+	//set get player position
 	SoundEngine::_SoundEngine()->setListenerPosition(
-		GameManager::smgr->getActiveCamera()->getAbsolutePosition(), 
-		GameManager::smgr->getActiveCamera()->getTarget() - GameManager::smgr->getActiveCamera()->getAbsolutePosition());
+		GameManager::smgr->getActiveCamera()->getAbsolutePosition(),
+		GameManager::smgr->getActiveCamera()->getTarget() - GameManager::smgr->getActiveCamera()->getAbsolutePosition(),
+		irrklang::vec3df(0, 1, 0));
 
-	//get the source position
 	if (soundEffect)
 	{
-		soundEffect->setPosition(sourcePos);
-	}	
-
-	//if (soundEffect)
-	//{
-	//	soundEffect->setVolume(volume);
-	//}
+		soundEffect->setPosition(pos3d);
+	}		
 }
+
 
 #else
 
@@ -174,6 +174,29 @@ void Sound::SoundEffect2D(const char* soundFile, const float volume)
 //{
 //	Shark* shark = (Shark*)GameManager::FindGameObjectWithTag<GameObject>(GameObject::MONSTER, GameManager::gameObjects);
 //
-//	Sound::SoundEffect3D("../media/evilsatanlaugh.ogg", shark->getAbsolutePosition(), 0.5);
+//	Sound::InitSoundEffect3D("../media/evilsatanlaugh.ogg", shark->getAbsolutePosition(), 0.5);
 //	//Sound::SoundEffect2D("../media/evilsatanlaugh.ogg", 0.5);
+//}
+
+//OLD SOUND INIT
+//void Sound::InitSoundEffect3D(const char* soundFile, irr::core::vector3df sourcePos, const float volume)
+//{
+//	soundEffect = SoundEngine::_SoundEngine()->play3D(soundFile, irr::core::vector3df(0, 0, 0), false, false, true);
+//
+//	if (soundEffect)
+//	{
+//		soundEffect->setMinDistance(5.0f);
+//	}
+//
+//	//set listener direction
+//	SoundEngine::_SoundEngine()->setListenerPosition(
+//		GameManager::smgr->getActiveCamera()->getAbsolutePosition(),
+//		GameManager::smgr->getActiveCamera()->getTarget() - GameManager::smgr->getActiveCamera()->getAbsolutePosition());
+//
+//	//get the source position
+//	if (soundEffect)
+//	{
+//		soundEffect->setPosition(sourcePos);
+//	}
+//
 //}

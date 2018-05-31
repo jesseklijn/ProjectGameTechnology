@@ -25,13 +25,19 @@ public:
 		const char* soundFile,
 		float volume);
 	static void TestSound3D();
-	static void SoundEffect3D(
+	static void InitSoundEffect3D(
 		const char* soundFile,
 		irr::core::vector3df sourcePos,
 		float volume);	
+	static void Sound3D();
 
 	static irrklang::ISound* soundEffect;
 
 private:
 	static irrklang::ISound* backGroundMusic;		
 };
+
+class SoundEffect
+{
+
+}
