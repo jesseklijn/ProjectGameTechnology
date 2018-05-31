@@ -800,7 +800,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
 
 
-	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/ruins.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
+	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins2.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
 
@@ -809,28 +809,81 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 
 	if (loadingType == SceneManager::BASICS) {
 		GameManager::device->setWindowCaption(L"Loading BASICS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)	), true, 0, -1, L"test");
 
 	}
 	else if (loadingType == SceneManager::CREATURES)
 	{
 		GameManager::device->setWindowCaption(L"Loading CREATURES Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/Creatures.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Creatures.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
 	}
 	else if (loadingType == SceneManager::WORLD)
 	{
 		GameManager::device->setWindowCaption(L"Loading WORLD Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/World.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/World.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
 	}
 	else if (loadingType == SceneManager::LAND_MARKS)
 	{
 		GameManager::device->setWindowCaption(L"Loading LAND_MARKS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/Landmarks.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Landmarks.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
 	}
+	else if (loadingType == SceneManager::PLAYER)
+	{
+		GameManager::device->setWindowCaption(L"Loading PLAYER Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/player.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
+	}
+	else if (loadingType == SceneManager::RELICS)
+	{
+		GameManager::device->setWindowCaption(L"Loading RELIC Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/relics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::CRITTERS)
+	{
+		GameManager::device->setWindowCaption(L"Loading CRITTERS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/critters.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::RUINS)
+	{
+		GameManager::device->setWindowCaption(L"Loading RUINS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Ruins.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::SHIPS)
+	{
+		GameManager::device->setWindowCaption(L"Loading SHIPS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/ships.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::VINES)
+	{
+		GameManager::device->setWindowCaption(L"Loading VINES Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/vines.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::TERRORS)
+	{
+		GameManager::device->setWindowCaption(L"Loading TERRORS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/terrors.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::SHIPS)
+	{
+		GameManager::device->setWindowCaption(L"Loading SHIPS Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/ships.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
+	else if (loadingType == SceneManager::CORALS)
+	{
+		GameManager::device->setWindowCaption(L"Loading CORAL Terrors Of The Deep");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/coral.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+
+	}
 	GameManager::guienv->drawAll();
 
 }
