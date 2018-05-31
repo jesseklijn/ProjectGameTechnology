@@ -325,12 +325,41 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	{
 	case TITLE_SCREEN:
 	{
+		Menu* TitleMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+		TitleMenu->elementWidth = 200.0f;
+		TitleMenu->elementHeight = 124.0f;
+		TitleMenu->hasWindowTitle = false;
+		TitleMenu->hasBackground = true;
+		TitleMenu->background = GameManager::driver->getTexture("../media/UI/YouLose.png");
+		TitleMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - TitleMenu->elementWidth / 2.0f,
+			GameManager::screenDimensions.Height / 2.0f - TitleMenu->elementHeight / 2.0f, 0.0f));
+		GameManager::interfaceObjects.push_back(TitleMenu);
 
-	} break;
+		int buttonCount = 2;
+		float buttonWidth = TitleMenu->elementWidth - TitleMenu->elementSpacing * 2.0f;
+		float buttonHeight = 50.0f;
+		float buttonStartX = TitleMenu->getPosition().X + TitleMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
+		float buttonStartY = TitleMenu->getPosition().Y + TitleMenu->elementHeight - 1 -
+			((buttonHeight + TitleMenu->elementSpacing) * buttonCount);
+
+		for (int bIndex = 0; bIndex < buttonCount; bIndex++)
+		{
+			Button* button = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing) * bIndex)), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+				(Button::ButtonType)((int)Button::GO_RETRY + bIndex), 0, GameManager::smgr, 15000);
+			button->creator = TitleMenu;
+			button->elementWidth = buttonWidth;
+			button->elementHeight = buttonHeight;
+			GameManager::interfaceObjects.push_back(button);
+		}
+	}
+	break;
+
 	case LOADING:
 	{
 
-	} break;
+	}
+	break;
 
 
 	case LEVEL:
@@ -408,7 +437,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Make a playingField (mesh out of grid)
 		GridMesh* playingField = new GridMesh(
 			new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200,
-			              -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)),
+				-GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)),
 			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
 			GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
 
@@ -505,7 +534,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
 		//Bug: This file causes a memory allocation problem
 		//meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
-		
+
 		// List contains rock game objects
 		vector<GameObject*> rockList;
 
@@ -721,7 +750,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	SceneManager::OnSceneChange();
 	return true;
 }
+void SceneManager::TitleScene()
+{
 
+}
 /* Pauses the current scene by setting the game speed multiplier to 0. */
 void SceneManager::PauseScene(bool mode)
 {
@@ -800,7 +832,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
 
 
-	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins1536x864.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
+	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins1536x864.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
 
@@ -809,7 +841,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 
 	if (loadingType == SceneManager::BASICS) {
 		GameManager::device->setWindowCaption(L"Loading BASICS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)	), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
 	}
 	else if (loadingType == SceneManager::CREATURES)
