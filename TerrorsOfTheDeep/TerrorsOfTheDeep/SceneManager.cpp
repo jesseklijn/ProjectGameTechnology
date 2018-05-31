@@ -162,13 +162,8 @@ void SceneManager::Update()
 					if (cageShouldDescend)
 					{
 						cageShouldDescend = false;
+						GameManager::levelPlayer->canMove = true;
 						SceneManager::introKeyOverlayTimer = SceneManager::introKeyOverlayTime;
-
-						// Replace the intro camera with a new camera with keymapping for movement
-						vector3df currentCameraPosition = camera->camera->getPosition();
-						vector3df currentCameraLookAt = camera->camera->getTarget();
-						camera->CreateCamera(currentCameraPosition, currentCameraLookAt,
-							camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
 					}
 				}
 			}
@@ -363,9 +358,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		// Create a keymap-less camera for the intro sequence
 		camera = new Camera(GameManager::smgr);
-		camera->CreateCamera(vector3df(0, GameManager::WORLD_RADIUS_Y - 1000.0f, 0), vector3df(-90, 0, 0),
-			camera->cameraRotationSpeed, camera->cameraSpeed, camera->cameraFarValue);
-
 		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
 
 
