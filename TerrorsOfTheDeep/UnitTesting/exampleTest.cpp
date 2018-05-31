@@ -5,23 +5,35 @@
 ////specific cpp file where the unit test is
 #include "../TerrorsOfTheDeep/UnitTests.cpp"
 #include "../TerrorsOfTheDeep/Fish.h"
+#include "../TerrorsOfTheDeep/SoundEngine.h"
+#include "../TerrorsOfTheDeep/Sound.h"
+#include <irrKlang.h>
+#include <irrlicht.h>
 
 
 //unit test
-TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
-{
-	REQUIRE(UnitTestExample(0) == 0);
-	REQUIRE(UnitTestExample(1) == 2);
-	REQUIRE(UnitTestExample(2) == 4);
-	REQUIRE(UnitTestExample(4) == 6);
-	REQUIRE(UnitTestExample(10) == 20);
-}
+//TEST_CASE("Example: ints are multiplied", "[UnitTestExample]")
+//{
+//	int test = 5;
+//
+//	REQUIRE(SoundEngine::_SoundEngine() != 0);
+//}
 
-TEST_CASE("Example: vectors", "[CalculateDistance]")
-{
+//unit test
+//TEST_CASE("Example: ints are multiplied", "[UnitTestExample]") 
+//{
+//	REQUIRE(UnitTestExample(0) == 0);
+//	REQUIRE(UnitTestExample(1) == 2);
+//	REQUIRE(UnitTestExample(2) == 4);
+//	REQUIRE(UnitTestExample(4) == 6);
+//	REQUIRE(UnitTestExample(10) == 20);
+//}
 
-	REQUIRE(CalculateDistance(irr::core::vector3df(0, 0, 0), irr::core::vector3df(0, 0, 0)) == 5.f);
-}
+//TEST_CASE("Example: vectors", "[CalculateDistance]")
+//{
+//
+//	REQUIRE(CalculateDistance(irr::core::vector3df(0, 0, 0), irr::core::vector3df(0, 0, 0)) == 5.f);
+//}
 
 
 

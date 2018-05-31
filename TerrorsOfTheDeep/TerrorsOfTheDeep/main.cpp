@@ -68,6 +68,10 @@ int main()
 		sceneManager.Draw();	
 		gameManager.Draw();
 		GameManager::guienv->drawAll();
+		
+		Sound::TestSound3D();
+
+
 
 		// Our frame is finished
 		GameManager::driver->endScene();
@@ -83,7 +87,7 @@ int main()
 	GameManager::device->drop();
 
 	// Stop sound
-	Sound::SoundShutdown();
+	Sound::DropAllSounds();
 
 	return 0;
 }

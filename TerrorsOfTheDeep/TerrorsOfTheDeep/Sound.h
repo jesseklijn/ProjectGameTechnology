@@ -13,7 +13,8 @@ class Sound
 public:
 	Sound();
 	~Sound();
-	static void SoundShutdown();
+	static void DropAllSounds();
+	static void StopSounds();
 	static void BackGroundMusic2D(
 		const char* soundFile,
 		float volume);
@@ -23,11 +24,14 @@ public:
 	static void SoundEffect2D(
 		const char* soundFile,
 		float volume);
+	static void TestSound3D();
 	static void SoundEffect3D(
 		const char* soundFile,
-		float volume, irr::core::vector3df sourcePos);	
+		irr::core::vector3df sourcePos,
+		float volume);	
+
+	static irrklang::ISound* soundEffect;
 
 private:
-	static irrklang::ISound* backGroundMusic;	
-	static irrklang::ISound* soundEffect;
+	static irrklang::ISound* backGroundMusic;		
 };
