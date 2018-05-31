@@ -123,7 +123,7 @@ void Monster::ExecuteState()
 		moveSpeed = chaseSpeed;
 		stateUpdateTime = GameManager::deltaTimeMS;
 
-		if ((Player*)targetAttack && targetDistance <= attackKillRange)
+		if ((Player*)targetAttack && targetDistance <= attackKillRange && !SceneManager::introIsActive)
 			GameManager::gameOver = true;
 
 		// When the shark at any time moves away from the target, we count this as an attack try.

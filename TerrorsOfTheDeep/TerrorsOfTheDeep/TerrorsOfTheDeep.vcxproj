@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\HvA\Game Technology\IrrlichtSDK\noiselib\include\noise;$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\HvA\Game Technology\IrrlichtSDK\noiselib\bin;$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\lib;$(IRRKLANG_HOME)\lib</LibraryPath>
+    <IncludePath>$(IRRLICHT_HOME)\include\noiselib\include\noise;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;$(IRRLICHT_HOME)\irrlicht-1.8.4\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(IRRLICHT_HOME)\noiselib\bin;$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\lib\Win32-visualStudio;$(IRRLICHT_HOME)\irrlicht-1.8.4\lib\Win32-visualstudio</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(IRRKLANG_HOME)\include;$(IncludePath);;$(IRRKLANG_HOME)\include</IncludePath>
@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep;$(IRRKLANG_HOME)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\irrlicht-1.8.4\include;$(IRRLICHT_HOME)\noiselib\include\noise;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>D:\HvA\Game Technology\IrrlichtSDK\noiselib\bin;$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

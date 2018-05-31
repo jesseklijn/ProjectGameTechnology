@@ -9,14 +9,18 @@ static const float KEYLIGHT_RADIUS = 1000.0f;
 static const float CHESTLIGHT_RADIUS = 1000.0f;
 static const float FLASHLIGHT_RANGE = 4000.0f;
 
+
 GameObject* SceneManager::defaultGameObject;
 vector<GameObject*> SceneManager::defaultGameObjectList;
 
 SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
 SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
 bool SceneManager::sceneIsPaused = false;
+int meshSelector;
 
-
+GameObject* SceneManager::levelMonster = nullptr;
+GameObject* SceneManager::levelPlayer = nullptr;
+IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
 
 // Light data
@@ -155,7 +159,7 @@ void SceneManager::Update()
 
 				rayStart = divingCage->getAbsolutePosition();
 				rayEnd = rayStart + vector3df(0.0f, -400.0f, 0.0f);
-				bool touchedDown = (GameManager::PerformRaycast(rayStart, rayEnd) != 0);
+				bool touchedDown = (GameManager::PerformRaycast(rayStart, rayEnd, SceneManager::levelPlane->getID()) != 0);
 				if (touchedDown)
 				{
 					// Start the key overlay timer
@@ -306,6 +310,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			delete intObj;
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
+	SceneManager::levelMonster = nullptr;
+	SceneManager::levelPlayer = nullptr;
+	SceneManager::levelPlane = nullptr;
 	SceneManager::mouseOverlay = nullptr;
 	SceneManager::keyOverlay = nullptr;
 
@@ -363,9 +370,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		// Spawn player in cage
 		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 5,
-			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1111, playerMesh, GameManager::driver->getTexture("../media/armsText.jpg"));
+			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/armsText.jpg"));
 		GameManager::gameObjects.push_back(player);
 		GameManager::levelPlayer = player;
+		player->isKinematic = true;
 
 		GameObject* cage = new GameObject(new vector3df(player->getParent()->getPosition().X, player->getParent()->getPosition().Y - 400.0f, player->getParent()->getPosition().Z),
 			new vector3df(1, 1, 1),
@@ -387,31 +395,38 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			true,
 			player);
 
-		// Spawn shark
-		Shark* shark = new Shark(new vector3df(40000, 5000, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-			0, GameManager::smgr, -1111,
+		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
+			new vector3df(1, 1, 1),
+			new vector3df(0, 0, 0),
+			0,
+			GameManager::smgr,
+			-1111,
 			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-			0, false);
-		GameManager::levelMonster = shark;
+			0,
+			false);
+		SceneManager::levelMonster = shark;
 		GameManager::gameObjects.push_back(shark);
 
 		StartLoadingScreen(SceneManager::WORLD);
 		EndLoadingScreen();
 		// Make a playingField (mesh out of grid)
-		GridMesh* playingField = new GridMesh(
-			new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2), -200,
-			              -GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)),
-			new vector3df(1, 1, 1), new vector3df(0, 0, 0),
-			GameManager::smgr->getRootSceneNode(), GameManager::smgr, -100, 0, 0);
-
+		GridMesh* playingField = new GridMesh(new vector3df(-GameManager::WORLD_RADIUS_X - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2),
+			-300,
+			-GameManager::WORLD_RADIUS_Z - ((GridMesh::GRID_OFFSET * GridMesh::CELL_SIZE) / 2)),
+			new vector3df(1, 1, 1),
+			new vector3df(0, 0, 0),
+			0,
+			GameManager::smgr,
+			-100);
 		GameManager::gameObjects.push_back(playingField);
 		playingField->isKinematic = true;
+		SceneManager::levelPlane = playingField->mesh;
 
 		ITriangleSelector* selector = GameManager::smgr->createTriangleSelector(playingField->mesh);
 		playingField->mesh->setTriangleSelector(selector);
 		selector->drop();
 
-		// Spawn random objects on grid;
+		// Spawn random objects on grid
 		IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
 
 		// Key collectible object
@@ -456,10 +471,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			}
 		}
 
-		// Used for generating random meshes when creating game objects
-		int meshSelector;
-
-		// Uses the meshDirectionaries and meshTexture list to create game objects (rock)
+		// Spawn critters
 		meshDirectories.clear();
 		meshTextures.clear();
 		meshDirectories.push_back("../media/Fish/Fish1.obj"); meshTextures.push_back("");
@@ -497,7 +509,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
 		//Bug: This file causes a memory allocation problem
 		meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
-		
+
 		// List contains rock game objects
 		vector<GameObject*> rockList;
 
@@ -792,7 +804,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
 
 
-	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
+	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
 
@@ -801,7 +813,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 
 	if (loadingType == SceneManager::BASICS) {
 		GameManager::device->setWindowCaption(L"Loading BASICS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)	), true, 0, -1, L"test");
+		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
 	}
 	else if (loadingType == SceneManager::CREATURES)
