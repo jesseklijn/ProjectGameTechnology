@@ -97,7 +97,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\noiselib\bin;$(IRRLICHT_HOME)\irrlicht-1.8.4\lib\Win32-visualstudio;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\lib\Win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>irrKlang.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Irrlicht.lib;irrKlang.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>LinkVerbose</ShowProgress>
       <HeapReserveSize>
       </HeapReserveSize>
