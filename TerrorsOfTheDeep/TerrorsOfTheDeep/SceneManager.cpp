@@ -800,7 +800,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
 
 
-	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins2.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
+	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0),false,0,-1,L"test");
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
 	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
 
