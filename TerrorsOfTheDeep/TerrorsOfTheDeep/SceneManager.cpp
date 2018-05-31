@@ -504,7 +504,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		meshDirectories.push_back("../media/Rocks/Rock1.obj"); meshTextures.push_back("");
 		meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
 		//Bug: This file causes a memory allocation problem
-		//meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
+		meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
 		
 		// List contains rock game objects
 		vector<GameObject*> rockList;

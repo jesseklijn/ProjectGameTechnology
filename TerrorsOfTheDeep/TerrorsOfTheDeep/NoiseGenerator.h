@@ -15,7 +15,7 @@ public:
 
 	// Get the pixel color of the texture. This is currently used for heightmapping to get the pixel color of the noise map.
 	// The pixel color determines the height.
-	irr::video::SColor getPixelColor(irr::video::ITexture* texture, int x = 0, int y = 0);
+	irr::video::SColor getPixelColor(irr::video::ITexture* texture, irr::video::IImage* image, int x = 0, int y = 0);
 
 	// Sizes of the image to make it usable for outside uses (outside the function)
 	int xSizeImage, ySizeImage;
