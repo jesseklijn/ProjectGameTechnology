@@ -54,6 +54,10 @@ float GameManager::creatureStateRange = 5000.0f;
 bool GameManager::gameOver = false;
 const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
+/* Seed the random number generator, so we don't end up with
+the same random numbers on every run */
+int GameManager::gameSeed = 0;
+
 // World dimensions
 const int GameManager::WORLD_RADIUS_X = 12000.0f;
 const int GameManager::WORLD_RADIUS_Y = 12000.0f;

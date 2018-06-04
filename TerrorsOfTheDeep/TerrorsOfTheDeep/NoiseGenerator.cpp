@@ -32,6 +32,7 @@ NoiseGenerator::~NoiseGenerator()
 	utils::NoiseMap heightMap;
 	utils::NoiseMapBuilderPlane heightMapBuilder;
 
+	myModule->SetSeed(GameManager::gameSeed);
 	myModule->SetFrequency(1.0); // Defines the strength of the noise
 	heightMapBuilder.SetSourceModule(*myModule);
 	heightMapBuilder.SetDestNoiseMap(heightMap);
