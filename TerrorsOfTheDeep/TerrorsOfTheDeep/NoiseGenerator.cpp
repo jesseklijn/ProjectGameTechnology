@@ -31,6 +31,8 @@ NoiseGenerator::~NoiseGenerator()
 /// First a Perlin module has to be made to create perlin noise. Here you can modify what kind of noise you want to create (IE you can set the frequency of the noise). <br/>
 /// This will be passed on to the NoiseMapBuilderPlane where the noise map will be build.<br/>
 /// After that a renderer module is used to render this build into an image. The writer is used to output the image which will create an image to the given file path.<br/>
+/// <b>Output</b><br/>
+/// A noise map that has generated and placed in the "fileDestName" path.
 
  void NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
@@ -77,6 +79,8 @@ NoiseGenerator::~NoiseGenerator()
 /// The default pixel color is black if a parameter is missing or not correct so it will return a black color if this is the case. <br/>
 /// After the checks, the function will use the texture to get the original size (incase if it's scaled somewhere else). <br/>
 /// The color of the pixel of the given coordinates will be calculated by using an irrlicht builtin function "getPixel". This value will be returned to the caller <br/>
+/// <b>Output</b><br/>
+/// A SColor value of the given image of the given pixel
 video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, video::IImage* image, int x, int y)
  {
 	// Set the default color of the pixel 
