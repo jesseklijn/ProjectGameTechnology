@@ -54,9 +54,23 @@ void GridMesh::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
-/* The grid generation makes use of a seed which makes it possible to get different vertices every time the playing mesh gets generated.
-The output (not from the function) is an IAnimatedMeshSceneNode which is the mesh component for the GameObject class. This mesh will be added to the GameObject of the playing field.
-*/
+/// The grid generation makes use a heightmap which makes it possible to get different vertices every time the playing mesh gets generated. <br/>
+/// <b>Components</b><br/>
+/// SMesh - The grid mesh will be put in a SMesh which is a static mesh <br/>
+/// SMeshBuffer - Makes it possible to modify the SMesh  <br/>
+/// IMeshManipulator - Allows the mesh to be modified by more built-in irrlicht functions (such as recalculating normals) <br/>
+/// SAnimatedMesh - Used to make a SMesh into a mesh without animation (GameObject uses SAnimatedMeshes to draw its mesh thus a SMesh cannot be assigned to the GameObject) <br/>
+/// <b>Usage</b><br/>
+/// This function is currently used to create a mesh out of a grid which uses a heightmap to create different and natural feeling heights to the vertices.
+/// <b>How does it work?</b><br/>
+/// After assigning the size of the grid, it also gets multiplied by 2 (to get the grid in the center for positioning purposes) and the offset gets added. <br/>
+/// All the components of the grid has to be instantiated and added to their corresponding components. <br/>
+/// After that, the vertices and triangles are drawn by giving the grid size as parameters. These functions will return a list of vertices and triangles to the caller. </br>
+/// The vertices and triangles are added to the SMesh </br>
+/// The bounding box and normals are recalculated to make the lighting and collisions work as they should.  </br>
+/// This SMesh will be added to the SAnimatedMesh so it will be compatible with GameObject.  </br>
+/// Then the mesh's position will be set to their parent position and the texture will be added to the mesh. </br>
+
 void GridMesh::GenerateMesh()
 {
 	// Sets the total grid size to be generated (including the offset)
@@ -83,7 +97,7 @@ void GridMesh::GenerateMesh()
 	buffer->recalculateBoundingBox();
 
 	// Convert the SMesh into a SAnimatedMesh (GameObjects uses SAnimatedMesh only and not 1 static mesh which is this sMesh)
-	// So by putting the sMesh into a SAnimatedMesh, it creates a mesh with no animation
+	// So by putting the sMesh into a SAnimatedMesh; it creates a mesh with no animation
 	meshGrid->addMesh(sMesh);
 
 	// Adds the SAnimatedMesh to the mesh of gameObject 
@@ -106,8 +120,31 @@ const aabbox3d<f32>&  GridMesh::getBoundingBox() const
 	return box;
 }
 
-// Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.
-// Either use a list with GameObjects or a single GameObject. One of the 2 must be given as a parameter.
+/// Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.  <br/>
+/// Either use a list with GameObjects or a single GameObject. One of the 2 must be given as a parameter. <br/>
+/// <b>Parameters</b><br/>
+/// meshBuffer - Buffer of the mesh you wish to place the GameObjects on <br/>
+/// rootPosition - Parent position of the mesh<br/>
+/// gameObjectList - A list of GameObjects (this is used when multiple GameObjects needs to be placed on the mesh)<br/>
+/// singleGameObject - A single GameObject (this is used when only one GameObject needs to be placed on the mesh)<br/>
+/// positionOffset - Offset of the placement <br/>
+/// excludeOffset - Should the GameObject(s) spawn within the offset (level boundaries)? <br/>
+/// resetOffsetPlacement - Don't track the placements outside the offset (this is used for spawning key items / chests so the GameObjects in the next call can spawn outside the level boundaries) <br/>
+/// <b>Usage</b><br/>
+/// This function is currently used to place GameObject(s) on the given mesh. In this case it's a grid mesh. <br/>
+/// <b>How does it work?</b><br/>
+/// The function will check if a list or a single GameObject is given. If it's a list then the amount variable will be the same as the size of the list. If it's a single then the amount is 1. <br/>
+/// This is used for determining the amount of loops in the for-loop later. A list of bool will be made for keeping track of what vertices already has a GameObject spawned on them. <br/>
+/// The amount of vertices is the same as the size of this list; the list represents the vertices of the mesh. <br/>
+/// If the excludeOffset parameter is true then the vertices outside the level boundaries will be excluded (will be set to true in the list).<br/>
+/// After this, a check will be made if there's a previous call (from the same grid) made so there can't be two GameObjects spawning on a single vertex. <br/>
+/// A while(true) will be used to place all the GameObjects on the vertices by using a random seed generator to choose the vertex. <br/>
+/// for-loop is used to loop through all the GameObjects. <br/>
+/// There's a break on every successful GameObject placement; this breaks the while(true). <br/>
+/// It also sets the bool in the list to true so for the next call. <br/> 
+/// there won't be another GameObject spawning on that same vertex. <br/>
+/// If the placement has failed X amount of times (determined by "timeOutTries" variable), it will skip the GameObject. <br/> 
+/// After every GameObject has placed on the vertex, the bool list will be saved in a global variable so it can be used for the next call. <br/>
 void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df rootPosition, vector<GameObject*> gameObjectList, GameObject* singleGameObject, vector3df
                                              positionOffset, bool excludeOffset, bool resetOffsetPlacement)
 {
@@ -248,7 +285,22 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 	}
 	return;
 }
-
+/// Draws the vertices of the grid <br/>
+/// <b>Parameters</b><br/>
+/// xSizeGrid and ySizeGrid - Determines the size of the grid that it needs to draw the vertices <br/>
+/// useHeightmap - Should the vertices make use of a heightmap? Or you wan't a plain grid with vertices where the y coordinates are the same<br/>
+/// <b>Usage</b><br/>
+/// This function is currently used for drawing the vertices of the gridMesh
+/// <b>How does it work?</b><br/>
+/// A heightMap will be generated if the bool is true. A NoiseGenerator has to be instantiated in order to generate a height map. <br/>
+/// After the height map has been generated, the height map needs to fit the mesh. By dividing the height map with the grid size, <br/>
+/// you get even parts of the height map so it will use the whole height map instead of a small part. This value will be saved as float variables "precisionX" and "precisionY" <br/>
+/// After this, the vertices are drawn by using the x and y values from the for-loop and multiplying by the CELL_SIZE constant variable to make a bigger grid. <br/>
+/// The reason why the y variable is on the z-axis of the vertex is because it is a 2D grid. So you have to rotate it by 90 degrees every time you generate vertex. <br/> 
+/// the y-axis defines the height of the vertices and a color picker function is used for this. A multiplier is used to make the color differences bigger (the height will differ greater between each other as well) <br/>
+/// If no height map is used then the vertices are generated without any height differences. <br/>
+/// <b>Output</b><br/>
+/// A list of vertex.
 core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap)
 {
 	// Buffer to put the vertices in it. The vertices will be returned as an array and not the whole buffer.
@@ -296,22 +348,37 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 	return bufferMesh->Vertices;
 }
 
+/// Draws the triangles of the grid <br/>
+/// <b>Parameters</b><br/>
+/// xSizeGrid and ySizeGrid - Determines the size of the grid that it needs to draw the triangles <br/>
+/// <b>Usage</b><br/>
+/// This function is currently used for drawing the triangles of the gridMesh
+/// <b>How does it work?</b><br/>
+/// A simple triangle technique is used for this where:  <br/>
+/// ri -Keeps track of the row above the selected vertex. <br/>
+/// y - Keeps track of the y vertices of the grid<br/>
+/// x - Keeps track of the x vertices of the grid<br/>
+/// +1 is used to get the next vertex of the selected vertex
+/// <b>Output</b><br/>
+/// A list of triangles.
 core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 {
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
 
 	// Create triangles for the mesh
-	for (int i = 0, ri = 0; i < ySizeGrid; i++, ri += xSizeGrid) 
+	for (int y = 0, ri = 0; y < ySizeGrid; y++, ri += xSizeGrid) 
 	{
-		for (int j = 0; j < xSizeGrid; j++) 
+		for (int x = 0; x < xSizeGrid; x++) 
 		{
-			bufferMesh->Indices.push_back(j + ri + i);
-			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 1 + i);
-			bufferMesh->Indices.push_back(j + ri + 1 + i);
+			// Draws the first triangle
+			bufferMesh->Indices.push_back(x + ri + y);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + x + 1 + y);
+			bufferMesh->Indices.push_back(x + ri + 1 + y);
 
-			bufferMesh->Indices.push_back(j + ri + 1 + i);
-			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 1 + i);
-			bufferMesh->Indices.push_back(xSizeGrid + ri + j + 2 + i);
+			// Draws the second triangle (to make a quad)
+			bufferMesh->Indices.push_back(x + ri + 1 + y);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + x + 1 + y);
+			bufferMesh->Indices.push_back(xSizeGrid + ri + x + 2 + y);
 		};
 	}
 

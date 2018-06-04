@@ -19,8 +19,19 @@ NoiseGenerator::NoiseGenerator()
 NoiseGenerator::~NoiseGenerator()
 {
 }
-// Generate a noise map to be used for the level generation. imageSizeX and imageSizeY defines the size of the noise map.
-// fileDestName determines the noise map name and where the noise map will save.
+
+/// Generate a noise map to be used for the level generation. 
+/// <br/><b>Parameters</b><br/>
+/// imageSizeX and imageSizeY - The size of the noise map<br/>
+/// fileDestName - Tells the function where the noise map should be saved and what the noise map is named.<br/>
+/// <b>Usage</b><br/>
+/// A new file will be created after running the program once. You can find the heightmap back in the fileDestName. <br/>
+/// A noise map has many usages such as heightmapping and creating textures.<br/>
+/// <b>How does it work?</b><br/>
+/// First a Perlin module has to be made to create perlin noise. Here you can modify what kind of noise you want to create (IE you can set the frequency of the noise). <br/>
+/// This will be passed on to the NoiseMapBuilderPlane where the noise map will be build.<br/>
+/// After that a renderer module is used to render this build into an image. The writer is used to output the image which will create an image to the given file path.<br/>
+
  void NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
 	// Set image size to the value of the parameter to be used outside the function
@@ -36,12 +47,12 @@ NoiseGenerator::~NoiseGenerator()
 	heightMapBuilder.SetSourceModule(*myModule);
 	heightMapBuilder.SetDestNoiseMap(heightMap);
 
-	// Set noise map size and the boundaries of the noise map
+	// Set noise map size and the boundaries of the noise map and also build the noise map
 	heightMapBuilder.SetDestSize(xSizeImage, ySizeImage);
 	heightMapBuilder.SetBounds(2.0, 6.0, 1.0, 5.0);
 	heightMapBuilder.Build();
 
-	// Render the image for the output of the noise map
+	// Render the image from the build 
 	utils::RendererImage renderer;
 	utils::Image image;
 	renderer.SetSourceNoiseMap(heightMap);
@@ -55,7 +66,17 @@ NoiseGenerator::~NoiseGenerator()
 	writer.WriteDestFile();
 }
 
-// Get the color of the pixel in the selected texture
+/// Get the color of the pixel in the selected texture. 
+/// <br/><b>Parameters</b><br/>
+/// Texture - Texture of the object you want to get the pixel color from (this is used for determining the dimensions of the texture).<br/>
+/// Image - Image of the texture (this is used for determining the dimensions of the texture) <br/>
+/// X and Y - Coordinates of the pixel <br/>
+/// <b>Usage</b><br/>
+/// This function is currently used for heightmapping where the value determines the vertex's height. <br/>
+/// <b>How does it work?</b><br/>
+/// The default pixel color is black if a parameter is missing or not correct so it will return a black color if this is the case. <br/>
+/// After the checks, the function will use the texture to get the original size (incase if it's scaled somewhere else). <br/>
+/// The color of the pixel of the given coordinates will be calculated by using an irrlicht builtin function "getPixel". This value will be returned to the caller <br/>
 video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, video::IImage* image, int x, int y)
  {
 	// Set the default color of the pixel 
@@ -79,9 +100,7 @@ video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, video::IIm
 		 return pixel;
 	 }
 
-	  pixel = image->getPixel(x, y);
-
-	 return pixel;
+	 return image->getPixel(x, y);
  }
 
 
