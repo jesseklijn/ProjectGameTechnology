@@ -25,9 +25,15 @@ public:
 	irr::core::aabbox3d<irr::f32> Box;
 	irr::video::S3DVertex vertices[8];
 	irr::video::SMaterial Material;
+	irr::scene::IParticleSystemSceneNode* particleSystem;
+	irr::scene::IParticleEmitter* particleEmitter;
 
 	float speed;
 	bool canMove = false;
+	float bubbleStartTime = 5.0f * 1000.0f;
+	float bubbleStartTimer = 0.0f;
+	float bubbleDurationTime = 1.0f * 1000.0f;
+	float bubbleDurationTimer = 0.0f;
 
 	// used?
 	irr::core::vector3df latestPos;
