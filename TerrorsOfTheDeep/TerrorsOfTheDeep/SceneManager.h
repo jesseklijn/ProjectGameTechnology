@@ -18,11 +18,12 @@
 #include <iostream>
 #include "FlockingEntity.h"
 #include <chrono>
+#include "Fader.h"
 #pragma endregion
 
 // Forward declaration
 class Menu;
-class Fader;
+//class Fader;
 
 /* Class responsible for managing different scenes in the game.
 This includes scenes like a title screen, loading screen etcetera. */

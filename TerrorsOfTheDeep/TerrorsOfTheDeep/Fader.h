@@ -19,7 +19,7 @@ public:
 	};
 	FaderMode faderMode = FADE_IN;
 
-	bool isFading = true;
+	bool isFading = false;
 	float alphaIncrement = 1.0f;
 
 

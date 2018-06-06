@@ -8,7 +8,7 @@ Fader::Fader(irr::core::vector2df * startPosition, irr::core::vector2df * startS
 	irr::scene::ISceneNode * parent, irr::scene::ISceneManager * mgr, irr::s32 id)
 	: InterfaceObject(startPosition, startScale, startRotation, parent, mgr, id)
 {
-
+	std::cout << "Testtt";
 }
 
 Fader::~Fader()
@@ -18,8 +18,11 @@ Fader::~Fader()
 
 void Fader::Update()
 {
+	std::cout << alpha << std::endl;
 	if (isFading)
 	{
+		
+
 		switch (faderMode)
 		{
 		case FADE_IN:

@@ -1,5 +1,7 @@
+#pragma once
 #include "Button.h"
 #include "GameManager.h"
+#include "Fader.h"
 
 
 Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation,
@@ -111,6 +113,9 @@ void Button::ButtonMouseLeave()
 depending on the button's type. */
 void Button::ButtonPressed()
 {
+	//if (SceneManager::fader->isFading)
+		//return;
+
 	switch (buttonType)
 	{
 	case PM_RESUME:
@@ -120,24 +125,24 @@ void Button::ButtonPressed()
 
 	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 	{
-		SceneManager::PauseScene(false);
-		SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
-	} break;
+		SceneManager::fader->faderMode = Fader::FADE_OUT;
+		SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_MAIN;
+		SceneManager::fader->isFading = true;
+	}
+	break;;
 
 	case PM_QUIT: case MM_QUIT:
 	{
 		GameManager::device->closeDevice();
 	} break;
 
-	case GO_RETRY:
+	case GO_RETRY: case MM_START:
 	{
-		SceneManager::LoadScene(SceneManager::LEVEL);
+		SceneManager::fader->faderMode = Fader::FADE_OUT;
+		SceneManager::fader->alpha = 0.0f;
+		SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_LEVEL;
+		SceneManager::fader->isFading = true;
 	} break;
-
-	case MM_START:
-		{
-		SceneManager::LoadScene(SceneManager::LEVEL);
-		}
 
 	default: break;
 	}
