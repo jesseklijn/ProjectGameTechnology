@@ -54,6 +54,10 @@ float GameManager::creatureStateRange = 5000.0f;
 bool GameManager::gameOver = false;
 const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
+/* Seed the random number generator, so we don't end up with
+the same random numbers on every run */
+int GameManager::gameSeed = 0;
+
 // World dimensions
 const int GameManager::WORLD_RADIUS_X = 12000.0f;
 const int GameManager::WORLD_RADIUS_Y = 12000.0f;
@@ -76,7 +80,7 @@ int GameManager::skullCount = 2;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0002f);
+	GameManager::driver->setFog(SColor(1, 10, 10, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0003f);
 	GameManager::guienv->getSkin()->setFont(GameManager::font);
 	GameManager::smgr->setShadowColor(SColor(100, 0, 0, 0));
 	

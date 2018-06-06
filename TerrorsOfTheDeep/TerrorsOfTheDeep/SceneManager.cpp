@@ -158,7 +158,7 @@ void SceneManager::Update()
 				SceneManager::divingCage->Move(introCageDescendRate * GameManager::deltaTime, vector3df(0.0f, -1.0f, 0.0f));
 
 				rayStart = divingCage->getAbsolutePosition();
-				rayEnd = rayStart + vector3df(0.0f, -400.0f, 0.0f);
+				rayEnd = rayStart + vector3df(0.0f, -100.0f, 0.0f);
 				bool touchedDown = (GameManager::PerformRaycast(rayStart, rayEnd, SceneManager::levelPlane->getID()) != 0);
 				if (touchedDown)
 				{
@@ -365,12 +365,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		// Create a keymap-less camera for the intro sequence
 		camera = new Camera(GameManager::smgr);
-		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/FPSArms.obj");
+		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/Player/FPSArms.obj");
 
 
 		// Spawn player in cage
 		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 5,
-			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/armsText.jpg"));
+			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/Player/armsText.jpg"));
 		GameManager::gameObjects.push_back(player);
 		GameManager::levelPlayer = player;
 		player->isKinematic = true;
@@ -419,6 +419,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr,
 			-100);
 		GameManager::gameObjects.push_back(playingField);
+		playingField->mesh->setID(-1337);
 		playingField->isKinematic = true;
 		SceneManager::levelPlane = playingField->mesh;
 
