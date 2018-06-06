@@ -43,7 +43,7 @@ int main()
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
-	//DetectCollision detectCollision;
+	DetectCollision detectCollision;
 
 	GameManager::gameSeed = rand() % 100000;
 
@@ -61,14 +61,15 @@ int main()
 		// Update the world
 		sceneManager.Update();
 		gameManager.Update();		
-		//detectCollision.Detect(GameManager::smgr);
+		if (SceneManager::scene == SceneManager::LEVEL) detectCollision.Detect(GameManager::smgr);
+		else detectCollision.ResetArray();
 
-			// Draw the world
-			GameManager::smgr->drawAll();
-			GameManager::guienv->clear();
-			sceneManager.Draw();
-			gameManager.Draw();
-			GameManager::guienv->drawAll();
+		// Draw the world
+		GameManager::smgr->drawAll();
+		GameManager::guienv->clear();
+		sceneManager.Draw();
+		gameManager.Draw();
+		GameManager::guienv->drawAll();
 
 		// Our frame is finished
 		GameManager::driver->endScene();

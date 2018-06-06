@@ -571,7 +571,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				rock->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
+			GameManager::gameObjects.push_back(rock);
 			rockList.push_back(rock);
 		}
 		StartLoadingScreen(SceneManager::RUINS);
@@ -613,7 +613,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				ruins->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
+			//GameManager::gameObjects.push_back(ruins);
 			ruinsList.push_back(ruins);
 		}
 		StartLoadingScreen(SceneManager::CORALS);
@@ -655,7 +655,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				coral->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
+			GameManager::gameObjects.push_back(coral);
 			coralList.push_back(coral);
 		}
 		
@@ -692,7 +692,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				vines->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
 			vinesList.push_back(vines);
 		}
 
@@ -730,7 +729,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				skull->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
+			//GameManager::gameObjects.push_back(skull);
 			skullList.push_back(skull);
 		}
 		StartLoadingScreen(SceneManager::SHIPS);
@@ -771,7 +770,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				ship->mesh->getMaterial(mIndex).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF;
 			}
-
+			//GameManager::gameObjects.push_back(ship);
 			shipList.push_back(ship);
 		}
 
@@ -792,6 +791,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 	case GAME_OVER:
 	{
+		//DetectCollision::ResetArray();
 		Menu* gameOverMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
 		gameOverMenu->elementWidth = 200.0f;
