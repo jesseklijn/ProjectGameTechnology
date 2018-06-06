@@ -125,6 +125,7 @@ void Button::ButtonPressed()
 
 	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 	{
+		SceneManager::PauseScene(false);
 		SceneManager::fader->faderMode = Fader::FADE_OUT;
 		SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_MAIN;
 		SceneManager::fader->isFading = true;

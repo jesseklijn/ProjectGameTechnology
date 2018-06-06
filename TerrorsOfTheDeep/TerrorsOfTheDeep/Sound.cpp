@@ -52,14 +52,10 @@
 //#endif
 
 // Old Sound, works
+#pragma once
+#include "Sound.h"
+#include "GameManager.h"
 
-#include "sound.h"
-
-#define USE_IRRKLANG
-
-#ifdef USE_IRRKLANG
-
-#include <irrKlang.h>
 
 #pragma comment (lib, "irrKlang.lib")
 
@@ -92,9 +88,20 @@ void background_music(const char * file)
 	backMusic = engine->play2D(file, true, false, true);
 
 	if (backMusic != nullptr)
-	{
-		backMusic->setVolume(0.5f);
-	}
+		SetSoundVolume(backMusic, 0.5f);
+}
+
+void SetSoundVolume(irrklang::ISound* sound, float volume)
+{
+	if (sound == nullptr)
+		return;
+
+	sound->setVolume(GameManager::Clamp(volume, 0.0f, 5.0f));
+}
+
+irrklang::ISound * GetBackgroundSound()
+{
+	return backMusic;
 }
 
 void sound_shutdown()
@@ -105,11 +112,3 @@ void sound_shutdown()
 	if (engine)
 		engine->drop();
 }
-
-#else
-
-void sound_init(IrrlichtDevice *device) {}
-void sound_shutdown() {}
-void background_music(const c8 * file) {}
-
-#endif
