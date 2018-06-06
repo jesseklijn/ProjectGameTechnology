@@ -74,7 +74,7 @@ irr::core::vector3df SceneManager::scaleVariationRuins = vector3df(0, 0, 0);
 irr::core::vector3df SceneManager::rotationVariationRuins = vector3df(5, 360, 5);
 
 irr::core::vector3df SceneManager::baseScaleCorals = vector3df(2 , 2, 2);
-irr::core::vector3df SceneManager::scaleVariationCorals = vector3df(3, 3, 3);
+irr::core::vector3df SceneManager::scaleVariationCorals = vector3df(0, 0, 0);
 irr::core::vector3df SceneManager::rotationVariationCorals = vector3df(0, 0, 0);
 
 irr::core::vector3df SceneManager::baseScaleVines = vector3df(1, 1.5, 1);
