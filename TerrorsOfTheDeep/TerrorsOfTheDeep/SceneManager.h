@@ -101,7 +101,6 @@ public:
 	virtual Tag GetTag();
 
 	static bool LoadScene(SceneType sceneToLoad);
-	static void TitleScene();
 	static void PauseScene(bool mode);
 	static void OnSceneChange();
 

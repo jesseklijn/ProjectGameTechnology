@@ -45,7 +45,7 @@ int main()
 	SceneManager sceneManager;
 	//DetectCollision detectCollision;
 
-	sceneManager.LoadScene(SceneManager::LEVEL);
+	sceneManager.LoadScene(SceneManager::TITLE_SCREEN);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())

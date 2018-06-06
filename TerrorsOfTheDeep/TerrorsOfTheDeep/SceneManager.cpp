@@ -325,15 +325,24 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	{
 	case TITLE_SCREEN:
 	{
+		ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
+		skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
+		sound_init();
+		//TODO: Find title screen music
+		background_music("../media/AmbientUnderwaterMaddnes.ogg");
+		Lighting lighting = Lighting(GameManager::smgr);
+		lighting.SetSceneLight(ambientColor);
+
+		//TODO: Title Image
 		Menu* TitleMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
 		TitleMenu->elementWidth = 200.0f;
-		TitleMenu->elementHeight = 124.0f;
+		TitleMenu->hasWindow = false;
+		TitleMenu->hasWindowBorder = false;
 		TitleMenu->hasWindowTitle = false;
-		TitleMenu->hasBackground = true;
-		TitleMenu->background = GameManager::driver->getTexture("../media/UI/YouLose.png");
+		TitleMenu->elementHeight = 124.0f;
 		TitleMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - TitleMenu->elementWidth / 2.0f,
-			GameManager::screenDimensions.Height / 2.0f - TitleMenu->elementHeight / 2.0f, 0.0f));
+			GameManager::screenDimensions.Height / 2.0f, 0.0f));
 		GameManager::interfaceObjects.push_back(TitleMenu);
 
 		int buttonCount = 2;
@@ -341,17 +350,22 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		float buttonHeight = 50.0f;
 		float buttonStartX = TitleMenu->getPosition().X + TitleMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
 		float buttonStartY = TitleMenu->getPosition().Y + TitleMenu->elementHeight - 1 -
-			((buttonHeight + TitleMenu->elementSpacing) * buttonCount);
+			((buttonHeight + TitleMenu->elementSpacing) * 3);
 
-		for (int bIndex = 0; bIndex < buttonCount; bIndex++)
-		{
-			Button* button = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing) * bIndex)), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
-				(Button::ButtonType)((int)Button::GO_RETRY + bIndex), 0, GameManager::smgr, 15000);
-			button->creator = TitleMenu;
-			button->elementWidth = buttonWidth;
-			button->elementHeight = buttonHeight;
-			GameManager::interfaceObjects.push_back(button);
-		}
+
+		Button* startButton = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing))), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			(Button::ButtonType)((int)Button::MM_START), 0, GameManager::smgr, 15000);
+		startButton->creator = TitleMenu;
+		startButton->elementWidth = buttonWidth;
+		startButton->elementHeight = buttonHeight;
+		GameManager::interfaceObjects.push_back(startButton);
+
+		Button* quitButton = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing)) * 2), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			(Button::ButtonType)((int)Button::MM_QUIT), 0, GameManager::smgr, 15000);
+		quitButton->creator = TitleMenu;
+		quitButton->elementWidth = buttonWidth;
+		quitButton->elementHeight = buttonHeight;
+		GameManager::interfaceObjects.push_back(quitButton);
 	}
 	break;
 
@@ -749,10 +763,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 	SceneManager::OnSceneChange();
 	return true;
-}
-void SceneManager::TitleScene()
-{
-
 }
 /* Pauses the current scene by setting the game speed multiplier to 0. */
 void SceneManager::PauseScene(bool mode)

@@ -9,7 +9,9 @@ class Button : public InterfaceObject
 public:
 	enum ButtonType
 	{
-		// Pause Menu
+		// MM = Main Menu PM = Pause Menu GO = Game Over
+		MM_START,
+		MM_QUIT,
 		PM_RESUME,
 		PM_BACK_TO_MAIN,
 		PM_QUIT,

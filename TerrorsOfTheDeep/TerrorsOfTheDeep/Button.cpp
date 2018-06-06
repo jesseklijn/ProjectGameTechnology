@@ -2,7 +2,7 @@
 #include "GameManager.h"
 
 
-Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation, 
+Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation,
 	ButtonType buttonType, irr::scene::ISceneNode * parent, irr::scene::ISceneManager * mgr, irr::s32 id)
 	: InterfaceObject(startPosition, startScale, startRotation, parent, mgr, id)
 {
@@ -11,27 +11,33 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 
 	switch (buttonType)
 	{
-		case PM_RESUME:
-		{
-			buttonTitle = "Resume Game";
-		} break;
+	case MM_START:
+	{
+		buttonTitle = "Start Game";
+	}
+	break;
 
-		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
-		{
-			buttonTitle = "Main Menu";
-		} break;
+	case PM_RESUME:
+	{
+		buttonTitle = "Resume Game";
+	} break;
 
-		case PM_QUIT:
-		{
-			buttonTitle = "Quit";
-		} break;
+	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
+	{
+		buttonTitle = "Main Menu";
+	} break;
 
-		case GO_RETRY:
-		{
-			buttonTitle = "Retry";
-		} break;
+	case PM_QUIT: case MM_QUIT:
+	{
+		buttonTitle = "Quit Game";
+	} break;
 
-		default: break;
+	case GO_RETRY:
+	{
+		buttonTitle = "Retry";
+	} break;
+
+	default: break;
 	}
 }
 
@@ -107,27 +113,27 @@ void Button::ButtonPressed()
 {
 	switch (buttonType)
 	{
-		case PM_RESUME:
-		{
-			SceneManager::PauseScene(false);
-		} break;
+	case PM_RESUME:
+	{
+		SceneManager::PauseScene(false);
+	} break;
 
-		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
-		{
-			SceneManager::PauseScene(false);
-			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);			
-		} break;
+	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
+	{
+		SceneManager::PauseScene(false);
+		SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
+	} break;
 
-		case PM_QUIT:
-		{
-			GameManager::device->closeDevice();
-		} break;
+	case PM_QUIT: case MM_QUIT:
+	{
+		GameManager::device->closeDevice();
+	} break;
 
-		case GO_RETRY:
-		{
-			SceneManager::LoadScene(SceneManager::LEVEL);
-		} break;
+	case GO_RETRY: case MM_START:
+	{
+		SceneManager::LoadScene(SceneManager::LEVEL);
+	} break;
 
-		default: break;
+	default: break;
 	}
 }
