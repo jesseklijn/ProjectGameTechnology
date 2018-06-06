@@ -25,12 +25,12 @@ public:
 
 	/// Variables
 	static const int GRID_OFFSET = 10; //grid part that �sn't accessible by the player (field beyond level boundaries)
-	static const int CELL_SIZE = 250; //Define the size of 1 cell (1 unit)
+	static const int CELL_SIZE = 100; //Define the size of 1 cell (1 unit)
 	irr::core::vector3df* startPos;
 	int xSizeGrid, ySizeGrid;
 
 	/// Ground modifiers
-	int heightMultiplier = 3;  //defines the max ground differences between the vertices
+	int heightMultiplier = 10;  //defines the max ground differences between the vertices
 
 	/// Functions 
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);

@@ -63,6 +63,8 @@ public:
 	// Event receiver
 	static EventManager eventManager;
 
+	static int gameSeed;
+
 	// A list of all X or derived classes of X in the scene
 	static std::vector<GameObject*> gameObjects;
 	static std::vector<InterfaceObject*> interfaceObjects;

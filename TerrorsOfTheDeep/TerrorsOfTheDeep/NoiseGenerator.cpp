@@ -53,6 +53,12 @@ NoiseGenerator::~NoiseGenerator()
 	NoiseMap heightMap;
 	NoiseMapBuilderPlane heightMapBuilder;
 
+	billow.SetSeed(GameManager::gameSeed);
+	mountainTerrain.SetSeed(GameManager::gameSeed);
+	baseFlatTerrain.SetSeed(GameManager::gameSeed);
+	terrainType.SetSeed(GameManager::gameSeed);
+	finalTerrain.SetSeed(GameManager::gameSeed);
+
 	baseFlatTerrain.SetFrequency(1.0);
 	flatTerrain.SetSourceModule(0, baseFlatTerrain);
 	flatTerrain.SetScale(0.25);
@@ -61,7 +67,7 @@ NoiseGenerator::~NoiseGenerator()
 	terrainType.SetFrequency(0.25);
 	terrainType.SetPersistence(0.1);
 
-	mountainTerrain.SetFrequency(0.5f);
+	mountainTerrain.SetFrequency(0.2f);
 
 	terrainSelector.SetSourceModule(0, flatTerrain);
 	terrainSelector.SetSourceModule(1, mountainTerrain);

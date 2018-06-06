@@ -83,25 +83,21 @@ void GridMesh::GenerateMesh()
 	SMesh* sMesh = new SMesh();
 	SMeshBuffer* buffer = new SMeshBuffer();
 
-	// Adds a buffer to the sMesh to make it possible for the sMesh to be manipulated
-	sMesh->addMeshBuffer(buffer);
-
 	// Draw the vertices and triangles of the grid
 	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid, true);
 	buffer->Indices = DrawTriangles(xSizeGrid, ySizeGrid);
 
-	// Recalucate the normals of the sMesh
-	meshManipulator->recalculateNormals(sMesh);
-
-	// Recalculate the bounding box of the mesh
 	buffer->recalculateBoundingBox();
+	sMesh->addMeshBuffer(buffer);
+	meshManipulator->recalculateNormals(sMesh);
+	sMesh->recalculateBoundingBox();
 
 	// Convert the SMesh into a SAnimatedMesh (GameObjects uses SAnimatedMesh only and not 1 static mesh which is this sMesh)
 	// So by putting the sMesh into a SAnimatedMesh; it creates a mesh with no animation
 	meshGrid->addMesh(sMesh);
 
 	// Adds the SAnimatedMesh to the mesh of gameObject 
-	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, GameManager::smgr->getRootSceneNode());
+	mesh = GameManager::smgr->addAnimatedMeshSceneNode(meshGrid, 0);
 	mesh->setPosition(*startPos);
 
 	// Set the material flags
@@ -316,7 +312,7 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 
 		// Divide the noise map by the vertices of the mesh to get good color differences
 		float precisionX = noiseGenerator->xSizeImage / xSizeGrid;
-		float precisionY = noiseGenerator->ySizeImage / xSizeGrid;
+		float precisionY = noiseGenerator->ySizeImage / ySizeGrid;
 
 		for (size_t y = 0; y <= ySizeGrid; y++)
 		{
@@ -325,7 +321,7 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 				// Draw the vertices and use the noise map's pixel for the height of the vertex to create natural hill heights
 				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
 					noiseGenerator->getPixelColor(texture,
-					                              y * precisionY).getRed() * heightMultiplier,
+					                              x * precisionX, y * precisionY).getRed() * heightMultiplier,
 					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
 					x, y));
 			}
