@@ -82,7 +82,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 						continue;
 
 					// Temporary fix to be replaced by mesh collision
-					float size = 300;
+					float size = 500;
 					if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 					{
 						size = 1000;
