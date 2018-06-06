@@ -24,8 +24,8 @@ IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
 
 // Light data
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
@@ -63,6 +63,31 @@ vector3df* SceneManager::vectorZero = new vector3df(0, 0, 0);
 int SceneManager::noID = -1111;
 
 float SceneManager::distanceKeyChest = 1500;
+
+// Random scale and rotation setter for GameObjects
+irr::core::vector3df SceneManager::baseScaleRock = vector3df(1, 1, 1);
+irr::core::vector3df SceneManager::scaleVariationRock = vector3df(0.6f, 0.6f, 0.6f);
+irr::core::vector3df SceneManager::rotationVariationRock = vector3df(45, 360, 45);
+
+irr::core::vector3df SceneManager::baseScaleRuins = vector3df(2, 2, 2);
+irr::core::vector3df SceneManager::scaleVariationRuins = vector3df(0, 0, 0);
+irr::core::vector3df SceneManager::rotationVariationRuins = vector3df(5, 360, 5);
+
+irr::core::vector3df SceneManager::baseScaleCorals = vector3df(2 , 2, 2);
+irr::core::vector3df SceneManager::scaleVariationCorals = vector3df(3, 3, 3);
+irr::core::vector3df SceneManager::rotationVariationCorals = vector3df(0, 0, 0);
+
+irr::core::vector3df SceneManager::baseScaleVines = vector3df(1, 1.5, 1);
+irr::core::vector3df SceneManager::scaleVariationVines = vector3df(0.25f, 0.5f, 0.25f);
+irr::core::vector3df SceneManager::rotationVariationVines = vector3df(10, 360, 10);
+
+irr::core::vector3df SceneManager::baseScaleShips = vector3df(2.5f, 2.5f, 2.5f);
+irr::core::vector3df SceneManager::scaleVariationShips = vector3df(0.5f, 0.5f, 0.5f);
+irr::core::vector3df SceneManager::rotationVariationShips = vector3df(45, 360, 45);
+
+irr::core::vector3df SceneManager::baseScaleSkulls = vector3df(1, 1, 1);
+irr::core::vector3df SceneManager::scaleVariationSkulls = vector3df(0, 0, 0);
+irr::core::vector3df SceneManager::rotationVariationSkulls = vector3df(15, 360, 15);
 
 // Constructor
 SceneManager::SceneManager()
@@ -508,16 +533,31 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		meshTextures.clear();
 		meshDirectories.push_back("../media/Rocks/Rock1.obj"); meshTextures.push_back("");
 		meshDirectories.push_back("../media/Rocks/Rock2.obj"); meshTextures.push_back("");
-		//Bug: This file causes a memory allocation problem
 		meshDirectories.push_back("../media/Rocks/PM_GraniteKnife_HR_Geometry.obj"); meshTextures.push_back("");
 
 		// List contains rock game objects
 		vector<GameObject*> rockList;
+		//float scaleAdditionX = ((rand() % 100) * scaleVariationX) / 100.0f - scaleVariationX / 2.0f;
+		//float scaleAdditionY = ((rand() % 100) * scaleVariationY) / 100.0f - scaleVariationY / 2.0f;
+		//float scaleAdditionZ = ((rand() % 100) * scaleVariationZ) / 100.0f - scaleVariationZ / 2.0f;
+		//float rotationAdditionX = ((rand() % 100) * rotationVariationX) / 100.0f - rotationVariationX / 2.0f;
+		//float rotationAdditionY = ((rand() % 100) * rotationVariationY) / 100.0f - rotationVariationY / 2.0f;
+		//float rotationAdditionZ = ((rand() % 100) * rotationVariationZ) / 100.0f - rotationVariationZ / 2.0f;
 
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::rockCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* rock = new GameObject(SceneManager::vectorZero, new vector3df(1, 1, 1), SceneManager::vectorZero,
+			vector3df* objectScale = new vector3df(
+				1+ ((rand() % 100) * scaleVariationRock.X) / 100.0f - scaleVariationRock.X / 2.0f,
+				1+ ((rand() % 100) * scaleVariationRock.Y) / 100.0f - scaleVariationRock.Y / 2.0f,
+				1+ ((rand() % 100) * scaleVariationRock.Z) / 100.0f - scaleVariationRock.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				360 *((rand() % 100) * rotationVariationRock.X) / 100.0f - rotationVariationRock.X / 2.0f,
+				360 *((rand() % 100) * rotationVariationRock.Y) / 100.0f - rotationVariationRock.Y / 2.0f,
+				360 *((rand() % 100) * rotationVariationRock.Z) / 100.0f - rotationVariationRock.Z / 2.0f);
+
+			GameObject* rock = new GameObject(SceneManager::vectorZero,  objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
@@ -548,7 +588,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::ruinsCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* ruins = new GameObject(SceneManager::vectorZero, new vector3df(0.2f, 0.2f, 0.2f), SceneManager::vectorZero,
+			vector3df* objectScale = new vector3df(
+			baseScaleRock.X	+ ((rand() % 100) * scaleVariationRock.X) / 100.0f - scaleVariationRock.X / 2.0f,
+				baseScaleRock.Y + ((rand() % 100) * scaleVariationRock.Y) / 100.0f - scaleVariationRock.Y / 2.0f,
+				baseScaleRock.Z + ((rand() % 100) * scaleVariationRock.Z) / 100.0f - scaleVariationRock.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				((rand() % 100) * rotationVariationRuins.X) / 100.0f - rotationVariationRuins.X / 2.0f,
+				((rand() % 100) * rotationVariationRuins.Y) / 100.0f - rotationVariationRuins.Y / 2.0f,
+				((rand() % 100) * rotationVariationRuins.Z) / 100.0f - rotationVariationRuins.Z / 2.0f);
+
+			GameObject* ruins = new GameObject(SceneManager::vectorZero, objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
@@ -578,7 +628,18 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::coralCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* coral = new GameObject(SceneManager::vectorZero, new vector3df(1, 1, 1), SceneManager::vectorZero,
+
+			vector3df* objectScale = new vector3df(
+				baseScaleCorals.X	+((rand() % 100) * scaleVariationCorals.X) / 100.0f - scaleVariationCorals.X / 2.0f,
+				baseScaleCorals.Y	+((rand() % 100) * scaleVariationCorals.Y) / 100.0f - scaleVariationCorals.Y / 2.0f,
+				baseScaleCorals.Z	+((rand() % 100) * scaleVariationCorals.Z) / 100.0f - scaleVariationCorals.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				((rand() % 100) * rotationVariationCorals.X) / 100.0f - rotationVariationCorals.X / 2.0f,
+				((rand() % 100) * rotationVariationCorals.Y) / 100.0f - rotationVariationCorals.Y / 2.0f,
+				((rand() % 100) * rotationVariationCorals.Z) / 100.0f - rotationVariationCorals.Z / 2.0f);
+
+			GameObject* coral = new GameObject(SceneManager::vectorZero, objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
@@ -604,7 +665,18 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::plantCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* vines = new GameObject(SceneManager::vectorZero, new vector3df(1, 1, 1), SceneManager::vectorZero,
+
+			vector3df* objectScale = new vector3df(
+				baseScaleVines.X	+((rand() % 100) * scaleVariationVines.X) / 100.0f - scaleVariationVines.X / 2.0f,
+				baseScaleVines.Y	+((rand() % 100) * scaleVariationVines.Y) / 100.0f - scaleVariationVines.Y / 2.0f,
+				baseScaleVines.Z	+((rand() % 100) * scaleVariationVines.Z) / 100.0f - scaleVariationVines.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				((rand() % 100) * rotationVariationVines.X) / 100.0f - rotationVariationVines.X / 2.0f,
+				((rand() % 100) * rotationVariationVines.Y) / 100.0f - rotationVariationVines.Y / 2.0f,
+				((rand() % 100) * rotationVariationVines.Z) / 100.0f - rotationVariationVines.Z / 2.0f);
+
+			GameObject* vines = new GameObject(SceneManager::vectorZero, objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
@@ -631,7 +703,18 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::skullCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* skull = new GameObject(SceneManager::vectorZero, new vector3df(0.25f, 0.25f, 0.25f), SceneManager::vectorZero,
+
+			vector3df* objectScale = new vector3df(
+				baseScaleSkulls.X	+((rand() % 100) * scaleVariationSkulls.X) / 100.0f - scaleVariationSkulls.X / 2.0f,
+				baseScaleSkulls.Y	+((rand() % 100) * scaleVariationSkulls.Y) / 100.0f - scaleVariationSkulls.Y / 2.0f,
+				baseScaleSkulls.Z	+((rand() % 100) * scaleVariationSkulls.Z) / 100.0f - scaleVariationSkulls.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				((rand() % 100) * rotationVariationSkulls.X) / 100.0f - rotationVariationSkulls.X / 2.0f,
+				((rand() % 100) * rotationVariationSkulls.Y) / 100.0f - rotationVariationSkulls.Y / 2.0f,
+				((rand() % 100) * rotationVariationSkulls.Z) / 100.0f - rotationVariationSkulls.Z / 2.0f);
+
+			GameObject* skull = new GameObject(SceneManager::vectorZero, objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 
@@ -660,7 +743,18 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Creates x amount gameObjects 
 		for (int i = 0; i < GameManager::shipCount; i++) {
 			meshSelector = rand() % meshDirectories.size();
-			GameObject* ship = new GameObject(SceneManager::vectorZero, new vector3df(0.5f, 0.5f, 0.5f), SceneManager::vectorZero,
+
+			vector3df* objectScale = new vector3df(
+				baseScaleShips.X	+((rand() % 100) * scaleVariationShips.X) / 100.0f - scaleVariationShips.X / 2.0f,
+				baseScaleShips.Y	+((rand() % 100) * scaleVariationShips.Y) / 100.0f - scaleVariationShips.Y / 2.0f,
+				baseScaleShips.Z	+((rand() % 100) * scaleVariationShips.Z) / 100.0f - scaleVariationShips.Z / 2.0f);
+
+			vector3df* objectRotation = new vector3df(
+				360 * ((rand() % 100) * rotationVariationShips.X) / 100.0f - rotationVariationShips.X / 2.0f,
+				360 * ((rand() % 100) * rotationVariationShips.Y) / 100.0f - rotationVariationShips.Y / 2.0f,
+				360 * ((rand() % 100) * rotationVariationShips.Z) / 100.0f - rotationVariationShips.Z / 2.0f);
+
+			GameObject* ship = new GameObject(SceneManager::vectorZero, objectScale, objectRotation,
 				0, GameManager::smgr, SceneManager::noID,
 				GameManager::smgr->getMesh(meshDirectories[meshSelector]));
 

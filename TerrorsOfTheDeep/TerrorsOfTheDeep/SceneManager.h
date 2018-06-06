@@ -115,4 +115,29 @@ public:
 	static void ShowKeyControlsOverlay();
 	static void HideMouseControlsOverlay();
 	static void HideKeyControlsOverlay();
+
+	// Random scale and rotation setter for GameObjects
+	static vector3df baseScaleRock;
+	static vector3df scaleVariationRock;
+	static vector3df rotationVariationRock;
+
+	static vector3df baseScaleRuins;
+	static vector3df scaleVariationRuins;
+	static vector3df rotationVariationRuins;
+
+	static vector3df baseScaleCorals;
+	static vector3df scaleVariationCorals;
+	static vector3df rotationVariationCorals;
+
+	static vector3df baseScaleVines;
+	static vector3df scaleVariationVines;
+	static vector3df rotationVariationVines;
+
+	static vector3df baseScaleShips;
+	static vector3df scaleVariationShips;
+	static vector3df rotationVariationShips;
+
+	static vector3df baseScaleSkulls;
+	static vector3df scaleVariationSkulls;
+	static vector3df rotationVariationSkulls;
 };
