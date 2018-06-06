@@ -12,7 +12,8 @@ public:
 		PAUSE_MENU,
 		LOADING_SCREEN,
 		END_MENU,
-		OVERLAY
+		OVERLAY,
+		FADER
 	};
 	MenuType menuType;
 

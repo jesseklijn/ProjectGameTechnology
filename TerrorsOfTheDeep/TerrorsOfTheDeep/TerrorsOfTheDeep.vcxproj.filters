@@ -183,6 +183,9 @@
     <ClCompile Include="noiseutils.cpp">
       <Filter>Source Files\Controllers\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="Fader.cpp">
+      <Filter>Source Files\Interface Objects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -271,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="noiseutils.h">
       <Filter>Header Files\Controllers\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Fader.h">
+      <Filter>Header Files\Interface Objects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -181,6 +181,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Creature.cpp" />
     <ClCompile Include="Critter.cpp" />
+    <ClCompile Include="Fader.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="InterfaceObject.cpp" />
     <ClCompile Include="Lighting.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Critter.h" />
+    <ClInclude Include="Fader.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="InterfaceObject.h" />
     <ClInclude Include="Lighting.h" />
