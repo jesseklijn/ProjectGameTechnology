@@ -6,8 +6,8 @@
 
 using namespace std;
 static const int NO_PARENT = 0;
-static const float KEYLIGHT_RADIUS = 1000.0f;
-static const float CHESTLIGHT_RADIUS = 1000.0f;
+static const float KEYLIGHT_RADIUS = 3000.0f;
+static const float CHESTLIGHT_RADIUS = 3000.0f;
 static const float FLASHLIGHT_RANGE = 4000.0f;
 
 
@@ -26,6 +26,7 @@ GameObject* SceneManager::levelPlayer = nullptr;
 IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
 Fader* SceneManager::fader = nullptr;
+ITexture* SceneManager::loadingScreenImage = nullptr;
 
 // Light data
 irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
@@ -55,7 +56,7 @@ float SceneManager::introStartTime = 1.0f * 1000.0f;
 float SceneManager::introStartTimer = -1.0f;
 float SceneManager::introMouseOverlayTime = 1.0f * 1000.0f;
 float SceneManager::introMouseOverlayTimer = -1.0f;
-float SceneManager::introMouseOverlayDisplayTime = 10.0f * 1000.0f;
+float SceneManager::introMouseOverlayDisplayTime = 12.0f * 1000.0f;
 float SceneManager::introMouseOverlayDisplayTimer = -1.0f;
 float SceneManager::introKeyOverlayTime = 1.0f * 1000.0f;
 float SceneManager::introKeyOverlayTimer = -1.0f;
@@ -117,10 +118,8 @@ void SceneManager::Update()
 {
 	if(SceneManager::scene == TITLE_SCREEN )
 	{
-		
-		//TODO Shark doesn't move, make it move
 		if (levelMonster != nullptr)
-			levelMonster->Move(1, vector3df(0, 0, 1), false);
+			levelMonster->Move(1000 * GameManager::deltaTime, vector3df(0, 0, 1), false);
 	}
 	if (GameManager::gameOver)
 		SceneManager::LoadScene(GAME_OVER);
@@ -274,10 +273,10 @@ void SceneManager::ShowKeyControlsOverlay()
 	keyOverlay = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
 		Menu::OVERLAY, 0, GameManager::smgr, 10000, false);
 	keyOverlay->elementWidth = 335.0f;
-	keyOverlay->elementHeight = 200.0f;
+	keyOverlay->elementHeight = 350.0f;
 	keyOverlay->elementSpacing = 16.0f;
 	keyOverlay->hasWindowTitle = true;
-	keyOverlay->windowTitle = "Touchdown!\n\nPress [W], [A], [S], [D] to move around\nYou might want to watch out for terrors lurking in the deep darkness...";
+	keyOverlay->windowTitle = "Touchdown!\n\nPress [W], [A], [S], [D] to move around\nPress [SPACE] to ascend, [CTRL] to descend.\nYou might want to watch out for terrors lurking in the deep darkness...\n\nHiding behind objects can make you harder to catch!";
 	keyOverlay->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - keyOverlay->elementWidth / 2.0f,
 		GameManager::screenDimensions.Height - keyOverlay->elementHeight - keyOverlay->elementSpacing, 0.0f));
 	GameManager::interfaceObjects.push_back(keyOverlay);
@@ -366,13 +365,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			delete intObj;
 	GameManager::gameObjects.clear();
 	GameManager::interfaceObjects.clear();
-	SceneManager::levelMonster = nullptr;
+
+	if (scene == TITLE_SCREEN && SceneManager::levelMonster != nullptr)
+	{
+		delete SceneManager::levelMonster;
+		SceneManager::levelMonster = nullptr;
+	}
+	
 	SceneManager::levelPlayer = nullptr;
 	SceneManager::levelPlane = nullptr;
 	SceneManager::mouseOverlay = nullptr;
 	SceneManager::keyOverlay = nullptr;
-
-
 
 
 	// Load the new scene
@@ -384,28 +387,27 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 		skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 		
-		sound_init();
-		
+		sound_init();		
 		background_music("../media/Sound/Main Menu/titlescreen.ogg");
 
 		Lighting lighting = Lighting(GameManager::smgr);
 		lighting.SetSceneLight(ambientColorTitle);
+		GameManager::driver->setFog(SColor(1, 10, 10, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0003f);
 
 		camera = new Camera(GameManager::smgr);
 		ICameraSceneNode* titleCam = GameManager::smgr->addCameraSceneNode(0, vector3df(0, 0, 0), vector3df(90, 0, 0), 0, true);
 		titleCam->setInputReceiverEnabled(false);
 
-		//-Shark* shark = new Shark(new vector3df(3000, -500, 0),
-		//	new vector3df(0.5f, 0.5f, 0.5f),
-		//	new vector3df(0, 0, 0),
-		//	0,
-		//	GameManager::smgr,
-		//	-1111,
-		//	GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-		//	0,
-		//	false);
-
-		//SceneManager::levelMonster = shark;
+		Shark* shark = new Shark(new vector3df(3000, -500, -3500),
+			new vector3df(0.5f, 0.5f, 0.5f),
+			new vector3df(0, 0, 0),
+			0,
+			GameManager::smgr,
+			-1111,
+			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
+			0,
+			false);
+		SceneManager::levelMonster = shark;
 
 		ISceneNode* title = GameManager::smgr->addBillboardSceneNode(0, dimension2d<f32>(59, 52), vector3df(50, 10, 0), 0, 0);
 		title->setRotation(vector3df(0, 0, 0));
@@ -470,18 +472,21 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 		skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
-		 /*Initialize our background music*/
-		sound_init();
-		background_music("../media/Sound/Ambience/AmbientUnderwaterMaddnes.ogg");
-
-
 		Lighting lighting = Lighting(GameManager::smgr);
 		lighting.SetSceneLight(ambientColor);
+		GameManager::driver->setFog(SColor(1, 10, 10, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0003f);
 #pragma endregion
 
 #pragma region World Generation
 		std::vector<io::path> meshDirectories;
 		std::vector<io::path> meshTextures;
+		std::vector<io::path> loadingScreenImages;
+		loadingScreenImages.push_back("../media/LoadingScreen/Backgrounds/BackgroundTerror1.png");
+		loadingScreenImages.push_back("../media/LoadingScreen/Backgrounds/BackgroundTerror2.png");
+		loadingScreenImages.push_back("../media/LoadingScreen/Backgrounds/BackgroundTerror3.png");
+		loadingScreenImages.push_back("../media/LoadingScreen/Backgrounds/BackgroundTerror4.png");
+		SceneManager::loadingScreenImage = GameManager::driver->getTexture(loadingScreenImages[rand() % loadingScreenImages.size()]);
+
 		//Update loading screen
 		StartLoadingScreen(SceneManager::BASICS);
 		EndLoadingScreen();
@@ -492,7 +497,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		StartLoadingScreen(SceneManager::PLAYER);
 		EndLoadingScreen();
 		// Spawn player in cage
-		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 5,
+		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 3.0f,
 			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/Player/armsText.jpg"));
 		GameManager::gameObjects.push_back(player);
 		GameManager::levelPlayer = player;
@@ -519,7 +524,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			true,
 			player);
 
-		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
+		Shark* shark = new Shark(new vector3df(5000, 3000, 5000),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
 			0,
@@ -595,11 +600,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				break;
 			}
-			ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
-			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
+			ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, 0);
+			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, 0);
 		}
 		StartLoadingScreen(SceneManager::CRITTERS);
 		EndLoadingScreen();
+
 		// Spawn critters
 		meshDirectories.clear();
 		meshTextures.clear();
@@ -879,12 +885,14 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Calculate how long the total level generation and setup took until this point
 		auto frameTimeEnd = std::chrono::system_clock::now();
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
-		float generationDuration = elapsed_seconds.count() * GameManager::gameSpeed  * 1000.0f;
-		GameManager::device->setWindowCaption(L"Now playing Terrors Of The Deep");
-
+		float generationDuration = elapsed_seconds.count() * GameManager::gameSpeed  * 1000.0f;		
 
 		// Start the controls display timers, compensate for the huge deltaTime of 1-frame generation
 		SceneManager::introStartTimer = generationDuration + SceneManager::introStartTime;
+
+		/*Initialize our background music*/
+		sound_init();
+		background_music("../media/Sound/Ambience/AmbientUnderwaterMaddnes.ogg");
 #pragma endregion
 	} break;
 
@@ -1000,105 +1008,65 @@ void SceneManager::OnSceneChange()
 Used to smoothly load a scene before showing it.*/
 void SceneManager::StartLoadingScreen(LoadingType loadingType)
 {
-
-	//TODO: Loading screen!
 	GameManager::driver->beginScene(true, true, SColor(255, 100, 101, 140));
 	GameManager::guienv->clear();
-	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
-
-
-	//IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
-	GameManager::driver->draw2DImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), rect<s32>(0, 0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height), rect<s32>(0, 0, 3000, 2000));
-
-	//cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
-	//cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
-
-	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingTitle.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 1036) / 2, 0), true, 0, -1, L"test");
-	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/underwater-ruins.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 700) / 2, (GameManager::screenDimensions.Height - 454) / 1.5F	), true, 0, -1, L"test");
-
-	if (loadingType == SceneManager::BASICS) {
-		GameManager::device->setWindowCaption(L"Loading BASICS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::CREATURES)
+	GameManager::driver->draw2DImage(SceneManager::loadingScreenImage, rect<s32>(0, 0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height), 
+		rect<s32>(0, 0, SceneManager::loadingScreenImage->getOriginalSize().Width, SceneManager::loadingScreenImage->getOriginalSize().Height));
+	ITexture* notifier = 0;
+	switch (loadingType)
 	{
-		GameManager::device->setWindowCaption(L"Loading CREATURES Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Creatures.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
+		case SceneManager::BASICS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/basics.jpg"); break;
 
+		case SceneManager::CREATURES:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Creatures.jpg"); break;
+
+		case SceneManager::WORLD:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/World.jpg"); break;
+
+		case SceneManager::LAND_MARKS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Landmarks.jpg"); break;
+
+		case SceneManager::PLAYER:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/player.jpg"); break;
+
+		case SceneManager::RELICS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/relics.jpg"); break;
+
+		case SceneManager::CRITTERS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/critters.jpg"); break;
+
+		case SceneManager::RUINS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Ruins.jpg"); break;
+
+		case SceneManager::SHIPS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/ships.jpg"); break;
+
+		case SceneManager::VINES:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/vines.jpg"); break;
+
+		case SceneManager::TERRORS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/terrors.jpg"); break;
+
+		case SceneManager::CORALS:
+			notifier = GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/coral.jpg"); break;
+
+		default: break;
 	}
-	else if (loadingType == SceneManager::WORLD)
-	{
-		GameManager::device->setWindowCaption(L"Loading WORLD Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/World.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
 
-	}
-	else if (loadingType == SceneManager::LAND_MARKS)
+	if (notifier != 0)
 	{
-		GameManager::device->setWindowCaption(L"Loading LAND_MARKS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Landmarks.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::PLAYER)
-	{
-		GameManager::device->setWindowCaption(L"Loading PLAYER Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/player.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::RELICS)
-	{
-		GameManager::device->setWindowCaption(L"Loading RELIC Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/relics.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::CRITTERS)
-	{
-		GameManager::device->setWindowCaption(L"Loading CRITTERS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/critters.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::RUINS)
-	{
-		GameManager::device->setWindowCaption(L"Loading RUINS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/Ruins.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::SHIPS)
-	{
-		GameManager::device->setWindowCaption(L"Loading SHIPS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/ships.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::VINES)
-	{
-		GameManager::device->setWindowCaption(L"Loading VINES Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/vines.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::TERRORS)
-	{
-		GameManager::device->setWindowCaption(L"Loading TERRORS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/terrors.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::SHIPS)
-	{
-		GameManager::device->setWindowCaption(L"Loading SHIPS Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/ships.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
-	}
-	else if (loadingType == SceneManager::CORALS)
-	{
-		GameManager::device->setWindowCaption(L"Loading CORAL Terrors Of The Deep");
-		GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/loadingTexts/coral.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 579) / 2, (GameManager::screenDimensions.Height - 93)), true, 0, -1, L"test");
-
+		GameManager::guienv->addImage(notifier, core::position2d<s32>(GameManager::screenDimensions.Width / 2.0f - notifier->getOriginalSize().Width / 2.0f,
+			GameManager::screenDimensions.Height - 100.0f));
 	}
 	GameManager::guienv->drawAll();
-
 }
 
 /* Ends the currently active loading screen.*/
 void SceneManager::EndLoadingScreen()
 {
 	GameManager::driver->endScene();
+	irrklang::ISound* bgMusic = GetBackgroundSound();
+	if (bgMusic != nullptr)
+		SetSoundVolume(bgMusic, bgMusic->getVolume() - 0.05f);
 }

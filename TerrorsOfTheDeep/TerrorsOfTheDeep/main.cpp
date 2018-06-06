@@ -47,6 +47,7 @@ int main()
 	DetectCollision detectCollision;
 
 	GameManager::gameSeed = rand() % 100000;
+	GameManager::device->setWindowCaption(L"Terrors Of The Deep");
 
 	sceneManager.LoadScene(SceneManager::TITLE_SCREEN);
 

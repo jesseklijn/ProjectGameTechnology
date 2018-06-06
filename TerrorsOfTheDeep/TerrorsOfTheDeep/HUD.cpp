@@ -39,8 +39,8 @@ void HUD::HudDraw(IVideoDriver* driver, IGUIEnvironment* guienv)
 	for (size_t i = 0; i < amountStrings.size(); i++)
 	{
 		IGUIStaticText* guiText = guienv->addStaticText(amountStrings[i].c_str(),
-			rect<s32>(10, 10 + (i * spacingText), 520, 42 + (i * spacingText)), true, true, 0, -1, false);	
-		guiText->setOverrideColor(SColor(255, 255, 255, 255));
+			rect<s32>(10, 10 + (i * spacingText), 170, 42 + (i * spacingText)), true, true, 0, -1, false);	
+		guiText->setOverrideColor(SColor(255, 105, 105, 105));
 	}
 
 	//Conditions for HUD to show

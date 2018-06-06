@@ -85,6 +85,7 @@ public:
 	static bool disableHud;
 	static irr::core::vector3df rayStart;
 	static irr::core::vector3df rayEnd;
+	static ITexture* loadingScreenImage;
 
 	// Intro
 	static bool introIsActive, cageShouldDescend, showControls, showMouseOverlay, showKeyOverlay;

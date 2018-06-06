@@ -96,8 +96,8 @@
       <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\irrlicht-1.8.4\include;$(IRRLICHT_HOME)\noiselib\include\noise;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;C:\Users\Timv9\source\PGT\ProjectGameTechnology\TerrorsOfTheDeep\TerrorsOfTheDeep</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\noiselib\bin;$(IRRLICHT_HOME)\irrlicht-1.8.4\bin\win32-visualStudio;$(IRRKLANG_HOME)\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>irrKlang.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\noiselib\bin;$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>irrKlang.lib;libnoise.lib;Irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>LinkVerbose</ShowProgress>
       <HeapReserveSize>
       </HeapReserveSize>
