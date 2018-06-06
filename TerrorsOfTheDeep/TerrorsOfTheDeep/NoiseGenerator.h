@@ -14,7 +14,7 @@ public:
 	void GenerateHeightMap(const std::string fileDestName, int imageSizeX = 256, int imageSizeY = 256);
 
 	/// Get the pixel color of the texture. It returns a SColor value to the caller. 
-	irr::video::SColor getPixelColor(irr::video::ITexture* texture, irr::video::IImage* image, int x = 0, int y = 0);
+	irr::video::SColor getPixelColor(irr::video::ITexture* texture, int x = 0, int y = 0);
 
 	/// Sizes of the image to make it usable for outside uses
 	int xSizeImage, ySizeImage;

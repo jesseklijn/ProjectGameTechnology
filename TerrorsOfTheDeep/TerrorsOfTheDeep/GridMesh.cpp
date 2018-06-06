@@ -297,7 +297,8 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 /// you get even parts of the height map so it will use the whole height map instead of a small part. This value will be saved as float variables "precisionX" and "precisionY" <br/>
 /// After this, the vertices are drawn by using the x and y values from the for-loop and multiplying by the CELL_SIZE constant variable to make a bigger grid. <br/>
 /// The reason why the y variable is on the z-axis of the vertex is because it is a 2D grid. So you have to rotate it by 90 degrees every time you generate vertex. <br/> 
-/// the y-axis defines the height of the vertices and a color picker function is used for this. A multiplier is used to make the color differences bigger (the height will differ greater between each other as well) <br/>
+/// the y-axis defines the height of the vertices and a color picker function is used for this. A multiplier is used to make the color differences bigger 
+/// (the height will differ greater between each other as well) <br/>
 /// If no height map is used then the vertices are generated without any height differences. <br/>
 /// <b>Output</b><br/>
 /// A list of vertex.
@@ -312,7 +313,6 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 		NoiseGenerator* noiseGenerator = new NoiseGenerator();
 		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp");
 		ITexture* texture = GameManager::driver->getTexture("../media/heightMap.bmp");
-		IImage* image = GameManager::driver->createImage(texture, vector2d<s32>(0, 0), texture->getOriginalSize());
 
 		// Divide the noise map by the vertices of the mesh to get good color differences
 		float precisionX = noiseGenerator->xSizeImage / xSizeGrid;
@@ -324,8 +324,8 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 			{
 				// Draw the vertices and use the noise map's pixel for the height of the vertex to create natural hill heights
 				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
-					noiseGenerator->getPixelColor(texture, image,
-						x * precisionX, y * precisionY).getRed() * heightMultiplier,
+					noiseGenerator->getPixelColor(texture,
+					                              y * precisionY).getRed() * heightMultiplier,
 					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
 					x, y));
 			}
