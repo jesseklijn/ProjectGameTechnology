@@ -1,9 +1,8 @@
 #include "Button.h"
 #include "GameManager.h"
-#include "Fader.h"
 
 
-Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation, 
+Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * startScale, irr::core::vector2df * startRotation,
 	ButtonType buttonType, irr::scene::ISceneNode * parent, irr::scene::ISceneManager * mgr, irr::s32 id)
 	: InterfaceObject(startPosition, startScale, startRotation, parent, mgr, id)
 {
@@ -12,27 +11,33 @@ Button::Button(irr::core::vector2df * startPosition, irr::core::vector2df * star
 
 	switch (buttonType)
 	{
-		case PM_RESUME:
-		{
-			buttonTitle = "Resume Game";
-		} break;
+	case MM_START:
+	{
+		buttonTitle = "Start Game";
+	}
+	break;
 
-		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
-		{
-			buttonTitle = "Main Menu";
-		} break;
+	case PM_RESUME:
+	{
+		buttonTitle = "Resume Game";
+	} break;
 
-		case PM_QUIT:
-		{
-			buttonTitle = "Quit";
-		} break;
+	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
+	{
+		buttonTitle = "Main Menu";
+	} break;
 
-		case GO_RETRY:
-		{
-			buttonTitle = "Retry";
-		} break;
+	case PM_QUIT: case MM_QUIT:
+	{
+		buttonTitle = "Quit Game";
+	} break;
 
-		default: break;
+	case GO_RETRY:
+	{
+		buttonTitle = "Retry";
+	} break;
+
+	default: break;
 	}
 }
 
@@ -106,35 +111,36 @@ void Button::ButtonMouseLeave()
 depending on the button's type. */
 void Button::ButtonPressed()
 {
-	if (SceneManager::fader->isFading)
-		return;
-
 	switch (buttonType)
 	{
-		case PM_RESUME:
-		{
-			SceneManager::PauseScene(false);
-		} break;
+	case PM_RESUME:
+	{
+		SceneManager::PauseScene(false);
+	} break;
 
-		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
-		{
-			SceneManager::fader->faderMode = Fader::FADE_OUT;
-			SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_MAIN;
-			SceneManager::fader->isFading = true;
-		} break;
+	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
+	{
+		GameManager::smgr->getActiveCamera()->drop();
+		SceneManager::PauseScene(false);
+		SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
+	} break;
 
-		case PM_QUIT:
-		{
-			GameManager::device->closeDevice();
-		} break;
+	case PM_QUIT: case MM_QUIT:
+	{
+		GameManager::device->closeDevice();
+	} break;
 
-		case GO_RETRY:
-		{
-			SceneManager::fader->faderMode = Fader::FADE_OUT;
-			SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_LEVEL;
-			SceneManager::fader->isFading = true;
-		} break;
+	case GO_RETRY:
+	{
+		SceneManager::LoadScene(SceneManager::LEVEL);
+	} break;
 
-		default: break;
+	case MM_START:
+		{
+		GameManager::smgr->getActiveCamera()->drop();
+		SceneManager::LoadScene(SceneManager::LEVEL);
+		}
+
+	default: break;
 	}
 }

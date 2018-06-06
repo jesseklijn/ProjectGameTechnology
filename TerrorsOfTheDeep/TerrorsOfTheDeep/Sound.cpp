@@ -82,15 +82,16 @@ void background_music(const char * file)
 		return;
 	}
 
-	if (backMusic)
+	if (backMusic != nullptr)
 	{
 		backMusic->stop();
 		backMusic->drop();
+		backMusic = nullptr;
 	}
 
 	backMusic = engine->play2D(file, true, false, true);
 
-	if (backMusic)
+	if (backMusic != nullptr)
 	{
 		backMusic->setVolume(0.5f);
 	}
@@ -98,7 +99,7 @@ void background_music(const char * file)
 
 void sound_shutdown()
 {
-	if (backMusic)
+	if (backMusic != nullptr)
 		backMusic->drop();
 
 	if (engine)

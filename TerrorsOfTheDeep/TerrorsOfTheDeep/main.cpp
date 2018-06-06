@@ -17,7 +17,6 @@
 #include <string>
 #include <iostream>
 #include <chrono>
-#include "Fader.h"
 #pragma endregion
 
 
@@ -48,7 +47,7 @@ int main()
 
 	GameManager::gameSeed = rand() % 100000;
 
-	sceneManager.LoadScene(SceneManager::GAME_OVER);
+	sceneManager.LoadScene(SceneManager::TITLE_SCREEN);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
@@ -61,20 +60,15 @@ int main()
 
 		// Update the world
 		sceneManager.Update();
-		gameManager.Update();
-		SceneManager::fader->Update();
-
-		if (SceneManager::scene == SceneManager::LEVEL) 
-			detectCollision.Detect(GameManager::smgr);
-		else 
-			detectCollision.ResetArray();
+		gameManager.Update();		
+		if (SceneManager::scene == SceneManager::LEVEL) detectCollision.Detect(GameManager::smgr);
+		else detectCollision.ResetArray();
 
 		// Draw the world
 		GameManager::smgr->drawAll();
 		GameManager::guienv->clear();
 		sceneManager.Draw();
 		gameManager.Draw();
-		SceneManager::fader->DrawGUI();
 		GameManager::guienv->drawAll();
 
 		// Our frame is finished

@@ -11,6 +11,7 @@ static const float CHESTLIGHT_RADIUS = 1000.0f;
 static const float FLASHLIGHT_RANGE = 4000.0f;
 
 
+
 GameObject* SceneManager::defaultGameObject;
 vector<GameObject*> SceneManager::defaultGameObjectList;
 
@@ -27,10 +28,10 @@ Menu* SceneManager::pauseMenu = nullptr;
 Fader* SceneManager::fader = nullptr;
 
 // Light data
-//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
-irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
+irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
+irr::video::SColorf SceneManager::ambientColorTitle = irr::video::SColorf(0.7f, 0.7f, 0.8f, 1.0f);
+//irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
-irr::video::SColorf SceneManager::sharkEyesColor = irr::video::SColorf(0.5f, 0.0f, 0.0f, 1.0f);
 vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
 vector3df SceneManager::keyLightOffset = vector3df(0, 100, 0);
 
@@ -114,6 +115,12 @@ SceneManager::~SceneManager()
 Happens before any drawing.*/
 void SceneManager::Update()
 {
+	if(SceneManager::scene == TITLE_SCREEN )
+	{
+		
+		//TODO Shark doesn't move, make it move
+		levelMonster->Move(1, vector3df(0, 0, 1), false);
+	}
 	if (GameManager::gameOver)
 		SceneManager::LoadScene(GAME_OVER);
 
@@ -365,7 +372,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	SceneManager::keyOverlay = nullptr;
 
 
-	
+
 
 	// Load the new scene
 	scene = sceneToLoad;
@@ -373,12 +380,78 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	{
 	case TITLE_SCREEN:
 	{
+		ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
+		skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
+		
+		sound_init();
+		
+		background_music("../media/Sound/Main Menu/titlescreen.ogg");
 
-	} break;
+		Lighting lighting = Lighting(GameManager::smgr);
+		lighting.SetSceneLight(ambientColorTitle);
+
+		camera = new Camera(GameManager::smgr);
+		ICameraSceneNode* titleCam = GameManager::smgr->addCameraSceneNode(0, vector3df(0, 0, 0), vector3df(90, 0, 0), 0, true);
+		titleCam->setInputReceiverEnabled(false);
+
+		Shark* shark = new Shark(new vector3df(3000, -500, 0),
+			new vector3df(0.5f, 0.5f, 0.5f),
+			new vector3df(0, 0, 0),
+			0,
+			GameManager::smgr,
+			-1111,
+			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
+			0,
+			false);
+
+		SceneManager::levelMonster = shark;
+
+		ISceneNode* title = GameManager::smgr->addBillboardSceneNode(0, dimension2d<f32>(59, 52), vector3df(50, 10, 0), 0, 0);
+		title->setRotation(vector3df(0, 0, 0));
+		title->setMaterialTexture(0, GameManager::driver->getTexture("../media/UI/titlescreen.png"));
+		title->setMaterialFlag(EMF_LIGHTING, false);
+		title->setMaterialType(EMT_TRANSPARENT_ALPHA_CHANNEL);
+
+		Menu* TitleMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+		TitleMenu->elementWidth = 200.0f;
+		TitleMenu->hasWindow = false;
+		TitleMenu->hasWindowBorder = false;
+		TitleMenu->hasWindowTitle = false;
+		TitleMenu->elementHeight = 124.0f;
+		TitleMenu->setPosition(vector3df(GameManager::screenDimensions.Width / 2.0f - TitleMenu->elementWidth / 2.0f,
+			GameManager::screenDimensions.Height / 1.4f, 0.0f));
+		GameManager::interfaceObjects.push_back(TitleMenu);
+
+		int buttonCount = 2;
+		float buttonWidth = TitleMenu->elementWidth - TitleMenu->elementSpacing * 2.0f;
+		float buttonHeight = 50.0f;
+		float buttonStartX = TitleMenu->getPosition().X + TitleMenu->elementWidth / 2.0f - buttonWidth / 2.0f;
+		float buttonStartY = TitleMenu->getPosition().Y + TitleMenu->elementHeight - 1 -
+			((buttonHeight + TitleMenu->elementSpacing) * 3);
+
+
+		Button* startButton = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing))), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			(Button::ButtonType)((int)Button::MM_START), 0, GameManager::smgr, 15000);
+		startButton->creator = TitleMenu;
+		startButton->elementWidth = buttonWidth;
+		startButton->elementHeight = buttonHeight;
+		GameManager::interfaceObjects.push_back(startButton);
+
+		Button* quitButton = new Button(new vector2df(buttonStartX, buttonStartY + ((buttonHeight + TitleMenu->elementSpacing)) * 2), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
+			(Button::ButtonType)((int)Button::MM_QUIT), 0, GameManager::smgr, 15000);
+		quitButton->creator = TitleMenu;
+		quitButton->elementWidth = buttonWidth;
+		quitButton->elementHeight = buttonHeight;
+		GameManager::interfaceObjects.push_back(quitButton);
+	}
+	break;
+
 	case LOADING:
 	{
 
-	} break;
+	}
+	break;
 
 
 	case LEVEL:
@@ -396,9 +469,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		ISceneNode* skydome = GameManager::smgr->addSkyDomeSceneNode(GameManager::driver->getTexture("../media/WorldDetail/Skydome_LED_BayDarkBlue.psd"), 16, 8, 0.95f, 2.0f);
 		skydome->setMaterialFlag(EMF_FOG_ENABLE, true);
 
-		// Initialize our background music
+		 /*Initialize our background music*/
 		sound_init();
-		background_music("../media/AmbientUnderwaterMaddnes.ogg");
+		background_music("../media/Sound/Ambience/AmbientUnderwaterMaddnes.ogg");
 
 
 		Lighting lighting = Lighting(GameManager::smgr);
@@ -444,7 +517,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			FLASHLIGHT_RANGE,
 			true,
 			player);
-		
+
 		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
@@ -489,9 +562,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::driver->getTexture("../media/WinLose/RustTexture.jpg"));
 		key->setTag(GameObject::KEY);
 		GameManager::gameObjects.push_back(key);
-		ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
-
 		
+
+
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
 
@@ -502,12 +575,12 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::driver->getTexture("../media/WinLose/GoldTexture.jpg"));
 		chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
 		chest->setTag(GameObject::CHEST);
-		ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
+		
 		GameManager::gameObjects.push_back(chest);
 
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
-		
+
 		// Keeps placing the key and chest on a different vertex if it's too close
 		while (true)
 		{
@@ -521,6 +594,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			{
 				break;
 			}
+			ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, nullptr);
+			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
 		}
 		StartLoadingScreen(SceneManager::CRITTERS);
 		EndLoadingScreen();
@@ -681,7 +756,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::gameObjects.push_back(coral);
 			coralList.push_back(coral);
 		}
-		
+
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), coralList);
 
@@ -853,7 +928,6 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	SceneManager::OnSceneChange();
 	return true;
 }
-
 /* Pauses the current scene by setting the game speed multiplier to 0. */
 void SceneManager::PauseScene(bool mode)
 {
@@ -933,7 +1007,7 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 
 
 	//IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
-	GameManager::driver->draw2DImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), rect<s32>(0,0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height), rect<s32>(0, 0, 3000,2000));
+	GameManager::driver->draw2DImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), rect<s32>(0, 0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height), rect<s32>(0, 0, 3000, 2000));
 
 	//cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
 	//cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
