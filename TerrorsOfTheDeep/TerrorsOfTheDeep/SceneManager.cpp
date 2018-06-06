@@ -317,9 +317,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	SceneManager::keyOverlay = nullptr;
 
 
-	//Update loading screen
-	StartLoadingScreen(SceneManager::BASICS);
-	EndLoadingScreen();
+	
 
 	// Load the new scene
 	scene = sceneToLoad;
@@ -362,7 +360,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 #pragma region World Generation
 		std::vector<io::path> meshDirectories;
 		std::vector<io::path> meshTextures;
-
+		//Update loading screen
+		StartLoadingScreen(SceneManager::BASICS);
+		EndLoadingScreen();
 		// Create a keymap-less camera for the intro sequence
 		camera = new Camera(GameManager::smgr);
 		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/Player/FPSArms.obj");
