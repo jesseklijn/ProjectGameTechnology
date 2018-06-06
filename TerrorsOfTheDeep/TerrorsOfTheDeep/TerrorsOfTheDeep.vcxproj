@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IRRLICHT_HOME)\include\noiselib\include\noise;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;$(IRRLICHT_HOME)\irrlicht-1.8.4\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IRRLICHT_HOME)\include\noiselib\include\noise;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;$(IRRLICHT_HOME)\irrlicht-1.8.4\include;$(IRRLICHT_HOME)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(IRRLICHT_HOME)\noiselib\bin;$(SolutionDir)lib;$(LibraryPath);$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\lib\Win32-visualStudio;$(IRRLICHT_HOME)\irrlicht-1.8.4\lib\Win32-visualstudio</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
