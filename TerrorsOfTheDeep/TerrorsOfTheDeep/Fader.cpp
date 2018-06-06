@@ -18,18 +18,23 @@ Fader::~Fader()
 
 void Fader::Update()
 {
-	switch (faderMode)
+	if (isFading)
 	{
+		switch (faderMode)
+		{
 		case FADE_IN:
 		{
 			alpha = GameManager::Clamp(alpha - alphaIncrement * GameManager::deltaTime, 0.0f, 1.0f);
-			isFading = alpha != 0.0f;
+			if (alpha == 0.0f)
+			{
+				faderMode = FADE_OUT;
+				isFading = false;
+			}
 		} break;
 
 		case FADE_OUT:
 		{
 			alpha = GameManager::Clamp(alpha + alphaIncrement * GameManager::deltaTime, 0.0f, 1.0f);
-			isFading = alpha != 1.0f;
 			if (alpha == 1.0f)
 			{
 				faderMode = FADE_IN;
@@ -38,11 +43,13 @@ void Fader::Update()
 		} break;
 
 		default: break;
+		}
 	}
 }
 
 void Fader::DrawGUI()
 {
-	GameManager::driver->draw2DRectangle(SColor(alpha * 255.0f, 0, 0, 0), rect<s32>(0, 0,
-		elementWidth, elementHeight));
+	IGUIImage* faderOverlay = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/UI/Background.png"), 
+		core::position2d<s32>(0, 0), true, 0, -1);
+	faderOverlay->setColor(SColor(alpha * 255.0f, 0, 0, 0));
 }

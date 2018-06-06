@@ -101,6 +101,7 @@ SceneManager::SceneManager()
 
 	SceneManager::fader = new Fader(new vector2df(0, 0), new vector2df(1, 1), new vector2df(0, 0),
 		0, GameManager::smgr, -1);
+	fader->isFading = true;
 }
 
 // Destructor
@@ -208,12 +209,6 @@ void SceneManager::Update()
 
 	if (camera)
 		camera->updatePos();
-
-	if (SceneManager::fader)
-	{
-		fader->Update();
-		fader->DrawGUI();
-	}
 }
 
 void SceneManager::StartLevelIntro()
@@ -821,7 +816,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 	{
 		//DetectCollision::ResetArray();
 		Menu* gameOverMenu = new Menu(new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f), new vector2df(0.0f, 0.0f),
-			Menu::PAUSE_MENU, 0, GameManager::smgr, 10000);
+			Menu::END_MENU, 0, GameManager::smgr, 10000);
 		gameOverMenu->elementWidth = 200.0f;
 		gameOverMenu->elementHeight = 124.0f;
 		gameOverMenu->hasWindowTitle = false;

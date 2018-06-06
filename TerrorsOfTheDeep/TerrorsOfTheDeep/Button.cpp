@@ -118,8 +118,9 @@ void Button::ButtonPressed()
 
 		case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 		{
-			SceneManager::fader->faderMode = SceneManager::fader->faderMode == Fader::FADE_IN ? Fader::FADE_OUT : Fader::FADE_IN;
+			SceneManager::fader->faderMode = Fader::FADE_OUT;
 			SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_MAIN;
+			SceneManager::fader->isFading = true;
 		} break;
 
 		case PM_QUIT:
@@ -129,8 +130,9 @@ void Button::ButtonPressed()
 
 		case GO_RETRY:
 		{
-			SceneManager::fader->faderMode = SceneManager::fader->faderMode == Fader::FADE_IN ? Fader::FADE_OUT : Fader::FADE_IN;
+			SceneManager::fader->faderMode = Fader::FADE_OUT;
 			SceneManager::faderAction = SceneManager::FaderAction::SCENE_SWITCH_TO_LEVEL;
+			SceneManager::fader->isFading = true;
 		} break;
 
 		default: break;

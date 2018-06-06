@@ -20,7 +20,7 @@ public:
 	FaderMode faderMode = FADE_IN;
 
 	bool isFading = true;
-	float alphaIncrement = 100.0f;
+	float alphaIncrement = 1.0f;
 
 
 	virtual void Update();
