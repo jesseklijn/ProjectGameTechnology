@@ -63,6 +63,8 @@ public:
 	// Event receiver
 	static EventManager eventManager;
 
+	static int gameSeed;
+
 	// A list of all X or derived classes of X in the scene
 	static std::vector<GameObject*> gameObjects;
 	static std::vector<InterfaceObject*> interfaceObjects;
@@ -96,7 +98,7 @@ public:
 	void FixedUpdate();
 	void Draw();
 
-	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition);
+	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition, irr::s32 id = 0);
 	static int FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag);
 
 	/* NOTE: These are now template functions for variable type parameters.

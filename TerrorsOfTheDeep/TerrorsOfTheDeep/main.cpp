@@ -38,12 +38,14 @@ int main()
 {
 	/* Seed the random number generator, so we don't end up with
 	the same random numbers on every run */
-	srand(static_cast<unsigned>(time(0)));
+	srand(time(NULL));
 
 	// Create managers
 	GameManager gameManager;
 	SceneManager sceneManager;
 	//DetectCollision detectCollision;
+
+	GameManager::gameSeed = rand() % 100000;
 
 	sceneManager.LoadScene(SceneManager::TITLE_SCREEN);
 

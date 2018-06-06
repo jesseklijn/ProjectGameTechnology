@@ -54,6 +54,10 @@ float GameManager::creatureStateRange = 5000.0f;
 bool GameManager::gameOver = false;
 const irr::core::dimension2du& GameManager::screenDimensions = GameManager::driver->getScreenSize();
 
+/* Seed the random number generator, so we don't end up with
+the same random numbers on every run */
+int GameManager::gameSeed = 0;
+
 // World dimensions
 const int GameManager::WORLD_RADIUS_X = 12000.0f;
 const int GameManager::WORLD_RADIUS_Y = 12000.0f;
@@ -76,7 +80,7 @@ int GameManager::skullCount = 2;
 GameManager::GameManager()
 {
 	// NOTE: if EFT_FOG_EXP / EFT_FOG_EXP2, distances don't matter, only density!
-	GameManager::driver->setFog(SColor(1, 0, 0, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0002f);
+	GameManager::driver->setFog(SColor(1, 10, 10, 25), EFT_FOG_EXP2, 0.0f, 5000.0f, 0.0003f);
 	GameManager::guienv->getSkin()->setFont(GameManager::font);
 	GameManager::smgr->setShadowColor(SColor(100, 0, 0, 0));
 	
@@ -224,7 +228,7 @@ Example:
 	<NODE>->setTriangleSelector(selector);
 	selector->drop();
 */
-ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition)
+ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPosition, irr::s32 id)
 {
 	ray.start = startPosition;
 	ray.end = endPosition;
@@ -234,8 +238,8 @@ ISceneNode* GameManager::PerformRaycast(vector3df startPosition, vector3df endPo
 			ray,
 			intersection,	// This will be the position of the collision
 			hitTriangle,	// This will be the triangle hit in the collision
-			0,				// This ensures that only nodes that we have set up to be pickable are considered
-			0);				// Check the entire scene (this is actually the implicit default)
+			id,				// This ensures that only nodes that we have set up to be pickable are considered
+			0);	// Check the entire scene (this is actually the implicit default)
 
 	return selectedSceneNode;
 }

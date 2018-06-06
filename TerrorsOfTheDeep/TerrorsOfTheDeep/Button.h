@@ -10,13 +10,14 @@ public:
 	enum ButtonType
 	{
 		// MM = Main Menu PM = Pause Menu GO = Game Over
-		MM_START,
-		MM_QUIT,
+		
 		PM_RESUME,
 		PM_BACK_TO_MAIN,
 		PM_QUIT,
 		GO_RETRY,
-		GO_BACK_TO_MAIN
+		GO_BACK_TO_MAIN,
+		MM_START,
+		MM_QUIT,
 	};
 	ButtonType buttonType;
 

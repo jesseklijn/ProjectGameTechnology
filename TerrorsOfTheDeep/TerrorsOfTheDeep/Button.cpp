@@ -120,6 +120,7 @@ void Button::ButtonPressed()
 
 	case PM_BACK_TO_MAIN: case GO_BACK_TO_MAIN:
 	{
+		GameManager::smgr->getActiveCamera()->drop();
 		SceneManager::PauseScene(false);
 		SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
 	} break;
@@ -131,6 +132,7 @@ void Button::ButtonPressed()
 
 	case GO_RETRY: case MM_START:
 	{
+		GameManager::smgr->getActiveCamera()->drop();
 		SceneManager::LoadScene(SceneManager::LEVEL);
 	} break;
 
