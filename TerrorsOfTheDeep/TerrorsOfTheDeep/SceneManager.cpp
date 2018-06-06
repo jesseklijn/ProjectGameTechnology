@@ -119,7 +119,8 @@ void SceneManager::Update()
 	{
 		
 		//TODO Shark doesn't move, make it move
-		levelMonster->Move(1, vector3df(0, 0, 1), false);
+		if (levelMonster != nullptr)
+			levelMonster->Move(1, vector3df(0, 0, 1), false);
 	}
 	if (GameManager::gameOver)
 		SceneManager::LoadScene(GAME_OVER);
@@ -394,17 +395,17 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		ICameraSceneNode* titleCam = GameManager::smgr->addCameraSceneNode(0, vector3df(0, 0, 0), vector3df(90, 0, 0), 0, true);
 		titleCam->setInputReceiverEnabled(false);
 
-		Shark* shark = new Shark(new vector3df(3000, -500, 0),
-			new vector3df(0.5f, 0.5f, 0.5f),
-			new vector3df(0, 0, 0),
-			0,
-			GameManager::smgr,
-			-1111,
-			GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
-			0,
-			false);
+		//-Shark* shark = new Shark(new vector3df(3000, -500, 0),
+		//	new vector3df(0.5f, 0.5f, 0.5f),
+		//	new vector3df(0, 0, 0),
+		//	0,
+		//	GameManager::smgr,
+		//	-1111,
+		//	GameManager::smgr->getMesh("../media/Monsters/Shark.obj"),
+		//	0,
+		//	false);
 
-		SceneManager::levelMonster = shark;
+		//SceneManager::levelMonster = shark;
 
 		ISceneNode* title = GameManager::smgr->addBillboardSceneNode(0, dimension2d<f32>(59, 52), vector3df(50, 10, 0), 0, 0);
 		title->setRotation(vector3df(0, 0, 0));
