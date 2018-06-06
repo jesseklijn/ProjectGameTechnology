@@ -804,9 +804,11 @@ void SceneManager::StartLoadingScreen(LoadingType loadingType)
 	GameManager::device->setWindowCaption(L"Loading Terrors Of The Deep");
 
 
-	IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
-	cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
-	cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
+	//IGUIImage* image = GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), core::position2d<s32>(0, 0), false, 0, -1, L"test");
+	GameManager::driver->draw2DImage(GameManager::driver->getTexture("../media/LoadingScreen/backgrounds/ruins3000x2000.jpg"), rect<s32>(0,0, GameManager::screenDimensions.Width, GameManager::screenDimensions.Height), rect<s32>(0, 0, 3000,2000));
+
+	//cout << image->getAbsoluteClippingRect().LowerRightCorner.X << endl;
+	//cout << image->getAbsoluteClippingRect().LowerRightCorner.Y << endl;
 
 	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/LoadingTitle.png"), core::position2d<s32>((GameManager::screenDimensions.Width - 1036) / 2, 0), true, 0, -1, L"test");
 	//GameManager::guienv->addImage(GameManager::driver->getTexture("../media/underwater-ruins.jpg"), core::position2d<s32>((GameManager::screenDimensions.Width - 700) / 2, (GameManager::screenDimensions.Height - 454) / 1.5F	), true, 0, -1, L"test");
