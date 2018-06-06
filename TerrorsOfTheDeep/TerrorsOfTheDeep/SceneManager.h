@@ -22,6 +22,7 @@
 
 // Forward declaration
 class Menu;
+class Fader;
 
 /* Class responsible for managing different scenes in the game.
 This includes scenes like a title screen, loading screen etcetera. */
@@ -58,6 +59,14 @@ public:
 		LAND_MARKS
 	};
 
+	enum FaderAction
+	{
+		NO_ACTION,
+		SCENE_SWITCH_TO_LEVEL,
+		SCENE_SWITCH_TO_MAIN
+	};
+	static FaderAction faderAction;
+
 	static SceneType scene, scenePrevious;
 	static bool sceneIsPaused, sceneIsLoaded;
 
@@ -88,6 +97,7 @@ public:
 	static Menu* mouseOverlay;
 	static Menu* keyOverlay;
 	static Menu* pauseMenu;
+	static Fader* fader;
 
 	// Default parameters
 	static vector3df* vectorZero; // Short for new vector3df(0,0,0)
@@ -140,4 +150,6 @@ public:
 	static vector3df baseScaleSkulls;
 	static vector3df scaleVariationSkulls;
 	static vector3df rotationVariationSkulls;
+
+	static void TriggerFaderAction();
 };

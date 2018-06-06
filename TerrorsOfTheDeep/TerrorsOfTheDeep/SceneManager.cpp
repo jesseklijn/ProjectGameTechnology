@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneManager.h"
+#include "Fader.h"
 #include "GridMesh.h"
 #include <Windows.h>
 
@@ -13,8 +14,9 @@ static const float FLASHLIGHT_RANGE = 4000.0f;
 GameObject* SceneManager::defaultGameObject;
 vector<GameObject*> SceneManager::defaultGameObjectList;
 
-SceneManager::SceneType SceneManager::scene = SceneManager::NONE;
+SceneManager::SceneType SceneManager::scene = SceneType::NONE;
 SceneManager::SceneType SceneManager::scenePrevious = SceneManager::scene;
+SceneManager::FaderAction SceneManager::faderAction = FaderAction::NO_ACTION;
 bool SceneManager::sceneIsPaused = false;
 int meshSelector;
 
@@ -22,6 +24,7 @@ GameObject* SceneManager::levelMonster = nullptr;
 GameObject* SceneManager::levelPlayer = nullptr;
 IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
+Fader* SceneManager::fader = nullptr;
 
 // Light data
 //irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
@@ -92,9 +95,12 @@ irr::core::vector3df SceneManager::rotationVariationSkulls = vector3df(15, 360, 
 // Constructor
 SceneManager::SceneManager()
 {
-	scene = NONE;
+	scene = SceneType::NONE;
 	scenePrevious = scene;
 	sceneIsPaused = false;
+
+	SceneManager::fader = new Fader(new vector2df(0, 0), new vector2df(1, 1), new vector2df(0, 0),
+		0, GameManager::smgr, -1);
 }
 
 // Destructor
@@ -203,6 +209,11 @@ void SceneManager::Update()
 	if (camera)
 		camera->updatePos();
 
+	if (SceneManager::fader)
+	{
+		fader->Update();
+		fader->DrawGUI();
+	}
 }
 
 void SceneManager::StartLevelIntro()
@@ -300,6 +311,23 @@ void SceneManager::HideKeyControlsOverlay()
 
 		if (introIsActive)
 			SceneManager::EndLevelIntro();
+	}
+}
+
+void SceneManager::TriggerFaderAction()
+{
+	switch (SceneManager::faderAction)
+	{
+		case SceneManager::SCENE_SWITCH_TO_LEVEL:
+		{
+			SceneManager::LoadScene(SceneManager::LEVEL);
+		} break;
+
+		case SceneManager::SCENE_SWITCH_TO_MAIN:
+		{
+			SceneManager::PauseScene(false);
+			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
+		} break;
 	}
 }
 
