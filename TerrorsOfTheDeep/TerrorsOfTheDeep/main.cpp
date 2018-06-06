@@ -47,7 +47,7 @@ int main()
 
 	GameManager::gameSeed = rand() % 100000;
 
-	sceneManager.LoadScene(SceneManager::LEVEL);
+	sceneManager.LoadScene(SceneManager::TITLE_SCREEN);
 
 	////////// MAIN PROGRAM LOOP //////////
 	while (GameManager::device->run())
