@@ -367,7 +367,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		camera = new Camera(GameManager::smgr);
 		IAnimatedMesh* playerMesh = GameManager::smgr->getMesh("../media/Player/FPSArms.obj");
 
-
+		StartLoadingScreen(SceneManager::PLAYER);
+		EndLoadingScreen();
 		// Spawn player in cage
 		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 5,
 			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/Player/armsText.jpg"));
@@ -385,7 +386,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		GameManager::gameObjects.push_back(cage);
 		SceneManager::divingCage = cage;
 		cage->isKinematic = true;
-
+		StartLoadingScreen(SceneManager::TERRORS);
+		EndLoadingScreen();
 		// Attach flashlight to the player
 		ISceneNode* newPlayer = player;
 		ILightSceneNode* flashlight = lighting.CreateSpotLight(flashlightColor,
@@ -394,7 +396,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			FLASHLIGHT_RANGE,
 			true,
 			player);
-
+		
 		Shark* shark = new Shark(new vector3df(8000, 5000, 0),
 			new vector3df(1, 1, 1),
 			new vector3df(0, 0, 0),
@@ -430,6 +432,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		// Spawn random objects on grid
 		IMeshBuffer* planeBuffer = playingField->mesh->getMesh()->getMeshBuffer(0);
 
+		StartLoadingScreen(SceneManager::RELICS);
+		EndLoadingScreen();
 		// Key collectible object
 		GameObject* key = new GameObject(new vector3df(0, 50, 0), new vector3df(0.5, 0.5, 0.5), SceneManager::vectorZero,
 			0, GameManager::smgr, 4,
@@ -439,8 +443,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		GameManager::gameObjects.push_back(key);
 		ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, nullptr);
 
-		StartLoadingScreen(SceneManager::LAND_MARKS);
-		EndLoadingScreen();
+		
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
 
@@ -456,7 +459,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
-
+		
 		// Keeps placing the key and chest on a different vertex if it's too close
 		while (true)
 		{
@@ -471,7 +474,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				break;
 			}
 		}
-
+		StartLoadingScreen(SceneManager::CRITTERS);
+		EndLoadingScreen();
 		// Spawn critters
 		meshDirectories.clear();
 		meshTextures.clear();
@@ -502,7 +506,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 				false);
 			GameManager::gameObjects.push_back(critter);
 		}
-
+		StartLoadingScreen(SceneManager::LAND_MARKS);
+		EndLoadingScreen();
 		// Spawn rocks
 		meshDirectories.clear();
 		meshTextures.clear();
@@ -529,7 +534,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 			rockList.push_back(rock);
 		}
-
+		StartLoadingScreen(SceneManager::RUINS);
+		EndLoadingScreen();
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), rockList);
 
@@ -560,7 +566,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 			ruinsList.push_back(ruins);
 		}
-
+		StartLoadingScreen(SceneManager::CORALS);
+		EndLoadingScreen();
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), ruinsList);
 
@@ -590,7 +597,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 			coralList.push_back(coral);
 		}
-
+		
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), coralList);
 
@@ -643,7 +650,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 			skullList.push_back(skull);
 		}
-
+		StartLoadingScreen(SceneManager::SHIPS);
+		EndLoadingScreen();
 		// Adds objects on the vertices of the playingfield mesh 
 		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), skullList);
 		// Uses the meshDirectionaries and meshTexture list to create game objects (ship)
@@ -680,6 +688,8 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		auto frameTimeEnd = std::chrono::system_clock::now();
 		std::chrono::duration<float> elapsed_seconds = frameTimeEnd - frameTimeStart;
 		float generationDuration = elapsed_seconds.count() * GameManager::gameSpeed  * 1000.0f;
+		GameManager::device->setWindowCaption(L"Now playing Terrors Of The Deep");
+
 
 		// Start the controls display timers, compensate for the huge deltaTime of 1-frame generation
 		SceneManager::introStartTimer = generationDuration + SceneManager::introStartTime;
