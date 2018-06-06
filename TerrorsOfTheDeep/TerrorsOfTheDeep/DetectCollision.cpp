@@ -2,8 +2,12 @@
 #include "SceneManager.h"
 
 // simple collision code. 
-bool DetectCollision::Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) {
-	return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
+bool DetectCollision::Col(irr::scene::ISceneNode* objectOne, irr::scene::ISceneNode* objectTwo, float size) 
+{
+	if (objectOne && objectTwo)
+		return (objectOne->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition()) < size);
+
+	return false;
 }
 
 void DetectCollision::fillInitialArray()
@@ -18,7 +22,7 @@ void DetectCollision::fillInitialArray()
 			}
 		}
 		arrayFilled = true;
-		std::cout << "Number of objects in oList: " << oList.size() << std::endl;
+		//std::cout << "Number of objects in oList: " << oList.size() << std::endl;
 	}
 }
 
@@ -27,9 +31,10 @@ void DetectCollision::getNearestObjectsFromPosition(GameObject* object, GameObje
 	if (object == nullptr || objectTwo == nullptr)
 		return;
 
-	float distance = (object->getAbsolutePosition() - objectTwo->getAbsolutePosition()).getLength();
+	float distance = GameManager::smgr->getActiveCamera()->getAbsolutePosition().getDistanceFrom(objectTwo->getAbsolutePosition());
+	//float distance = (object->getAbsolutePosition() - objectTwo->getAbsolutePosition()).getLength();
 
-	if (distance <= 1000)
+	if (distance <= 5000)
 	{
 		nearestObjects.push_back(objectTwo);
 	}
@@ -50,7 +55,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 		{
 			getNearestObjectsFromPosition(GameManager::levelPlayer, oList[i]);
 		}
-		//std::cout << nearestObjects.size() << std::endl;
+		//std::cout << "nearestObjects size: " << nearestObjects.size() << std::endl;
 		findNearestObjectsTimer = findNearestObjectsTime;
 	}
 
@@ -72,15 +77,12 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 				for (int j = 0; j < nearestObjects.size(); j++)
 				{
 					GameObject* obj2 = nearestObjects[j];
-					//float size = ((obj1->getTransformedBoundingBox().getExtent().X +
-					//	(obj2->getTransformedBoundingBox().getExtent().X)) * 0.5f
-					//	);
 
 					if (obj2 == nullptr)
 						continue;
 
 					// Temporary fix to be replaced by mesh collision
-					float size = 500;
+					float size = 300;
 					if (obj1->tag == GameObject::MONSTER || obj2->tag == GameObject::MONSTER)
 					{
 						size = 1000;
@@ -93,6 +95,7 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 						if (Col(obj1, obj2, size))
 						{
 							//std::cout << obj1->tag << " collides with " << obj2->tag << " size: " << size << std::endl;
+							int i = 0;
 							switch (obj1->tag) {
 							case GameObject::PLAYER:
 								switch (obj2->tag)
@@ -100,7 +103,12 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 								case GameObject::KEY:
 									GameManager::keyPickedUp = true;
 									obj2->mesh->remove();
-									GameManager::gameObjects.erase(GameManager::gameObjects.begin() + j);
+									i = GameManager::FindIndexInList(obj2, GameManager::gameObjects);
+									GameManager::gameObjects[i] = nullptr;
+									i = GameManager::FindIndexInList(obj2, oList);
+									oList[i] = nullptr;
+									i = GameManager::FindIndexInList(obj2, nearestObjects);
+									nearestObjects[i] = nullptr;
 									break;
 								case GameObject::CHEST:
 									if (GameManager::keyPickedUp)
@@ -125,7 +133,8 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 									// same as world_object
 								case GameObject::WORLD_OBJECT:
 									// collision resolution
-									Resolve(obj1, obj2);
+									obj1->NotifyCollision(obj2->getAbsolutePosition());
+									//Resolve(obj1, obj2);
 									break;
 								default:
 									break;
@@ -143,24 +152,32 @@ void DetectCollision::Detect(irr::scene::ISceneManager* smgr) {
 	}
 }
 
-void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
+//void DetectCollision::Resolve(GameObject* obj1, GameObject* obj2)
+//{
+//	vector3df currentVelocity = obj1->GetVelocity();
+//	float sizeVelocity = currentVelocity.getLength();
+//	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+//	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
+//
+//	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
+//	direction.normalize();
+//
+//	obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
+//	obj1->SetVelocity(sizeVelocity * reflection.normalize());
+//}
+//
+//float DetectCollision::Dot(vector3df vector1, vector3df vector2)
+//{
+//	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+//}
+
+void DetectCollision::ResetArray()
 {
-	vector3df currentVelocity = obj1->GetVelocity();
-	float sizeVelocity = currentVelocity.getLength();
-	vector3df normal = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	vector3df reflection = currentVelocity - Dot(currentVelocity, normal) * normal;
-
-	vector3df direction = obj2->getAbsolutePosition() - obj1->getAbsolutePosition();
-	direction.normalize();
-
-	obj1->setPosition(obj1->getAbsolutePosition() - 5 * sizeVelocity * direction);
-	obj1->SetVelocity(sizeVelocity * reflection.normalize());
+	arrayFilled = false;
+	oList.clear();
+	nearestObjects.clear();
 }
 
-float DetectCollision::Dot(vector3df vector1, vector3df vector2)
-{
-	return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
-}
 
 
 DetectCollision::DetectCollision()

@@ -26,6 +26,8 @@ public:
 
 	bool canMove = true;
 	float moveSpeed = 0.25f;
+	bool isColliding = false;
+	irr::core::vector3df colPos;
 
 	// Functions
 	void render() override;
@@ -41,6 +43,7 @@ public:
 	virtual Tag GetTag();
 	virtual void setTag(GameObject::Tag tagPar);
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
+	void NotifyCollision(irr::core::vector3df objPosition);
 
 private:
 };

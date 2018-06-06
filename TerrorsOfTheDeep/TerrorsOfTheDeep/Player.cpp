@@ -183,7 +183,10 @@ void Player::UpdatePos()
 /// Moves the player's parent (camera) according to the given movement vector.
 void Player::MoveParent(vector3df parentMovement)
 {
-	getParent()->setPosition(getParent()->getPosition() + speed * parentMovement.normalize());
+	vector3df newPos = getParent()->getPosition() + speed * parentMovement.normalize();
+	if (!(isColliding && getParent()->getPosition().getDistanceFrom(colPos) > newPos.getDistanceFrom(colPos))) {
+		getParent()->setPosition(newPos);
+	}
 }
 
 void Player::NotifyCollision(vector3df objPosition)

@@ -107,6 +107,8 @@ void GameObject::Update()
 	// Run the Update() of our base class
 	DynamicUpdater::Update();
 
+	isColliding = false;
+
 	updateAbsolutePosition();
 }
 
@@ -134,9 +136,15 @@ void GameObject::Move(float speed, irr::core::vector3df direction, bool turnToDi
 	//}
 
 	//Add a vector of length speed in the given direction
-	setPosition(getPosition() + (direction.normalize() * speed));
+
+	vector3df newPos = getPosition() + (direction.normalize() * speed);
+	if (!(isColliding && getPosition().getDistanceFrom(colPos) > newPos.getDistanceFrom(colPos)))
+		setPosition(newPos);
+
 	if (mesh)
 		mesh->setPosition(getPosition());
+
+
 	if (turnToDirection)
 	{
 		setRotation(direction.getHorizontalAngle());
@@ -154,4 +162,10 @@ void GameObject::setTag(GameObject::Tag tagPar)
 {
 	tag = tagPar;
 	PhysicsObject::tag = tag;
+}
+
+void GameObject::NotifyCollision(vector3df objPosition)
+{
+	isColliding = true;
+	colPos = objPosition;
 }

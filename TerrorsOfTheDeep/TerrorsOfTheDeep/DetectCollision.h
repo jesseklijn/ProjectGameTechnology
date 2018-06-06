@@ -29,5 +29,6 @@ public:
 
 	void Resolve(GameObject* obj1, GameObject* obj2);
 	float Dot(irr::core::vector3df vector1, irr::core::vector3df vector2);
+	void ResetArray();
 };
 
