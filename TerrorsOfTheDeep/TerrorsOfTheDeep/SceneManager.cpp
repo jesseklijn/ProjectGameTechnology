@@ -6,8 +6,8 @@
 
 using namespace std;
 static const int NO_PARENT = 0;
-static const float KEYLIGHT_RADIUS = 3000.0f;
-static const float CHESTLIGHT_RADIUS = 3000.0f;
+static const float KEYLIGHT_RADIUS = 2000.0f;
+static const float CHESTLIGHT_RADIUS = 2000.0f;
 static const float FLASHLIGHT_RANGE = 4000.0f;
 
 
@@ -33,8 +33,8 @@ irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f,
 irr::video::SColorf SceneManager::ambientColorTitle = irr::video::SColorf(0.7f, 0.7f, 0.8f, 1.0f);
 //irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
 irr::video::SColorf SceneManager::flashlightColor = irr::video::SColorf(1.0f, 1.0f, 1.0f, 1.0f);
-vector3df SceneManager::chestLightOffset = vector3df(40, 300, 0);
-vector3df SceneManager::keyLightOffset = vector3df(0, 100, 0);
+vector3df SceneManager::chestLightOffset = vector3df(40, 600, 0);
+vector3df SceneManager::keyLightOffset = vector3df(0, 400, 0);
 
 Camera* SceneManager::camera;
 HUD* SceneManager::hud = new HUD();
@@ -327,7 +327,7 @@ void SceneManager::TriggerFaderAction()
 
 		case SceneManager::SCENE_SWITCH_TO_MAIN:
 		{
-			SceneManager::PauseScene(false);
+			SceneManager::PauseScene(false);			
 			SceneManager::LoadScene(SceneManager::TITLE_SCREEN);
 		} break;
 	}
@@ -355,7 +355,11 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 	// Unload current scene
 	if (sceneToLoad != GAME_OVER)
+	{
+		GameManager::escaped = false;
 		GameManager::gameOver = false;
+	}
+	GameManager::keyPickedUp = false;
 	GameManager::smgr->clear();
 	for (GameObject* gameObj : GameManager::gameObjects)
 		if (gameObj != nullptr)
@@ -497,7 +501,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		StartLoadingScreen(SceneManager::PLAYER);
 		EndLoadingScreen();
 		// Spawn player in cage
-		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 3.0f,
+		Player* player = new Player(new vector3df(0, 0, 0), new vector3df(1, 1, 1), new vector3df(0, 0, 0), 7.0f,
 			GameManager::smgr->getActiveCamera(), GameManager::smgr, -1337, playerMesh, GameManager::driver->getTexture("../media/Player/armsText.jpg"));
 		GameManager::gameObjects.push_back(player);
 		GameManager::levelPlayer = player;
@@ -561,8 +565,9 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 		StartLoadingScreen(SceneManager::RELICS);
 		EndLoadingScreen();
+
 		// Key collectible object
-		GameObject* key = new GameObject(new vector3df(0, 50, 0), new vector3df(0.5, 0.5, 0.5), SceneManager::vectorZero,
+		GameObject* key = new GameObject(new vector3df(0, 0, 0), new vector3df(0.5, 0.5, 0.5), SceneManager::vectorZero,
 			0, GameManager::smgr, 4,
 			GameManager::smgr->getMesh("../media/WinLose/key.obj"),
 			GameManager::driver->getTexture("../media/WinLose/RustTexture.jpg"));
@@ -572,10 +577,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 
 
 		// Adds objects on the vertices of the playingfield mesh 
-		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
+		//playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, key, {}, true, true);
 
 		// Win condition trigger object
-		GameObject* chest = new GameObject(new vector3df(-200, -100, 150), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
+		GameObject* chest = new GameObject(new vector3df(0, 0, 0), new vector3df(13, 13, 13), new vector3df(0, 0, 0),
 			0, GameManager::smgr, 5,
 			GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"),
 			GameManager::driver->getTexture("../media/WinLose/GoldTexture.jpg"));
@@ -585,7 +590,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 		GameManager::gameObjects.push_back(chest);
 
 		// Adds objects on the vertices of the playingfield mesh 
-		playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
+		//playingField->RandomObjectPlacementOnVertex(planeBuffer, playingField->getPosition(), {}, chest, {}, true, true);
 
 		// Keeps placing the key and chest on a different vertex if it's too close
 		while (true)
@@ -598,10 +603,10 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			}
 			else
 			{
+				ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, 0);
+				ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, 0);
 				break;
 			}
-			ILightSceneNode* chestLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), chest->getPosition() + chestLightOffset, CHESTLIGHT_RADIUS, false, 0);
-			ILightSceneNode* keyLight = lighting.CreatePointLight(video::SColorf(0.5f, 0.5f, 0.2f, 1.0f), key->getPosition() + keyLightOffset, KEYLIGHT_RADIUS, false, 0);
 		}
 		StartLoadingScreen(SceneManager::CRITTERS);
 		EndLoadingScreen();
