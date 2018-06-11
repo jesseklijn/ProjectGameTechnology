@@ -571,7 +571,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			0, GameManager::smgr, 4,
 			GameManager::smgr->getMesh("../media/WinLose/key.obj"),
 			GameManager::driver->getTexture("../media/WinLose/RustTexture.jpg"));
-		key->setTag(GameObject::KEY);
+		key->SetTag(GameObject::KEY);
 		GameManager::gameObjects.push_back(key);
 		
 
@@ -585,7 +585,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"),
 			GameManager::driver->getTexture("../media/WinLose/GoldTexture.jpg"));
 		chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-		chest->setTag(GameObject::CHEST);
+		chest->SetTag(GameObject::CHEST);
 		
 		GameManager::gameObjects.push_back(chest);
 

@@ -114,7 +114,7 @@ NoiseGenerator::~NoiseGenerator()
 /// The color of the pixel of the given coordinates will be calculated by using an irrlicht built-in function "getPixel". This value will be returned to the caller <br/>
 /// <b>Output</b><br/>
 /// A SColor value of the given image of the given pixel
-video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, int x, int y)
+video::SColor NoiseGenerator::GetPixelColor(video::ITexture* texture, int x, int y)
  {
 	// Set the default color of the pixel 
 	video::SColor pixel = video::SColor(0, 0, 0, 0);

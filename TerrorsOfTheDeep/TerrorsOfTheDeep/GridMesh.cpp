@@ -307,7 +307,7 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 	{
 		// Generate noiseMap 
 		NoiseGenerator* noiseGenerator = new NoiseGenerator();
-		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp");
+		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp", 256,256);
 		ITexture* texture = GameManager::driver->getTexture("../media/heightMap.bmp");
 
 		// Divide the noise map by the vertices of the mesh to get good color differences
@@ -320,7 +320,7 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 			{
 				// Draw the vertices and use the noise map's pixel for the height of the vertex to create natural hill heights
 				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
-					noiseGenerator->getPixelColor(texture,
+					noiseGenerator->GetPixelColor(texture,
 					                              x * precisionX, y * precisionY).getRed() * heightMultiplier,
 					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
 					x, y));
@@ -383,5 +383,5 @@ core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 
 SMaterial& GridMesh::getMaterial(u32 i)
 {
-	return Material;
+	return material;
 }

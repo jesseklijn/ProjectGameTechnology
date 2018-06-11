@@ -10,7 +10,7 @@ GameObject::GameObject(const irr::core::vector3df* startPosition,
 						: PhysicsObject(parent, mgr, id, startPosition, mass)
 
 {
-	setTag(GameObject::WORLD_OBJECT);
+	SetTag(GameObject::WORLD_OBJECT);
 
 	setPosition(*startPosition);
 	setScale(*startScale);
@@ -81,7 +81,7 @@ void GameObject::render()
 
 const aabbox3d<f32>& GameObject::getBoundingBox() const
 {
-	return Box;
+	return box;
 }
 
 u32 GameObject::getMaterialCount() const
@@ -91,7 +91,7 @@ u32 GameObject::getMaterialCount() const
 
 SMaterial& GameObject::getMaterial(u32 i)
 {
-	return Material;
+	return material;
 }
 
 /** Runs a default Update() loop, ran every frame.
@@ -158,7 +158,7 @@ GameObject::Tag GameObject::GetTag()
 	return tag;
 }
 
-void GameObject::setTag(GameObject::Tag tagPar)
+void GameObject::SetTag(GameObject::Tag tagPar)
 {
 	tag = tagPar;
 	PhysicsObject::tag = tag;

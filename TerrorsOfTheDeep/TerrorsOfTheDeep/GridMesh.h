@@ -26,11 +26,6 @@ public:
 	/// Variables
 	static const int GRID_OFFSET = 20; //grid part that �sn't accessible by the player (field beyond level boundaries)
 	static const int CELL_SIZE = 250; //Define the size of 1 cell (1 unit)
-	irr::core::vector3df* startPos;
-	int xSizeGrid, ySizeGrid;
-
-	/// Ground modifiers
-	int heightMultiplier = 10;  //Height factor multiplier for vertices
 
 	/// Functions 
 	virtual irr::video::SMaterial& getMaterial(irr::u32 i);
@@ -49,6 +44,11 @@ public:
 	vector<bool> previousPlacementTracker;
 
 private:
+
+	/// Ground modifiers
+	int heightMultiplier = 10;  //Height factor multiplier for vertices
 	irr::core::array<irr::video::S3DVertex> DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap = false);
-	irr::core::array<unsigned short> DrawTriangles(int xSizeGrid, int ySizeGrid);
+	irr::core::array<u16> DrawTriangles(int xSizeGrid, int ySizeGrid);
+	irr::core::vector3df* startPos;
+	int xSizeGrid, ySizeGrid;
 }; 
