@@ -207,7 +207,9 @@
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SoundEngine.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="UnitTests.cpp" />
+    <ClCompile Include="UnitTests.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />

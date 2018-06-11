@@ -3,18 +3,26 @@
 using namespace irr;
 using namespace scene;
 
-/*Example use:
-For ambient scene light:
-Lighting(smgr).SetSceneLight(irr::video::SColorf(r,g,b,a));
-
-All CreateLight functions have two extra arguments after color and position, namely castShadow and parentNode. 
-These default to false and 0.
-
-ILightSceneNode* light1 = Lighting(smgr).CreatePointLight(irr::video::SColorf(r,g,b,a), irr::core::vector3df(0, 30, -40));
-or
-ILightSceneNode* light1 = Lighting(smgr).CreatePointLight(irr::video::SColorf(r,g,b,a), core::vector3df(0, 30, -40), true, 5);
-
-Directional and Spotlight also require a vector3 dir for rotation
+/** Example use:
+ * For ambient scene light:
+ * Lighting(smgr).SetSceneLight(irr::video::SColorf(red,green,blue,alpha)
+ *
+ * For all Create[Name]Light functions:
+ * Lighting(smgr).Create[Name]Light(SColorf(red, green, blue, alpha), vector3df(x,y,z), vector3df(x,y,z), float 1000-5000, bool, ISceneNode)
+ * All CreateLight functions have two extra arguments after color and position, namely castShadow and parentNode.
+ * These default to false and 0 respectively.
+ *
+ * ILightSceneNode* light1 = Lighting(smgr).CreatePointLight(irr::video::SColorf(r,g,b,a), irr::core::vector3df(0, 30, -40), irr::core::vector3df(0,90,0));
+ * or
+ * ILightSceneNode* light1 = Lighting(smgr).CreatePointLight(irr::video::SColorf(r,g,b,a), core::vector3df(0, 30, -40), irr::core::vector3df(0,90,0), true, 5);
+ *
+ * Note: Directional and Spotlight require a vector3df for rotation. PointLight, however, does not.
+ *
+ * Variable usage: 
+ * SColorf expects floats between 0 and 1
+ * Radius correlates to the intensity of the light and needs to be a large value, preferably between 1000 and 5000.
+ * vector3df for rotation is used as degrees, not radians. If you want to rotate an object by 90 degrees along the x axis,
+ * you'd use vector3df(90,0,0)
 */
 
 
@@ -60,9 +68,9 @@ ILightSceneNode* Lighting::CreateDirectionalLight(irr::video::SColorf color, irr
 // Creates a spot light e.g. a flashlight
 ILightSceneNode* Lighting::CreateSpotLight(irr::video::SColorf color, irr::core::vector3df pos, irr::core::vector3df dir, float radius, bool castShadow, ISceneNode* parentNode)
 {
-	
+
 	ILightSceneNode* light = smgr->addLightSceneNode(parentNode, pos, color);
-	
+
 	light->setLightType(video::ELT_SPOT);
 	light->setRadius(radius);
 	irr::video::SLight lightData = light->getLightData();
@@ -72,7 +80,7 @@ ILightSceneNode* Lighting::CreateSpotLight(irr::video::SColorf color, irr::core:
 	lightData.Falloff = 20.f;
 	lightData.SpecularColor = video::SColorf(0.0f, 0.0f, 0.0f, 0.f);
 	light->setLightData(lightData);
-	
+
 	if (castShadow)
 		light->enableCastShadow(true);
 	return light;

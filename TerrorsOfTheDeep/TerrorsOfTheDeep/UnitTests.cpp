@@ -1,5 +1,5 @@
-
-
+#include "Lighting.h"
+#include <irrlicht.h>
 #include <vector3d.h>
 
 int UnitTestExample(int testVar) 
