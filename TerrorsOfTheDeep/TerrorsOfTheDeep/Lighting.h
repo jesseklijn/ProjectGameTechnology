@@ -8,9 +8,9 @@
  * Comes with predefined lightData settings to ensure homogenous light behaviour.
  *  
  * Requires an initialized ISceneManager, otherwise the lights can't be assigned to a Scene.
- * The parameters required for the Create[Name]Light functions are mostly the same, however the functions are still split up in order to increase code readability and usability.
- * The CreatePointLight function does not require the vector3df rotation.
- * The type of light is clearly defined in the name of the function.
+ * The parameters required for the Create[Name]Light functions are mostly the same, however the methods are still split up in order to increase code readability and usability.
+ * The CreatePointLight method does not require the vector3df rotation.
+ * The type of light is clearly defined in the name of the method.
  *  
  * SetSceneLight is used for ambient light, which only requires an SColorf type variable to set the colour.
  *  
