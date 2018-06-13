@@ -10,7 +10,7 @@
 // If this runs on Windows, link with the Irrlicht lib file. Also disable the default C++ console window
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
 EventManager GameManager::eventManager;
@@ -188,36 +188,36 @@ void GameManager::Draw()
 			interfaceObject->DrawGUI();
 }
 
-// Returns the smallest of the two values.
+/// Returns the smallest of the two values.
 float GameManager::Min(float value, float value2)
 {
 	return value <= value2 ? value : value2;
 }
 
-// Returns the largest of the two values
+/// Returns the largest of the two values
 float GameManager::Max(float value, float value2)
 {
 	return value > value2 ? value : value2;
 }
 
-// Limits the given value between a min and max value.
+/// Limits the given value between a min and max value.
 float GameManager::Clamp(float value, float minValue, float maxValue)
 {
 	return GameManager::Max(minValue, GameManager::Min(value, maxValue));
 }
 
-// Interpolates between the first and second value with a given blending factor.
+/// Interpolates between the first and second value with a given blending factor.
 float GameManager::Lerp(float value, float value2, float blend)
 {
 	return value + blend * (value2 - value);
 }
 
-// Interpolates between the first and second vector with a given blending factor.
+/// Interpolates between the first and second vector with a given blending factor.
 irr::core::vector3df GameManager::Lerp(irr::core::vector3df value, irr::core::vector3df value2, double blend)
 {
-	return vector3df(value.X + (blend * (value2.X - value.X)),
-		value.Y + (blend * (value2.Y - value.Y)),
-		value.Z + (blend * (value2.Z - value.Z)));
+	return vector3df(GameManager::Lerp(value.X, value2.X, blend),
+		GameManager::Lerp(value.Y, value2.Y, blend),
+		GameManager::Lerp(value.Z, value2.Z, blend));
 }
 
 /* Cast a Raycast line between the given start and end positions and return the ISceneNode that was hit.

@@ -19,9 +19,39 @@ using namespace gui;
 #pragma endregion
 
 
-/* Class responsible for managing the overall game.
-Makes use of state tracking and switching.
-Runs Update() and Draw() calls for every GameObject. */
+/**
+* Class responsible for managing the overall game.
+* 
+* Holds global components and initializes the core Irrlicht engine. Also keeps 
+* track of GameObjects and InterfaceObjects that are added to the GameManager's
+* vector<GameObject*> gameObjects or vector<InterfaceObject*> interfaceObjects
+* lists, provides search functions for these lists and adds basic math functionality.
+* 
+* When adding an object to either list, the GameManager will internally
+* call the following function structure for each object (in the following order):
+*
+* - Update(); - Ran every game frame
+* - FixedUpdate(); - Ran every fixed timestep, used for physics
+* - Draw(); - Ran every game frame, used for drawing something
+* in the world.
+* - DrawGUI(); - Ran every game frame, used for drawing something
+* on a GUI / game interface level.
+*
+* All positional and conditional behaviour should be executed first, which is
+* why Update(); and FixedUpdate(); come first. Drawing should always be done
+* after said updates, to prevent jitter/lag of one frame where drawing is done
+* on the previous coordinates instead of the actual position of objects at the
+* end of the main gameloop. That's why Draw(); and DrawGUI(); come next.
+*
+* NOTE: FixedUpdate(); is framerate independent with a fixed timestep, so
+* it won't run every frame necessarily. The default timestep is 60 frames, which
+* means that if you were running the game at 300 FPS, FixedUpdate(); would be
+* called every fifth frame. It's also important to note that it comes with its
+* own seperate delta timing and corrects an additional timing offset inbetween
+* calling frames. It's used for physics, so only GameObjects benefit from it at 
+* the moment. InterfaceObjects don't use it as it is. See GameManager::FixedUpdate(); 
+* for more details.
+*/
 class GameManager
 {
 public:
@@ -101,21 +131,36 @@ public:
 	static scene::ISceneNode* PerformRaycast(core::vector3df startPosition, core::vector3df endPosition, irr::s32 id = 0);
 	static int FindTagInTagList(std::vector<GameObject::Tag> vectorList, GameObject::Tag listTag);
 
-	/* NOTE: These are now template functions for variable type parameters.
-
-	Because we now have GameObjects as well as InterfaceObjects, we'd have to write double functions for both classes.
-	With a template this can be varied, but template functions must be implemented in the same header file as the class
-	that holds the functions, so you can find their implementation below this class. */
-	template <class T> 
-	static int FindIndexInList(T* object, std::vector<T*> targetList);
+	/**
+	* Template functions for list interactions.
+	* 
+	* Because we now have GameObjects as well as InterfaceObjects, we'd have to write double functions for both classes.
+	* Polymorphism is a way of dealing with this, but we'd still have to write multiple cases of the same function with
+	* different type parameters. 
+	* 
+	* With a template we can use the same function for a variable type parameter. This saves a lot of work, especially
+	* if we decided to add more classes at the same level of GameObject or InterfaceObject.
+	* 
+	* Their implementation is inline due to processing overhead. AI systems such as Monsters and Critters tend to call
+	* these regularly to find targets.
+	*/
+	template <class T> static int FindIndexInList(T* object, std::vector<T*> targetList);
 	template <class T> static T* FindObjectWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList);
 	template <class T> static std::vector<T*> FindObjectsWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList);
 	template <class T> static std::vector<T*> FindObjectsWithTags(std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList);
-	template <class T> static T* FindNearestObjectWithTag(T* origin, DynamicUpdater::Tag name, std::vector<T*> objectList, double detectionRange = INFINITY, bool visibilityCheck = false);
-	template <class T> static T* FindNearestObjectWithTags(T* origin, std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList, float detectionRange = INFINITY, bool visibilityCheck = false);
-	template <class T> static T* FindFurthestObjectWithTag(T* origin, DynamicUpdater::Tag name, std::vector<T*> objectList, double detectionRange = INFINITY, bool visibilityCheck = false);
-	template <class T> static T* FindFurthestObjectWithTags(T* origin, std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList, double detectionRange = INFINITY, bool visibilityCheck = false);
+	template <class T> static T* FindNearestObjectWithTag(T* origin, DynamicUpdater::Tag name, std::vector<T*> objectList, 
+		double detectionRange = INFINITY, bool visibilityCheck = false);
+	template <class T> static T* FindNearestObjectWithTags(T* origin, std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList, 
+		float detectionRange = INFINITY, bool visibilityCheck = false);
+	template <class T> static T* FindFurthestObjectWithTag(T* origin, DynamicUpdater::Tag name, std::vector<T*> objectList, 
+		double detectionRange = INFINITY, bool visibilityCheck = false);
+	template <class T> static T* FindFurthestObjectWithTags(T* origin, std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList, 
+		double detectionRange = INFINITY, bool visibilityCheck = false);
 
+	/**
+	* Quick implementation of certain mathematical functions that were needed throughout the game
+	* and did not seem to be easily accessible through generic math libraries.
+	*/
 	static float Min(float value, float value2);
 	static float Max(float value, float value2);
 	static float Clamp(float value, float minValue, float maxValue);
@@ -141,7 +186,10 @@ inline int GameManager::FindIndexInList(T * object, std::vector<T*> targetList)
 	return -1;
 }
 
-/* Finds the first object that satisfies the given tag. */
+/** 
+* Returns the first object that satisfies the given tag or a null pointer if no
+* object was found.
+*/
 template<class T>
 inline T* GameManager::FindObjectWithTag(DynamicUpdater::Tag tag, std::vector<T*> objectList)
 {
@@ -162,7 +210,10 @@ inline std::vector<T*> GameManager::FindObjectsWithTag(DynamicUpdater::Tag tag, 
 	return objs;
 }
 
-// Finds all GameObjects that satisfy the given tag list.
+/**
+* Returns a list of objects that satisfy the given tag(s) or an empty list if no
+* objects were found.
+*/
 template<class T>
 inline std::vector<T*> GameManager::FindObjectsWithTags(std::vector<DynamicUpdater::Tag> tagList, std::vector<T*> objectList)
 {
@@ -173,16 +224,18 @@ inline std::vector<T*> GameManager::FindObjectsWithTags(std::vector<DynamicUpdat
 	return objs;
 }
 
-/* Finds the nearest GameObject, from another GameObject's position, that satisfies the given tag.
-Optionally a max detection range and a visibility check can be enabled for more specific searches. */
+/** 
+* Finds the nearest object, from another object's position, that satisfies the given tag.
+* Optionally a max detection range and a visibility check can be enabled for more specific searches.
+*/
 template<class T>
-inline T * GameManager::FindNearestObjectWithTag(T * origin, DynamicUpdater::Tag name, std::vector<T*> objectList, double detectionRange, bool visibilityCheck)
+inline T * GameManager::FindNearestObjectWithTag(T * origin, DynamicUpdater::Tag tag, std::vector<T*> objectList, double detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
 	for (GameObject* gameObj : objectList)
 	{
-		if (gameObj != nullptr && gameObj != origin && gameObj->GetTag() == name)
+		if (gameObj != nullptr && gameObj != origin && gameObj->GetTag() == tag)
 		{
 			currentDistance = (gameObj->getAbsolutePosition() - origin->getAbsolutePosition()).getLength();
 			if (currentDistance < detectionRange && currentDistance < closestDistance)
