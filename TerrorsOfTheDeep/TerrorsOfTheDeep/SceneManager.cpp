@@ -27,6 +27,7 @@ IAnimatedMeshSceneNode* SceneManager::levelPlane = nullptr;
 Menu* SceneManager::pauseMenu = nullptr;
 Fader* SceneManager::fader = nullptr;
 ITexture* SceneManager::loadingScreenImage = nullptr;
+int SceneManager::groundID = -1337;
 
 // Light data
 irr::video::SColorf SceneManager::ambientColor = irr::video::SColorf(0.3f, 0.3f, 0.4f, 1.0f);
@@ -552,7 +553,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr,
 			-100);
 		GameManager::gameObjects.push_back(playingField);
-		playingField->mesh->setID(-1337);
+		playingField->mesh->setID(SceneManager::groundID);
 		playingField->isKinematic = true;
 		SceneManager::levelPlane = playingField->mesh;
 
@@ -571,7 +572,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			0, GameManager::smgr, 4,
 			GameManager::smgr->getMesh("../media/WinLose/key.obj"),
 			GameManager::driver->getTexture("../media/WinLose/RustTexture.jpg"));
-		key->setTag(GameObject::KEY);
+		key->SetTag(GameObject::KEY);
 		GameManager::gameObjects.push_back(key);
 		
 
@@ -585,7 +586,7 @@ bool SceneManager::LoadScene(SceneType sceneToLoad)
 			GameManager::smgr->getMesh("../media/WinLose/ChestCartoon.obj"),
 			GameManager::driver->getTexture("../media/WinLose/GoldTexture.jpg"));
 		chest->mesh->setMaterialFlag(irr::video::EMF_LIGHTING, true);
-		chest->setTag(GameObject::CHEST);
+		chest->SetTag(GameObject::CHEST);
 		
 		GameManager::gameObjects.push_back(chest);
 

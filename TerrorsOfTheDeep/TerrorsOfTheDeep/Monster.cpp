@@ -12,7 +12,7 @@ Monster::Monster(const irr::core::vector3df* startPosition,
 	bool detectCollision, bool castsShadows)
 	: Creature(startPosition, startScale, startRotation, parent, mgr, id, relatedMesh, relatedTexture, detectCollision, castsShadows)
 {
-	GameObject::setTag(GameObject::MONSTER);
+	GameObject::SetTag(GameObject::MONSTER);
 
 	canAttack = true;
 	canFlee = false;

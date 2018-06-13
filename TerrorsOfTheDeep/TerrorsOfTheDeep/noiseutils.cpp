@@ -26,6 +26,7 @@
 #include <mathconsts.h>
 
 #include "noiseutils.h"
+#include <model/plane.h>
 
 using namespace noise;
 using namespace noise::model;

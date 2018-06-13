@@ -36,13 +36,24 @@ NoiseGenerator::~NoiseGenerator()
 /// <b>Output</b><br/>
 /// A noise map that has generated and placed in the "fileDestName" path.
 
- void NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
+ bool NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
+	 if (fileDestName == "")
+	 {
+		 return false;
+	 }
+
+	 // Checks if the X and Y are positive since the image size must be a positive and higher than 0
+	 if (imageSizeX <= 0 || imageSizeY <= 0)
+	 {
+		 return false;
+	 }
+
 	// Set image size to the value of the parameter to be used outside the function
 	xSizeImage = imageSizeX;
 	ySizeImage = imageSizeY;
 
-	// Create noise modules and required items to create the noise map
+	// Create noise modules and required components to create the noise map
 	Billow billow;
 	RidgedMulti mountainTerrain;
 	Billow baseFlatTerrain;
@@ -60,6 +71,8 @@ NoiseGenerator::~NoiseGenerator()
 	finalTerrain.SetSeed(GameManager::gameSeed);
 
 	baseFlatTerrain.SetFrequency(1.0);
+
+	// Combines the module with another module
 	flatTerrain.SetSourceModule(0, baseFlatTerrain);
 	flatTerrain.SetScale(0.25);
 	flatTerrain.SetBias(-0.85);
@@ -79,6 +92,7 @@ NoiseGenerator::~NoiseGenerator()
 	finalTerrain.SetFrequency(1.0);
 	finalTerrain.SetPower(0.1);
 
+	// Selects the module and the noise map where this module will be built 
 	heightMapBuilder.SetSourceModule(finalTerrain);
 	heightMapBuilder.SetDestNoiseMap(heightMap);
 
@@ -99,6 +113,8 @@ NoiseGenerator::~NoiseGenerator()
 	writer.SetSourceImage(image);
 	writer.SetDestFilename(fileDestName);
 	writer.WriteDestFile();
+
+	return true;
 }
 
 /// Get the color of the pixel in the selected texture. 
@@ -114,28 +130,33 @@ NoiseGenerator::~NoiseGenerator()
 /// The color of the pixel of the given coordinates will be calculated by using an irrlicht built-in function "getPixel". This value will be returned to the caller <br/>
 /// <b>Output</b><br/>
 /// A SColor value of the given image of the given pixel
-video::SColor NoiseGenerator::getPixelColor(video::ITexture* texture, int x, int y)
+video::SColor NoiseGenerator::GetPixelColor(video::ITexture* textureImage, int x, int y)
  {
-	// Set the default color of the pixel 
-	video::SColor pixel = video::SColor(0, 0, 0, 0);
+	ITexture* texture = textureImage;
 
-	// Does the texture exist?
-	 if (texture == nullptr )
-		 return pixel;
+	if (texture == nullptr)
+	{
+		return NULL;
+	}
 
-	 dimension2du textureDimensions = texture->getOriginalSize();
-
-	// Checks if the X and Y are positive so they can be used for the image
-	 if (x < 0 || y < 0) 
+	 if (x < 0 || y < 0)
 	 {
-		 return pixel;
+		 return NULL;
 	 }
+
+	 // Set the default color of the pixel 
+	 video::SColor pixel = video::SColor(0, 0, 0, 0);
+
+	 // Get the original size of the texture (in case if it's scaled)
+	 dimension2du textureDimensions = texture->getOriginalSize();
 
 	 // Is the given X and Y within the image size?
 	 if (x > textureDimensions.Width || y > textureDimensions.Height)
 	 {
 		 return pixel;
 	 }
+
+	 // Create an image out of the texture in order to make use of the irrlicht built-in function "getPixel"
 	 IImage* image = GameManager::driver->createImage(texture, vector2d<s32>(0, 0), texture->getOriginalSize());
 	 pixel = image->getPixel(x, y);
 

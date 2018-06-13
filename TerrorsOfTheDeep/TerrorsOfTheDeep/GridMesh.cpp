@@ -28,7 +28,13 @@ GridMesh::GridMesh(
 		relatedTexture)
 {
 	startPos = startPosition;
-	GenerateField();
+
+	/// Generate the mesh only if the xyz size are assigned
+	if (GenerateGridSize(GameManager::WORLD_RADIUS_X / CELL_SIZE, GameManager::WORLD_RADIUS_Z / CELL_SIZE, 0)) 
+	{
+		// Generates the vertices and triangles for the playing field mesh
+		GenerateMesh();
+	}
 }
 
 GridMesh::~GridMesh()
@@ -37,13 +43,18 @@ GridMesh::~GridMesh()
 
 /* Generate the x size and y size of the grid depending on the worldRadius (defined in the GameManager class) and the cell size so it will be always fit within the level boundaries
 */
-void GridMesh::GenerateField()
+bool GridMesh::GenerateGridSize(int x,int y,int z)
 {
 	// Assign the grid size for the vertices to be generated
-	AssignSize(GameManager::WORLD_RADIUS_X / CELL_SIZE, GameManager::WORLD_RADIUS_Z / CELL_SIZE, 0);
+	xWidth = x, yHeight = y, zLength = z;
 
-	// Generates the vertices and triangles for the playing field mesh
-	GenerateMesh();
+	if (xWidth >= 0 && yHeight >= 0 && zLength >= 0) {
+		return true;
+	} 
+	else
+	{
+		return false;
+	}
 }
 
 void GridMesh::OnRegisterSceneNode()
@@ -77,13 +88,11 @@ void GridMesh::GenerateMesh()
 	xSizeGrid = xWidth * 2 + GRID_OFFSET;
 	ySizeGrid = yHeight * 2 + GRID_OFFSET;
 
-	// Components (buffers + meshes)
 	IMeshManipulator* meshManipulator = GameManager::smgr->getMeshManipulator();
 	SAnimatedMesh* meshGrid = new SAnimatedMesh();
 	SMesh* sMesh = new SMesh();
 	SMeshBuffer* buffer = new SMeshBuffer();
 
-	// Draw the vertices and triangles of the grid
 	buffer->Vertices = DrawVertices(xSizeGrid, ySizeGrid, true);
 	buffer->Indices = DrawTriangles(xSizeGrid, ySizeGrid);
 
@@ -157,14 +166,18 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 		useMultipleGameObjects = true;
 	}
 
-	else if (singleGameObject != nullptr) {
+	if (singleGameObject != nullptr) {
 		amount = 1;
 		useSingleGameObject = true;
 	}
-	else
+
+	if(useSingleGameObject && useMultipleGameObjects)
 	{
-		puts("Error - Function GridMesh::RandomObjectPlacementOnVertex contains both default parameters (gameObjectList and singleGameObject)");
+		puts("Error - Function GridMesh::RandomObjectPlacementOnVertex contains both parameters (gameObjectList and singleGameObject). Please use one of the two");
 		return;
+	} else if (!useSingleGameObject && !useMultipleGameObjects)
+	{
+		puts("Error - Function GridMesh::RandomObjectPlacementOnVertex contains both default parameters (gameObjectList and singleGameObject). Please put a value in one of the parameters");
 	}
 
 	// Amount of tries before it skips the current object and go to the next object
@@ -300,6 +313,14 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 /// A list of vertex.
 core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap)
 {
+
+	// Check if the x and y size are higher than 0
+	if (xSizeGrid < 0 || ySizeGrid < 0)
+	{
+		// Return nothing if one of the parameters are 0 or negative 
+		return NULL;
+	}
+
 	// Buffer to put the vertices in it. The vertices will be returned as an array and not the whole buffer.
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
 
@@ -307,10 +328,10 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 	{
 		// Generate noiseMap 
 		NoiseGenerator* noiseGenerator = new NoiseGenerator();
-		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp");
+		noiseGenerator->GenerateHeightMap("../media/heightMap.bmp", 256,256);
 		ITexture* texture = GameManager::driver->getTexture("../media/heightMap.bmp");
 
-		// Divide the noise map by the vertices of the mesh to get good color differences
+		// Divide the height map by the grid size of the mesh to make use of the whole height map
 		float precisionX = noiseGenerator->xSizeImage / xSizeGrid;
 		float precisionY = noiseGenerator->ySizeImage / ySizeGrid;
 
@@ -318,9 +339,9 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 		{
 			for (size_t x = 0; x <= xSizeGrid; x++)
 			{
-				// Draw the vertices and use the noise map's pixel for the height of the vertex to create natural hill heights
+				// Draw the vertices and use the height map's pixel color for the height of the vertex to create smooth hill heights
 				bufferMesh->Vertices.push_back(irr::video::S3DVertex(x * CELL_SIZE,
-					noiseGenerator->getPixelColor(texture,
+					noiseGenerator->GetPixelColor(texture,
 					                              x * precisionX, y * precisionY).getRed() * heightMultiplier,
 					y * CELL_SIZE, 1, 1, 1, irr::video::SColor(255, 255, 255, 255),
 					x, y));
@@ -359,9 +380,13 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 /// A list of triangles.
 core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 {
+	if (xSizeGrid < 0 || ySizeGrid < 0)
+	{
+		return NULL;
+	}
+
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
 
-	// Create triangles for the mesh
 	for (int y = 0, ri = 0; y < ySizeGrid; y++, ri += xSizeGrid) 
 	{
 		for (int x = 0; x < xSizeGrid; x++) 
@@ -383,5 +408,5 @@ core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 
 SMaterial& GridMesh::getMaterial(u32 i)
 {
-	return Material;
+	return material;
 }

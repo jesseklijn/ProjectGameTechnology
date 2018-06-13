@@ -19,8 +19,8 @@ public:
 
 	// Variables
 	irr::scene::IAnimatedMeshSceneNode* mesh;
-	irr::core::aabbox3d<irr::f32> Box;
-	irr::video::SMaterial Material;
+	irr::core::aabbox3d<irr::f32> box;
+	irr::video::SMaterial material;
 	irr::scene::ITriangleSelector* selector;
 	Tag tag = NONE;
 
@@ -41,7 +41,7 @@ public:
 	virtual void Draw();
 	virtual void DrawGUI() {};
 	virtual Tag GetTag();
-	virtual void setTag(GameObject::Tag tagPar);
+	virtual void SetTag(GameObject::Tag tagPar);
 	virtual void Move(float speed, irr::core::vector3df direction, bool turnToDirection = false);
 	void NotifyCollision(irr::core::vector3df objPosition);
 

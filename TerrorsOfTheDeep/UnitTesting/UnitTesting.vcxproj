@@ -72,9 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);$(TERRORSOFTHEDEEP_INCLUDE)</IncludePath>
+    <IncludePath>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);$(TERRORSOFTHEDEEP_INCLUDE);$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\include;$(IRRLICHT_HOME)\include\noiselib\include\noise</IncludePath>
     <LibraryWPath>$(LibraryPath);$(WindowsSDK_MetadataPath);</LibraryWPath>
-    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib;$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(IRRLICHT_HOME)\noiselib\bin;$(IRRLICHT_HOME)\lib\Win32-visualstudio</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -102,12 +102,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(TERRORSOFTHEDEEP_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IRRLICHT_HOME)\include;$(IRRKLANG_HOME)\include;$(TERRORSOFTHEDEEP_INCLUDE);$(IRRLICHT_HOME)\noiselib\include\noise</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>TerrorsOfTheDeep.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>TerrorsOfTheDeep.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(IRRLICHT_HOME)\noiselib\bin;$(IRRLICHT_HOME)\bin\win32-visualStudio;$(IRRLICHT_HOME)\irrKlang-32bit-1.6.0\bin\win32-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

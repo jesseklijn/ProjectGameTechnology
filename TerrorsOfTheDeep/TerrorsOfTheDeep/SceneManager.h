@@ -86,6 +86,7 @@ public:
 	static irr::core::vector3df rayStart;
 	static irr::core::vector3df rayEnd;
 	static ITexture* loadingScreenImage;
+	static int groundID;
 
 	// Intro
 	static bool introIsActive, cageShouldDescend, showControls, showMouseOverlay, showKeyOverlay;
