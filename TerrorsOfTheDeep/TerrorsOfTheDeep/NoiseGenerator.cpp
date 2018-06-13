@@ -38,7 +38,6 @@ NoiseGenerator::~NoiseGenerator()
 
  bool NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
-	 // Is the fileDestName given in the parameter?
 	 if (fileDestName == "")
 	 {
 		 return false;
@@ -72,6 +71,8 @@ NoiseGenerator::~NoiseGenerator()
 	finalTerrain.SetSeed(GameManager::gameSeed);
 
 	baseFlatTerrain.SetFrequency(1.0);
+
+	// Combines the module with another module
 	flatTerrain.SetSourceModule(0, baseFlatTerrain);
 	flatTerrain.SetScale(0.25);
 	flatTerrain.SetBias(-0.85);
@@ -91,6 +92,7 @@ NoiseGenerator::~NoiseGenerator()
 	finalTerrain.SetFrequency(1.0);
 	finalTerrain.SetPower(0.1);
 
+	// Selects the module and the noise map where this module will be built 
 	heightMapBuilder.SetSourceModule(finalTerrain);
 	heightMapBuilder.SetDestNoiseMap(heightMap);
 
@@ -112,7 +114,6 @@ NoiseGenerator::~NoiseGenerator()
 	writer.SetDestFilename(fileDestName);
 	writer.WriteDestFile();
 
-	// Heightmap has successfully generated
 	return true;
 }
 
@@ -129,8 +130,10 @@ NoiseGenerator::~NoiseGenerator()
 /// The color of the pixel of the given coordinates will be calculated by using an irrlicht built-in function "getPixel". This value will be returned to the caller <br/>
 /// <b>Output</b><br/>
 /// A SColor value of the given image of the given pixel
-video::SColor NoiseGenerator::GetPixelColor(video::ITexture* texture, int x, int y)
+video::SColor NoiseGenerator::GetPixelColor(video::ITexture* textureImage, int x, int y)
  {
+	ITexture* texture = textureImage;
+
 	if (texture == nullptr)
 	{
 		return NULL;
