@@ -2,6 +2,9 @@
 #include <irrlicht.h>
 #include <vector>
 
+/// NoiseGenerator class makes use of the LibNoise library to generate its noise map.
+/// This allows the programmer to make use of the functions of LibNoise.
+/// Look at the GenerateHeightMap function for more information on how it works
 class NoiseGenerator
 {
 public:
