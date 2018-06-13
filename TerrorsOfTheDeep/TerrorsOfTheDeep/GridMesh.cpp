@@ -28,7 +28,12 @@ GridMesh::GridMesh(
 		relatedTexture)
 {
 	startPos = startPosition;
-	GenerateField();
+
+	/// Generate the mesh only if the xyz size are assigned
+	if (GenerateGridSize(GameManager::WORLD_RADIUS_X / CELL_SIZE, GameManager::WORLD_RADIUS_Z / CELL_SIZE, 0)) {
+		// Generates the vertices and triangles for the playing field mesh
+		GenerateMesh();
+	}
 }
 
 GridMesh::~GridMesh()
@@ -37,13 +42,18 @@ GridMesh::~GridMesh()
 
 /* Generate the x size and y size of the grid depending on the worldRadius (defined in the GameManager class) and the cell size so it will be always fit within the level boundaries
 */
-void GridMesh::GenerateField()
+bool GridMesh::GenerateGridSize(int x,int y,int z)
 {
 	// Assign the grid size for the vertices to be generated
-	AssignSize(GameManager::WORLD_RADIUS_X / CELL_SIZE, GameManager::WORLD_RADIUS_Z / CELL_SIZE, 0);
+	xWidth = x, yHeight = y, zLength = z;
 
-	// Generates the vertices and triangles for the playing field mesh
-	GenerateMesh();
+	if (xWidth >= 0 && yHeight >= 0 && zLength >= 0) {
+		return true;
+	} 
+	else
+	{
+		return false;
+	}
 }
 
 void GridMesh::OnRegisterSceneNode()
@@ -300,6 +310,14 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 /// A list of vertex.
 core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap)
 {
+
+	// Check if the x and y size are higher than 0
+	if (xSizeGrid < 0 || ySizeGrid < 0)
+	{
+		// Return nothing if one of the parameters are 0 or negative 
+		return NULL;
+	}
+
 	// Buffer to put the vertices in it. The vertices will be returned as an array and not the whole buffer.
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
 
@@ -360,6 +378,13 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 {
 	SMeshBuffer* bufferMesh = new SMeshBuffer();
+
+	// Check if the x and y size are higher than 0
+	if (xSizeGrid < 0 || ySizeGrid < 0)
+	{
+		// Return nothing if one of the parameters are 0 or negative 
+		return NULL;
+	}
 
 	// Create triangles for the mesh
 	for (int y = 0, ri = 0; y < ySizeGrid; y++, ri += xSizeGrid) 

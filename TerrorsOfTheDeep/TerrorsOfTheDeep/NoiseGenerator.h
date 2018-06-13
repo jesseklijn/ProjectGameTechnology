@@ -1,7 +1,6 @@
 #pragma once
 #include <irrlicht.h>
 #include <vector>
-#include <module/perlin.h>
 
 class NoiseGenerator
 {
@@ -11,7 +10,7 @@ public:
 
 	/// Generate a heightmap (noise map) to be used for level generation by using the libnoise library. 
 	/// It outputs an image in the project folder (The fileDestName determines where it outputs).
-	void GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY);
+	bool GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY);
 
 	/// Get the pixel color of the texture. It returns a SColor value to the caller. 
 	irr::video::SColor GetPixelColor(irr::video::ITexture* texture, int x = 0, int y = 0);

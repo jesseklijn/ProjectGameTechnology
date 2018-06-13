@@ -36,8 +36,21 @@ NoiseGenerator::~NoiseGenerator()
 /// <b>Output</b><br/>
 /// A noise map that has generated and placed in the "fileDestName" path.
 
- void NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
+ bool NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
+
+	 // Is the fileDestName given in the parameter?
+	 if (fileDestName == "")
+	 {
+		 return false;
+	 }
+
+	 // Checks if the X and Y are positive since the image size must be a positive and higher than 0
+	 if (imageSizeX <= 0 || imageSizeY <= 0)
+	 {
+		 return false;
+	 }
+
 	// Set image size to the value of the parameter to be used outside the function
 	xSizeImage = imageSizeX;
 	ySizeImage = imageSizeY;
@@ -99,6 +112,9 @@ NoiseGenerator::~NoiseGenerator()
 	writer.SetSourceImage(image);
 	writer.SetDestFilename(fileDestName);
 	writer.WriteDestFile();
+
+	// Heightmap has successfully generated
+	return true;
 }
 
 /// Get the color of the pixel in the selected texture. 
@@ -116,20 +132,24 @@ NoiseGenerator::~NoiseGenerator()
 /// A SColor value of the given image of the given pixel
 video::SColor NoiseGenerator::GetPixelColor(video::ITexture* texture, int x, int y)
  {
-	// Set the default color of the pixel 
-	video::SColor pixel = video::SColor(0, 0, 0, 0);
 
 	// Does the texture exist?
-	 if (texture == nullptr )
-		 return pixel;
+	if (texture == nullptr)
+	{
+		return NULL;
+	}
 
-	 dimension2du textureDimensions = texture->getOriginalSize();
-
-	// Checks if the X and Y are positive so they can be used for the image
-	 if (x < 0 || y < 0) 
+	 // Checks if the X and Y are positive so they can be used for the image
+	 if (x < 0 || y < 0)
 	 {
-		 return pixel;
+		 return NULL;
 	 }
+
+	 // Set the default color of the pixel 
+	 video::SColor pixel = video::SColor(0, 0, 0, 0);
+
+	 // Get the original size of the texture (in case if it's scaled)
+	 dimension2du textureDimensions = texture->getOriginalSize();
 
 	 // Is the given X and Y within the image size?
 	 if (x > textureDimensions.Width || y > textureDimensions.Height)
