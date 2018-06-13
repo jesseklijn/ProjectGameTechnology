@@ -85,6 +85,18 @@
     <Filter Include="Source Files\Interface Objects\Components">
       <UniqueIdentifier>{0dea8c95-5aaf-4c91-b42e-e2d62256d623}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Misc\Shaders">
+      <UniqueIdentifier>{614d5ab2-f1c3-4f08-bf59-d3162cafdaf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc\Shaders\CallBack">
+      <UniqueIdentifier>{7bd3971b-f2ee-41c5-a8b2-1f6eefbbcbd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc\Shaders">
+      <UniqueIdentifier>{bd11534a-9d28-4aae-9ad4-8c81f95a8bd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc\Shaders\CallBack">
+      <UniqueIdentifier>{19d50a85-726b-4005-9ac5-af6bf86ce810}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -186,6 +198,9 @@
     <ClCompile Include="Fader.cpp">
       <Filter>Source Files\Interface Objects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="CustomShaderCallBack.cpp">
+      <Filter>Source Files\Misc\Shaders\CallBack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObject.h">
@@ -278,10 +293,21 @@
     <ClInclude Include="Fader.h">
       <Filter>Header Files\Interface Objects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="CustomShaderCallBack.h">
+      <Filter>Header Files\Misc\Shaders\CallBack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TerrorsOfTheDeep.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DistortionShader.hlsl">
+      <Filter>Source Files\Misc\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DiffuseShader.hlsl">
+      <Filter>Source Files\Misc\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
