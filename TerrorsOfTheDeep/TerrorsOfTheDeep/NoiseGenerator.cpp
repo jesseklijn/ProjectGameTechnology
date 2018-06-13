@@ -38,7 +38,6 @@ NoiseGenerator::~NoiseGenerator()
 
  bool NoiseGenerator::GenerateHeightMap(const std::string fileDestName, int imageSizeX, int imageSizeY)
 {
-
 	 // Is the fileDestName given in the parameter?
 	 if (fileDestName == "")
 	 {
@@ -55,7 +54,7 @@ NoiseGenerator::~NoiseGenerator()
 	xSizeImage = imageSizeX;
 	ySizeImage = imageSizeY;
 
-	// Create noise modules and required items to create the noise map
+	// Create noise modules and required components to create the noise map
 	Billow billow;
 	RidgedMulti mountainTerrain;
 	Billow baseFlatTerrain;
@@ -132,14 +131,11 @@ NoiseGenerator::~NoiseGenerator()
 /// A SColor value of the given image of the given pixel
 video::SColor NoiseGenerator::GetPixelColor(video::ITexture* texture, int x, int y)
  {
-
-	// Does the texture exist?
 	if (texture == nullptr)
 	{
 		return NULL;
 	}
 
-	 // Checks if the X and Y are positive so they can be used for the image
 	 if (x < 0 || y < 0)
 	 {
 		 return NULL;
@@ -156,6 +152,8 @@ video::SColor NoiseGenerator::GetPixelColor(video::ITexture* texture, int x, int
 	 {
 		 return pixel;
 	 }
+
+	 // Create an image out of the texture in order to make use of the irrlicht built-in function "getPixel"
 	 IImage* image = GameManager::driver->createImage(texture, vector2d<s32>(0, 0), texture->getOriginalSize());
 	 pixel = image->getPixel(x, y);
 

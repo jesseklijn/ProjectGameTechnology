@@ -8,7 +8,7 @@
 /// Test case for drawing triangles in the GridMesh class
 TEST_CASE("GridMesh: DrawTriangles", "[Array<u16>]")
 {
-	// Array contains the numbers for drawing 2 triangles (1 quad)
+	// Array contains the numbers for drawing 2 triangles (1 quad) in a grid enviroment
 	irr::core::array<irr::u16> arrayTriangles;
 	arrayTriangles.push_back(0);
 	arrayTriangles.push_back(2);
@@ -18,7 +18,7 @@ TEST_CASE("GridMesh: DrawTriangles", "[Array<u16>]")
 	arrayTriangles.push_back(2);
 	arrayTriangles.push_back(3);
 
-	// Should return null 
+	// Test if a grid size of 0 goes pass the null checker of this function
 	REQUIRE(DrawTriangles(0, 0) == NULL);
 
 	// Testing if 2 triangles (1 quad) are drawn in the function
@@ -32,7 +32,7 @@ TEST_CASE("GridMesh: DrawTriangles", "[Array<u16>]")
 /// B is blue
 TEST_CASE("NoiseGenerator: GetPixelColor", "[SColor]")
 {
-	// Should return null (black SColor value) 
+	// Test if the negative parameters goes pass the null checker
 	REQUIRE(GetPixelColor(driverUnitTest->getTexture("../media/heightMapUnitTest255.bmp"),-1,-1) == NULL);
 
 	// Should return a black color (255, 0,0,0,0)
@@ -47,10 +47,10 @@ TEST_CASE("NoiseGenerator: GetPixelColor", "[SColor]")
 
 TEST_CASE("GridMesh: GenerateGridSize", "[Bool]")
 {
-	// parameter size is negative so it should return false
+	// Parameter size is negative so it should return false
 	REQUIRE(GenerateGridSize(-1, -1, -1) == false);
 
-	// parameter size is positive so it should return true
+	// Parameter size is positive so it should return true
 	REQUIRE(GenerateGridSize(1, 1, 1) == true);
 }
 //to run the unit test, set this project as startup project and pres ctrl + f5
