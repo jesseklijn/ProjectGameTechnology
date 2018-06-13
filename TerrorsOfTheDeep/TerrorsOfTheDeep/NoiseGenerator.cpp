@@ -21,7 +21,7 @@ NoiseGenerator::NoiseGenerator()
 NoiseGenerator::~NoiseGenerator()
 {
 }
-
+/// <b>Summary</b><br/>
 /// Generate a noise map to be used for the level generation. 
 /// <br/><b>Parameters</b><br/>
 /// imageSizeX and imageSizeY - The size of the noise map<br/>
@@ -116,7 +116,7 @@ NoiseGenerator::~NoiseGenerator()
 
 	return true;
 }
-
+ /// <b>Summary</b><br/>
 /// Get the color of the pixel in the selected texture. 
 /// <br/><b>Parameters</b><br/>
 /// Texture - Texture of the object you want to get the pixel color from (this is used for determining the dimensions of the texture).<br/>

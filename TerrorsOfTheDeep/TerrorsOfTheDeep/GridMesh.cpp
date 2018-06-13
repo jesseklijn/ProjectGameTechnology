@@ -65,6 +65,7 @@ void GridMesh::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
+/// <b>Summary</b><br/>
 /// The grid generation makes use a heightmap which makes it possible to get different vertices every time the playing mesh gets generated. <br/>
 /// <b>Components</b><br/>
 /// SMesh - The grid mesh will be put in a SMesh which is a static mesh <br/>
@@ -125,6 +126,7 @@ const aabbox3d<f32>&  GridMesh::getBoundingBox() const
 	return box;
 }
 
+/// <b>Summary</b><br/>
 /// Places objects on a random vertex of the mesh. It can use mesh and texture vectors to give the object random meshes and textures.  <br/>
 /// Either use a list with GameObjects or a single GameObject. One of the 2 must be given as a parameter. <br/>
 /// <b>Parameters</b><br/>
@@ -294,6 +296,7 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 	}
 	return;
 }
+/// <b>Summary</b><br/>
 /// Draws the vertices of the grid <br/>
 /// <b>Parameters</b><br/>
 /// xSizeGrid and ySizeGrid - Determines the size of the grid that it needs to draw the vertices <br/>
@@ -310,7 +313,7 @@ void GridMesh::RandomObjectPlacementOnVertex(IMeshBuffer* meshBuffer,vector3df r
 /// (the height will differ greater between each other as well) <br/>
 /// If no height map is used then the vertices are generated without any height differences. <br/>
 /// <b>Output</b><br/>
-/// A list of vertex.
+/// An array of S3DVertex.
 core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool useHeightMap)
 {
 
@@ -377,7 +380,7 @@ core::array<S3DVertex> GridMesh::DrawVertices(int xSizeGrid, int ySizeGrid, bool
 /// x - Keeps track of the x vertices of the grid<br/>
 /// +1 is used to get the next vertex of the selected vertex
 /// <b>Output</b><br/>
-/// A list of triangles.
+/// An array of triangles.
 core::array<u16> GridMesh::DrawTriangles(int xSizeGrid, int ySizeGrid)
 {
 	if (xSizeGrid < 0 || ySizeGrid < 0)
