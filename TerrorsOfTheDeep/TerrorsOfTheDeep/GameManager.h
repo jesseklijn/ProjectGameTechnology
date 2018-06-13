@@ -225,11 +225,16 @@ inline std::vector<T*> GameManager::FindObjectsWithTags(std::vector<DynamicUpdat
 }
 
 /** 
-* Finds the nearest object, from another object's position, that satisfies the given tag.
-* Optionally a max detection range and a visibility check can be enabled for more specific searches.
+* Finds a nearest (other) object, from an origin object's position, that satisfies the given tag.
+*
+* An optional visibility check can be enabled for more specific searches. This will
+* perform a Raycast to see if the path towards the object is obstructed or not.
+* 
+* Returns the closest object found or a null pointer if no object was found.
 */
 template<class T>
-inline T * GameManager::FindNearestObjectWithTag(T * origin, DynamicUpdater::Tag tag, std::vector<T*> objectList, double detectionRange, bool visibilityCheck)
+inline T * GameManager::FindNearestObjectWithTag(T * origin, DynamicUpdater::Tag tag, std::vector<T*> objectList, 
+	double detectionRange, bool visibilityCheck)
 {
 	float closestDistance = INFINITY, currentDistance;
 	GameObject* closestObject = nullptr;
